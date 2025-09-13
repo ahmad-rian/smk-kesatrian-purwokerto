@@ -60,7 +60,7 @@ class Create extends Component
     public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
-        
+
         // Auto-generate kode ketika nama diubah (jika kode masih kosong)
         if ($propertyName === 'nama' && empty($this->kode) && !empty(trim($this->nama))) {
             $this->generateKodeAuto();
@@ -125,8 +125,8 @@ class Create extends Component
 
         try {
             // Filter array kosong
-            $validatedData['kompetensi'] = array_filter($this->kompetensi, fn($item) => !empty(trim($item)));
-            $validatedData['prospek_karir'] = array_filter($this->prospek_karir, fn($item) => !empty(trim($item)));
+            $validatedData['kompetensi'] = array_filter($this->kompetensi, fn($item) => !empty(trim(is_string($item) ? $item : '')));
+            $validatedData['prospek_karir'] = array_filter($this->prospek_karir, fn($item) => !empty(trim(is_string($item) ? $item : '')));
 
             // Buat program studi baru
             StudyProgram::create($validatedData);
@@ -168,7 +168,7 @@ class Create extends Component
         try {
             // Bersihkan nama dari karakter khusus
             $cleanNama = preg_replace('/[^a-zA-Z0-9\s]/', '', $this->nama);
-            
+
             // Ambil huruf pertama dari setiap kata
             $words = explode(' ', strtoupper(trim($cleanNama)));
             $kode = '';
@@ -194,7 +194,7 @@ class Create extends Component
             while (StudyProgram::where('kode', $kode)->exists()) {
                 $kode = $originalKode . $counter;
                 $counter++;
-                
+
                 // Batasi maksimal 10 karakter
                 if (strlen($kode) > 10) {
                     $kode = substr($originalKode, 0, 8) . $counter;
@@ -202,7 +202,6 @@ class Create extends Component
             }
 
             $this->kode = $kode;
-            
         } catch (\Exception $e) {
             // Silent fail untuk auto-generate
         }
@@ -225,7 +224,7 @@ class Create extends Component
         try {
             // Bersihkan nama dari karakter khusus
             $cleanNama = preg_replace('/[^a-zA-Z0-9\s]/', '', $this->nama);
-            
+
             // Ambil huruf pertama dari setiap kata
             $words = explode(' ', strtoupper(trim($cleanNama)));
             $kode = '';
@@ -251,7 +250,7 @@ class Create extends Component
             while (StudyProgram::where('kode', $kode)->exists()) {
                 $kode = $originalKode . $counter;
                 $counter++;
-                
+
                 // Batasi maksimal 10 karakter
                 if (strlen($kode) > 10) {
                     $kode = substr($originalKode, 0, 8) . $counter;
@@ -259,13 +258,12 @@ class Create extends Component
             }
 
             $this->kode = $kode;
-            
+
             $this->success(
                 title: 'Berhasil!',
                 description: "Kode '{$this->kode}' berhasil di-generate.",
                 position: 'toast-top toast-end'
             );
-            
         } catch (\Exception $e) {
             $this->error(
                 title: 'Gagal!',

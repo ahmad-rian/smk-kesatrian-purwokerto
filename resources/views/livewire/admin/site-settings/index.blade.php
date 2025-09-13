@@ -30,6 +30,34 @@
                             <p class="text-base font-semibold">{{ $siteSetting->nama_sekolah }}</p>
                         </div>
 
+                        @if ($siteSetting->nama_singkat)
+                            <div>
+                                <label class="text-sm font-medium text-base-content/70">Nama Singkat</label>
+                                <p class="text-base">{{ $siteSetting->nama_singkat }}</p>
+                            </div>
+                        @endif
+
+                        @if ($siteSetting->tagline)
+                            <div>
+                                <label class="text-sm font-medium text-base-content/70">Tagline</label>
+                                <p class="text-base italic">{{ $siteSetting->tagline }}</p>
+                            </div>
+                        @endif
+
+                        @if ($siteSetting->tahun_berdiri)
+                            <div>
+                                <label class="text-sm font-medium text-base-content/70">Tahun Berdiri</label>
+                                <p class="text-base">{{ $siteSetting->tahun_berdiri }}</p>
+                            </div>
+                        @endif
+
+                        @if ($siteSetting->deskripsi)
+                            <div>
+                                <label class="text-sm font-medium text-base-content/70">Deskripsi</label>
+                                <p class="text-base">{{ $siteSetting->deskripsi }}</p>
+                            </div>
+                        @endif
+
                         <div>
                             <label class="text-sm font-medium text-base-content/70">Alamat</label>
                             <p class="text-base">{{ $siteSetting->alamat ?: 'Belum diatur' }}</p>
@@ -44,6 +72,18 @@
                             <label class="text-sm font-medium text-base-content/70">Email</label>
                             <p class="text-base">{{ $siteSetting->email ?: 'Belum diatur' }}</p>
                         </div>
+
+                        @if ($siteSetting->website)
+                            <div>
+                                <label class="text-sm font-medium text-base-content/70">Website</label>
+                                <p class="text-base">
+                                    <a href="{{ $siteSetting->website }}" target="_blank"
+                                        class="link link-primary hover:link-hover">
+                                        {{ $siteSetting->website }}
+                                    </a>
+                                </p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -60,6 +100,13 @@
                                     <img src="{{ Storage::url($siteSetting->logo) }}" alt="Logo Sekolah"
                                         class="w-20 h-20 object-contain bg-base-200 rounded-lg p-2">
                                 </div>
+                            </div>
+                        @endif
+
+                        @if ($siteSetting->nama_kepala_sekolah)
+                            <div>
+                                <label class="text-sm font-medium text-base-content/70">Nama Kepala Sekolah</label>
+                                <p class="text-base font-semibold">{{ $siteSetting->nama_kepala_sekolah }}</p>
                             </div>
                         @endif
 

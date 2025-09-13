@@ -1,6 +1,7 @@
 <div>
     {{-- Header Section --}}
-    <x-mary-header title="Kelola Gallery" subtitle="Kelola gallery foto dan gambar untuk website sekolah" separator progress-indicator>
+    <x-mary-header title="Kelola Gallery" subtitle="Kelola gallery foto dan gambar untuk website sekolah" separator
+        progress-indicator>
         <x-slot:actions>
             <x-mary-button label="Tambah Gallery" icon="o-plus" class="btn-primary"
                 link="{{ route('admin.galleries.create') }}" />
@@ -30,7 +31,7 @@
                 <x-mary-input label="Pencarian" wire:model.live.debounce="search"
                     placeholder="Cari berdasarkan judul atau deskripsi..." icon="o-magnifying-glass" clearable />
             </div>
-            
+
             {{-- Status Filter --}}
             <div class="w-48">
                 <x-mary-select label="Status" wire:model.live="statusFilter" :options="[
@@ -52,15 +53,14 @@
                     ['value' => 'urutan', 'label' => 'Urutan'],
                     ['value' => 'judul', 'label' => 'Judul'],
                     ['value' => 'created_at', 'label' => 'Tanggal Dibuat'],
-                ]" option-value="value" option-label="label" />
+                ]" option-value="value"
+                    option-label="label" />
             </div>
 
             {{-- Sort Direction --}}
             <div class="w-48">
-                <x-mary-select label="Arah" wire:model.live="sortDirection" :options="[
-                    ['value' => 'asc', 'label' => 'Naik (A-Z)'],
-                    ['value' => 'desc', 'label' => 'Turun (Z-A)'],
-                ]" option-value="value" option-label="label" />
+                <x-mary-select label="Arah" wire:model.live="sortDirection" :options="[['value' => 'asc', 'label' => 'Naik (A-Z)'], ['value' => 'desc', 'label' => 'Turun (Z-A)']]" option-value="value"
+                    option-label="label" />
             </div>
 
             {{-- Reset Button --}}
@@ -91,7 +91,7 @@
                                 <div class="w-12 h-12 rounded-lg">
                                     @if ($gallery->gambar_sampul)
                                         <img src="{{ Storage::url($gallery->gambar_sampul) }}" alt="{{ $gallery->judul }}"
-                                            class="object-cover w-full h-full rounded-lg" 
+                                            class="object-cover w-full h-full rounded-lg"
                                             onerror="this.onerror=null; this.src='/images/placeholder-image.svg'; console.error('Gambar tidak dapat dimuat:', this.alt);" />
                                     @else
                                         <div class="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
@@ -126,7 +126,8 @@
 
                 {{-- Urutan Column --}}
                 @scope('cell_urutan', $gallery)
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                         {{ $gallery->urutan }}
                     </span>
                 @endscope
@@ -212,7 +213,8 @@
     </x-mary-modal>
 
     {{-- Loading Overlay - Hanya untuk operasi yang membutuhkan waktu lama --}}
-    <div wire:loading.flex wire:target="delete" class="fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center">
+    <div wire:loading.flex wire:target="delete"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center">
         <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-xl">
             <div class="flex items-center space-x-3">
                 <x-mary-loading class="loading-spinner loading-md" />

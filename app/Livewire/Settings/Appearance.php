@@ -5,9 +5,10 @@ namespace App\Livewire\Settings;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
 
 #[Title('Appearance Settings - SMK Kesatrian')]
-
+#[Layout('livewire.admin.layout')]
 class Appearance extends Component
 {
     #[Validate('required|in:light,dark,system')]

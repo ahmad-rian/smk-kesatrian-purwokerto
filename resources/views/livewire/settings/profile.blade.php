@@ -75,10 +75,18 @@ new class extends Component {
         <x-slot:title class="title text-xl font-semibold">{{ __('Profile Information') }}</x-slot:title>
                 
                 <form wire:submit="updateProfileInformation" class="space-y-6">
-                    <x-mary-input wire:model="nama" :label="__('Name')" type="text" required autofocus autocomplete="name" icon="o-user" />
+                    <x-mary-input wire:model="nama" :label="__('Name')" type="text" required autofocus autocomplete="name">
+                        <x-slot:prepend>
+                            <x-mary-icon name="user" class="w-4 h-4" />
+                        </x-slot:prepend>
+                    </x-mary-input>
 
                     <div>
-                        <x-mary-input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" icon="o-envelope" />
+                        <x-mary-input wire:model="email" :label="__('Email')" type="email" required autocomplete="email">
+                            <x-slot:prepend>
+                                <x-mary-icon name="envelope" class="w-4 h-4" />
+                            </x-slot:prepend>
+                        </x-mary-input>
 
                         @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&! auth()->user()->hasVerifiedEmail())
                             <div class="mt-4">

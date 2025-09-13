@@ -110,9 +110,18 @@ class StudyProgram extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('kode', 'like', "%{$search}%")
-              ->orWhere('nama', 'like', "%{$search}%")
-              ->orWhere('ketua_program', 'like', "%{$search}%");
+                ->orWhere('nama', 'like', "%{$search}%")
+                ->orWhere('ketua_program', 'like', "%{$search}%");
         });
+    }
+
+    /**
+     * Relasi dengan Facility
+     * Satu program studi memiliki banyak fasilitas
+     */
+    public function facilities()
+    {
+        return $this->hasMany(Facility::class, 'study_program_id');
     }
 
     /**

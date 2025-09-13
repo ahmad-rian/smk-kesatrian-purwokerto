@@ -140,9 +140,9 @@ class Edit extends Component
         $validatedData = $this->validate();
 
         try {
-            // Filter array kosong
-            $validatedData['kompetensi'] = array_filter($this->kompetensi, fn($item) => !empty(trim($item)));
-            $validatedData['prospek_karir'] = array_filter($this->prospek_karir, fn($item) => !empty(trim($item)));
+            // Filter array kosong - pastikan $item adalah string
+            $validatedData['kompetensi'] = array_filter($this->kompetensi, fn($item) => !empty(trim(is_string($item) ? $item : '')));
+            $validatedData['prospek_karir'] = array_filter($this->prospek_karir, fn($item) => !empty(trim(is_string($item) ? $item : '')));
 
             // Jika tidak ada gambar baru, hapus dari validated data
             if (!$this->gambar) {

@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Livewire\Component;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
 
 #[Title('Password Settings - SMK Kesatrian')]
+#[Layout('livewire.admin.layout')]
 class Password extends Component
 {
     public string $current_password = '';

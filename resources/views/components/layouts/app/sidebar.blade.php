@@ -9,9 +9,10 @@
 
             <!-- Logo Section -->
             <div class="p-4 border-b border-base-300">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 transition-all hover:scale-105"
-                    wire:navigate>
-                    <x-app-logo />
+                <a href="{{ route('admin.dashboard') }}" class="transition-all hover:scale-105" wire:navigate>
+                    {{-- Logo Dinamis dari Database untuk Admin Sidebar --}}
+                    <x-app-logo size="md" :showText="true" textPosition="right" logoClass="shadow-sm"
+                        class="gap-3" />
                 </a>
             </div>
 
@@ -42,16 +43,28 @@
                             :active="request()->routeIs('admin.study-programs.*')" wire:navigate class="spa-nav-item" />
 
                         <!-- Kegiatan Sekolah -->
-                        <x-mary-menu-item title="Kegiatan Sekolah" icon="o-calendar-days" :link="route('admin.school-activities.index')"
-                            :active="request()->routeIs('admin.school-activities.*')" wire:navigate class="spa-nav-item" />
+        <x-mary-menu-item title="Kegiatan Sekolah" icon="o-calendar-days" :link="route('admin.school-activities.index')"
+            :active="request()->routeIs('admin.school-activities.*')" wire:navigate class="spa-nav-item" />
 
-                        <!-- Fasilitas -->
-                        <x-mary-menu-item title="Fasilitas" icon="o-building-office-2" :link="route('admin.facilities.index')"
-                            :active="request()->routeIs('admin.facilities.*')" wire:navigate class="spa-nav-item" />
+        <!-- Berita -->
+        <x-mary-menu-item title="Berita" icon="o-newspaper" :link="route('admin.news.index')"
+            :active="request()->routeIs('admin.news.*')" wire:navigate class="spa-nav-item" />
+
+        <!-- Fasilitas -->
+        <x-mary-menu-item title="Fasilitas" icon="o-building-office-2" :link="route('admin.facilities.index')"
+            :active="request()->routeIs('admin.facilities.*')" wire:navigate class="spa-nav-item" />
 
                         <!-- Gallery -->
-                        <x-mary-menu-item title="Gallery" icon="o-photo" :link="route('admin.galleries.index')"
-                            :active="request()->routeIs('admin.galleries.*')" wire:navigate class="spa-nav-item" />
+                        <x-mary-menu-item title="Gallery" icon="o-photo" :link="route('admin.galleries.index')" :active="request()->routeIs('admin.galleries.*')"
+                            wire:navigate class="spa-nav-item" />
+
+                        <!-- Home Carousel -->
+                        <x-mary-menu-item title="Carousel Beranda" icon="o-photo" :link="route('admin.home-carousels.index')" :active="request()->routeIs('admin.home-carousels.*')"
+                            wire:navigate class="spa-nav-item" />
+
+                        <!-- Contact Messages -->
+                        <x-mary-menu-item title="Pesan Kontak" icon="o-envelope" :link="route('admin.contact-messages.index')" :active="request()->routeIs('admin.contact-messages.*')"
+                            wire:navigate class="spa-nav-item" />
                     </div>
                 </x-mary-menu>
             </div>

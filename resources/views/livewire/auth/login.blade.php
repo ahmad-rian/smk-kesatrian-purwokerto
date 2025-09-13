@@ -8,51 +8,161 @@ new #[Layout('components.layouts.auth')] class extends Component {
 // Semua logic authentication ditangani oleh GoogleController
 }; ?>
 
-<div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Masuk ke Akun Anda')" :description="__('Gunakan akun Google untuk masuk ke sistem')" />
+<!-- Main Content Card dengan Responsive Design -->
+<x-mary-card class="shadow-2xl bg-base-100 overflow-hidden">
+    <!-- Desktop Layout - Grid 2 kolom -->
+    <div class="hidden lg:grid lg:grid-cols-5 min-h-[400px]">
+        <!-- Left Side - Animation (Desktop only) -->
+        <div class="lg:col-span-2 bg-gradient-to-br from-primary/10 to-primary/20 flex items-center justify-center p-6">
+            <div class="text-center">
+                <!-- Lottie Animation -->
+                <div class="mb-4">
+                    <lottie-player src="/assets/animations/login.json" background="transparent" speed="1"
+                        style="width: 280px; height: 280px;" loop autoplay renderer="svg" mode="normal">
+                    </lottie-player>
+                    <!-- Fallback jika animasi gagal -->
+                    <div class="hidden animate-pulse" id="animation-fallback">
+                        <div class="w-20 h-20 bg-primary/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
-
-    <!-- Error Message -->
-    @if (session('error'))
-        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-center">
-            {{ session('error') }}
+                <!-- Welcome Text -->
+                <div class="text-black">
+                    <h3 class="text-lg font-bold mb-2">{{ __('Selamat Datang') }}</h3>
+                    <p class="text-sm opacity-80">{{ __('SMK Kesatrian Purwokerto') }}</p>
+                </div>
+            </div>
         </div>
-    @endif
 
-    <!-- Success Message -->
-    @if (session('success'))
-        <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-center">
-            {{ session('success') }}
-        </div>
-    @endif
+        <!-- Right Side - Login Form (Desktop) -->
+        <div class="lg:col-span-3 p-6 lg:p-8 flex items-center justify-center">
+            <div class="w-full max-w-sm space-y-6">
+                <!-- Header -->
+                <div class="text-center">
+                    <h1 class="text-2xl font-bold text-base-content mb-2">{{ __('Masuk ke Akun Anda') }}</h1>
+                    <p class="text-base-content/70">{{ __('Gunakan akun Google untuk masuk ke sistem') }}</p>
+                </div>
 
-    <!-- Google SSO Button -->
-    <div class="space-y-4">
-        <a href="{{ route('auth.google') }}"
-            class="w-full flex items-center justify-center gap-3 px-6 py-3 border border-gray-300 rounded-lg shadow-sm bg-white hover:bg-gray-50 transition-colors duration-200 text-gray-700 font-medium">
-            <!-- Google Icon SVG -->
-            <svg class="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="#FBBC05"
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                <path fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-            </svg>
-            {{ __('Masuk dengan Google') }}
-        </a>
+                <!-- Error/Success Messages -->
+                @if (session('error'))
+                    <x-mary-alert class="alert-error">
+                        <x-slot:icon>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </x-slot:icon>
+                        {{ session('error') }}
+                    </x-mary-alert>
+                @endif
 
-        <!-- Info Text -->
-        <div class="text-center text-sm text-gray-600 dark:text-gray-400">
-            <p class="mb-2">{{ __('Sistem menggunakan Single Sign-On (SSO) Google') }}</p>
-            <p class="text-xs">
-                {{ __('Admin:') }} <span class="font-medium">ahmad.ritonga@mhs.unsoed.ac.id</span><br>
-                {{ __('User:') }} <span class="font-medium">alriansr@gmail.com</span>
-            </p>
+                @if (session('success'))
+                    <x-mary-alert class="alert-success">
+                        <x-slot:icon>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </x-slot:icon>
+                        {{ session('success') }}
+                    </x-mary-alert>
+                @endif
+
+                <!-- Google SSO Button -->
+                <a href="{{ route('auth.google') }}"
+                    class="btn btn-outline btn-lg w-full flex items-center justify-center gap-3 hover:bg-base-200 transition-all duration-200 group border-2">
+                    <!-- Google Icon SVG -->
+                    <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-200" viewBox="0 0 24 24">
+                        <path fill="#4285F4"
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="#34A853"
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05"
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#EA4335"
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
+                    <span class="font-semibold">{{ __('Masuk dengan Google') }}</span>
+                </a>
+                <!-- Divider Line - Mobile -->
+                <div class="border-b border-gray-200 my-4"></div>
+
+                <!-- SSO Text - Mobile -->
+                <div class="text-center">
+                    <p class="text-sm font-medium text-black">{{ __('Single Sign-On (SSO)') }}</p>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
+
+    <!-- Mobile & Tablet Layout - Single Column -->
+    <div class="lg:hidden p-4 sm:p-6 min-h-[300px] flex items-center justify-center">
+        <div class="w-full max-w-sm space-y-6">
+            <!-- Header - Mobile -->
+            <div class="text-center">
+                <h1 class="text-xl sm:text-2xl font-bold text-base-content mb-2">{{ __('Masuk ke Akun Anda') }}</h1>
+                <p class="text-sm sm:text-base text-base-content/70 mb-1">
+                    {{ __('Gunakan akun Google untuk masuk ke sistem') }}</p>
+
+            </div>
+
+            <!-- Error/Success Messages - Mobile -->
+            @if (session('error'))
+                <x-mary-alert class="alert-error">
+                    <x-slot:icon>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </x-slot:icon>
+                    {{ session('error') }}
+                </x-mary-alert>
+            @endif
+
+            @if (session('success'))
+                <x-mary-alert class="alert-success">
+                    <x-slot:icon>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </x-slot:icon>
+                    {{ session('success') }}
+                </x-mary-alert>
+            @endif
+
+            <!-- Google SSO Button - Mobile -->
+            <a href="{{ route('auth.google') }}"
+                class="btn btn-outline btn-lg w-full flex items-center justify-center gap-3 hover:bg-base-200 transition-all duration-200 group border-2 py-4">
+                <!-- Google Icon SVG -->
+                <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-200"
+                    viewBox="0 0 24 24">
+                    <path fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                    <path fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+                <span class="font-medium sm:font-semibold text-sm sm:text-base">{{ __('Masuk dengan Google') }}</span>
+            </a>
+
+            <!-- Divider Line - Mobile -->
+            <div class="border-b border-gray-200 my-4"></div>
+
+            <!-- SSO Text - Mobile -->
+            <div class="text-center">
+                <p class="text-sm font-medium text-black">{{ __('Single Sign-On (SSO)') }}</p>
+            </div>
+        </div>
+    </div>
+</x-mary-card>

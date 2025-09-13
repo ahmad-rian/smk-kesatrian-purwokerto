@@ -9,8 +9,8 @@ Route::middleware('guest')->group(function () {
     Volt::route('login', 'auth.login')
         ->name('login');
 
-    Volt::route('register', 'auth.register')
-        ->name('register');
+    // Volt::route('register', 'auth.register')
+    //     ->name('register');
 
     Volt::route('forgot-password', 'auth.forgot-password')
         ->name('password.request');
@@ -21,7 +21,7 @@ Route::middleware('guest')->group(function () {
     // Google SSO Routes
     Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])
         ->name('auth.google');
-    
+
     Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])
         ->name('auth.google.callback');
 });
