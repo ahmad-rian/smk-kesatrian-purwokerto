@@ -18,9 +18,9 @@ class Edit extends Component
     /**
      * ID carousel
      *
-     * @var int
+     * @var string
      */
-    public int $carouselId;
+    public string $carouselId;
 
     /**
      * Judul carousel
@@ -28,6 +28,13 @@ class Edit extends Component
      * @var string
      */
     public string $judul = '';
+
+    /**
+     * Deskripsi carousel
+     *
+     * @var string
+     */
+    public string $deskripsi = '';
 
     /**
      * File gambar carousel baru
@@ -65,9 +72,10 @@ class Edit extends Component
      */
     public function mount(HomeCarousel $homeCarousel): void
     {
-        $this->carouselId = (int) $homeCarousel->id;
+        $this->carouselId = $homeCarousel->id;
 
         $this->judul = $homeCarousel->judul;
+        $this->deskripsi = $homeCarousel->deskripsi ?? '';
         $this->gambarPath = $homeCarousel->gambar;
         $this->aktif = $homeCarousel->aktif;
         $this->urutan = $homeCarousel->urutan;
@@ -119,6 +127,7 @@ class Edit extends Component
             $carousel = HomeCarousel::findOrFail($this->carouselId);
             $data = [
                 'judul' => $this->judul,
+                'deskripsi' => $this->deskripsi,
                 'aktif' => $this->aktif,
                 'urutan' => $this->urutan,
             ];

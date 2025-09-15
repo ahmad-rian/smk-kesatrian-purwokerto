@@ -8,6 +8,7 @@ use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Layout;
 
 /**
  * Livewire Component untuk Edit Berita
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
  * - Update gambar dengan hapus gambar lama
  * - Redirect setelah update
  */
+#[Layout('livewire.admin.layout')]
 class Edit extends Component
 {
     use WithFileUploads, Toast;
@@ -75,7 +77,7 @@ class Edit extends Component
         $this->judul = $news->judul;
         $this->slug = $news->slug;
         $this->konten = $news->konten;
-        $this->status = $news->status;
+        $this->status = $news->status === 'published' ? 'aktif' : 'nonaktif';
         $this->gambarLama = $news->gambar;
         
         // Set preview gambar lama jika ada
@@ -138,7 +140,7 @@ class Edit extends Component
                 'judul' => $this->judul,
                 'slug' => $this->slug,
                 'konten' => $this->konten,
-                'status' => $this->status,
+                'status' => $this->status === 'aktif' ? 'published' : 'draft',
                 'updated_at' => now()
             ];
 

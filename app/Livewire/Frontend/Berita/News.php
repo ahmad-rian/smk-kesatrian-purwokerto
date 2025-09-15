@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Frontend;
+namespace App\Livewire\Frontend\Berita;
 
 use App\Models\News as NewsModel;
 use Livewire\Component;
@@ -39,7 +39,7 @@ class News extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('judul', 'like', '%' . $this->search . '%')
-                      ->orWhere('konten', 'like', '%' . $this->search . '%');
+                        ->orWhere('konten', 'like', '%' . $this->search . '%');
                 });
             })
             ->orderBy('created_at', 'desc')
@@ -67,8 +67,8 @@ class News extends Component
      */
     public function render()
     {
-        return view('livewire.frontend.news', [
-            'newsList' => $this->news
+        return view('livewire.frontend.berita.news', [
+            'newsList' => $this->getNewsProperty()
         ]);
     }
 }

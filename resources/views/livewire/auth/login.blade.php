@@ -23,11 +23,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                     <!-- Fallback jika animasi gagal -->
                     <div class="hidden animate-pulse" id="animation-fallback">
                         <div class="w-20 h-20 bg-primary/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
+                            <x-mary-icon name="o-user" class="w-10 h-10 text-primary" />
                         </div>
                     </div>
                 </div>
@@ -51,25 +47,13 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
                 <!-- Error/Success Messages -->
                 @if (session('error'))
-                    <x-mary-alert class="alert-error">
-                        <x-slot:icon>
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </x-slot:icon>
+                    <x-mary-alert class="alert-error" icon="o-exclamation-triangle">
                         {{ session('error') }}
                     </x-mary-alert>
                 @endif
 
                 @if (session('success'))
-                    <x-mary-alert class="alert-success">
-                        <x-slot:icon>
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </x-slot:icon>
+                    <x-mary-alert class="alert-success" icon="o-check-circle">
                         {{ session('success') }}
                     </x-mary-alert>
                 @endif
@@ -115,25 +99,13 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
             <!-- Error/Success Messages - Mobile -->
             @if (session('error'))
-                <x-mary-alert class="alert-error">
-                    <x-slot:icon>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </x-slot:icon>
+                <x-mary-alert class="alert-error" icon="o-exclamation-circle">
                     {{ session('error') }}
                 </x-mary-alert>
             @endif
 
             @if (session('success'))
-                <x-mary-alert class="alert-success">
-                    <x-slot:icon>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </x-slot:icon>
+                <x-mary-alert class="alert-success" icon="o-check-circle">
                     {{ session('success') }}
                 </x-mary-alert>
             @endif

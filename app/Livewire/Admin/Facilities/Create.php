@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Facilities;
 
 use App\Models\Facility;
+use App\Models\FacilityImage;
 use App\Models\StudyProgram;
 use App\Services\ImageConversionService;
 use Illuminate\Http\UploadedFile;
@@ -36,7 +37,8 @@ class Create extends Component
     public ?string $kategori = null;
     public string $deskripsi = '';
     public string $study_program_id = '';
-    public ?UploadedFile $gambar = null;
+    public ?UploadedFile $gambar = null; // Backward compatibility
+    public array $images = []; // Multiple images (1-5)
 
     /**
      * Service untuk konversi gambar
@@ -61,7 +63,9 @@ class Create extends Component
             'deskripsi' => 'required|string|min:10|max:1000',
             'study_program_id' => 'required|exists:study_programs,id',
             'kategori' => 'nullable|string|max:100|in:laboratorium,perpustakaan,olahraga,aula,kantin,asrama,parkir,lainnya',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Backward compatibility
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'images' => 'nullable|array|min:1|max:5',
         ];
     }
 
@@ -79,7 +83,7 @@ class Create extends Component
     public function updatedNama()
     {
         $this->validateOnly('nama');
-        
+
         // Auto-generate slug atau format nama jika diperlukan
         if ($this->nama) {
             $this->nama = trim($this->nama);
@@ -92,7 +96,7 @@ class Create extends Component
     public function updatedGambar()
     {
         $this->validateOnly('gambar');
-        
+
         if ($this->gambar) {
             // Validasi tambahan untuk ukuran file
             if ($this->gambar->getSize() > 2048 * 1024) {
@@ -100,6 +104,28 @@ class Create extends Component
                 $this->gambar = null;
             }
         }
+    }
+
+    /**
+     * Validasi khusus untuk multiple images
+     */
+    public function updatedImages()
+    {
+        $this->validateOnly('images');
+
+        // Validasi setiap gambar
+        foreach ($this->images as $index => $image) {
+            if ($image && $image instanceof UploadedFile) {
+                // Validasi ukuran file
+                if ($image->getSize() > 2048 * 1024) {
+                    $this->addError("images.{$index}", 'Ukuran file tidak boleh lebih dari 2MB.');
+                    unset($this->images[$index]);
+                }
+            }
+        }
+
+        // Reset array index
+        $this->images = array_values(array_filter($this->images));
     }
 
     /**
@@ -119,7 +145,12 @@ class Create extends Component
             'study_program_id.exists' => 'Program studi tidak valid',
             'gambar.image' => 'File harus berupa gambar',
             'gambar.mimes' => 'Format gambar harus: jpeg, jpg, png, gif, atau webp',
-            'gambar.max' => 'Ukuran gambar maksimal 2MB'
+            'gambar.max' => 'Ukuran gambar maksimal 2MB',
+            'images.*.image' => 'File harus berupa gambar',
+            'images.*.mimes' => 'Format gambar harus: jpeg, jpg, png, gif, atau webp',
+            'images.*.max' => 'Ukuran gambar maksimal 2MB',
+            'images.min' => 'Minimal upload 1 gambar',
+            'images.max' => 'Maksimal upload 5 gambar'
         ];
     }
 
@@ -132,7 +163,8 @@ class Create extends Component
             'nama' => 'nama fasilitas',
             'deskripsi' => 'deskripsi',
             'study_program_id' => 'program studi',
-            'gambar' => 'gambar fasilitas'
+            'gambar' => 'gambar fasilitas',
+            'images' => 'gambar fasilitas'
         ];
     }
 
@@ -161,7 +193,7 @@ class Create extends Component
             'study_program_id' => $this->study_program_id,
         ];
 
-        // Handle gambar upload jika ada
+        // Handle gambar upload jika ada (backward compatibility)
         if ($this->gambar) {
             try {
                 $data['gambar'] = $this->imageService->convertToWebP(
@@ -190,6 +222,7 @@ class Create extends Component
         $this->deskripsi = '';
         $this->study_program_id = '';
         $this->gambar = null;
+        $this->images = [];
     }
 
     /**
@@ -200,33 +233,38 @@ class Create extends Component
         try {
             // Validasi input
             $validatedData = $this->validateInput();
-            
+
             // Validasi business rules tambahan
             $this->validateBusinessRules();
-            
+
             // Persiapkan data untuk disimpan
             $data = $this->prepareDataForSave($validatedData);
-            
+
             // Simpan ke database dengan transaction
             DB::transaction(function () use ($data) {
                 $facility = Facility::create($data);
-                
+
+                // Upload multiple images jika ada
+                if (!empty($this->images)) {
+                    $this->uploadMultipleImages($facility);
+                }
+
                 // Log untuk debugging
                 Log::info('Fasilitas baru berhasil dibuat', [
                     'facility_id' => $facility->id,
                     'nama' => $facility->nama,
                     'study_program_id' => $facility->study_program_id,
-                    'kategori' => $facility->kategori
+                    'kategori' => $facility->kategori,
+                    'images_count' => count($this->images)
                 ]);
             });
-            
+
             // Reset form dan tampilkan pesan sukses
             $this->resetForm();
             $this->success('Fasilitas berhasil ditambahkan!');
-            
+
             // Redirect ke halaman index
             $this->redirect(route('admin.facilities.index'), navigate: true);
-            
         } catch (ValidationException $e) {
             // Error sudah ditangani di validateInput()
             Log::warning('Validation error saat membuat fasilitas', [
@@ -268,7 +306,7 @@ class Create extends Component
         $existingFacility = Facility::where('nama', trim($this->nama))
             ->where('study_program_id', $this->study_program_id)
             ->first();
-        
+
         if ($existingFacility) {
             $this->addError('nama', 'Fasilitas dengan nama ini sudah ada di program studi yang sama.');
             throw new ValidationException(validator([], []));
@@ -284,7 +322,48 @@ class Create extends Component
     }
 
     /**
-     * Method untuk preview gambar yang diupload
+     * Upload multiple images untuk fasilitas
+     */
+    private function uploadMultipleImages(Facility $facility): void
+    {
+        foreach ($this->images as $index => $image) {
+            if ($image instanceof UploadedFile) {
+                try {
+                    $facilityImage = new FacilityImage([
+                        'facility_id' => $facility->id,
+                        'urutan' => $index + 1,
+                        'is_primary' => $index === 0, // Gambar pertama sebagai primary
+                        'alt_text' => "Gambar fasilitas {$facility->nama} - " . ($index + 1)
+                    ]);
+
+                    $facilityImage->gambar = $image;
+                    $facilityImage->save();
+                } catch (\Exception $e) {
+                    Log::error('Error saat mengupload gambar fasilitas', [
+                        'error' => $e->getMessage(),
+                        'facility_id' => $facility->id,
+                        'image_index' => $index,
+                        'file_name' => $image->getClientOriginalName()
+                    ]);
+                    throw new \Exception("Gagal mengupload gambar ke-" . ($index + 1) . ". Silakan coba lagi.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove image dari array
+     */
+    public function removeImage($index): void
+    {
+        if (isset($this->images[$index])) {
+            unset($this->images[$index]);
+            $this->images = array_values($this->images); // Reset array index
+        }
+    }
+
+    /**
+     * Method untuk preview gambar yang diupload (backward compatibility)
      */
     public function getImagePreviewProperty(): ?string
     {
@@ -303,6 +382,27 @@ class Create extends Component
         }
 
         return null;
+    }
+
+    /**
+     * Method untuk preview multiple images
+     */
+    public function getImagePreviewsProperty(): array
+    {
+        $previews = [];
+
+        foreach ($this->images as $index => $image) {
+            if ($image instanceof UploadedFile) {
+                try {
+                    $previews[$index] = $image->temporaryUrl();
+                } catch (\Exception $e) {
+                    Log::warning("Failed to generate temporary URL for image {$index}: " . $e->getMessage());
+                    $previews[$index] = null;
+                }
+            }
+        }
+
+        return $previews;
     }
 
     /**

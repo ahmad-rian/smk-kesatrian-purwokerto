@@ -120,6 +120,6 @@ class ContactForm extends Component
      */
     public function render()
     {
-        return view('livewire.frontend.contact-form');
+        return view('livewire.frontend.contact.contact-form');
     }
 }

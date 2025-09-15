@@ -4,6 +4,7 @@ namespace App\Livewire\Frontend;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\SiteSetting;
 
 /**
  * Navbar Component untuk Frontend
@@ -28,11 +29,17 @@ class Navbar extends Component
     public bool $mobileMenuOpen = false;
 
     /**
+     * Site settings data
+     */
+    public ?SiteSetting $siteSettings = null;
+
+    /**
      * Initialize component dengan theme dari session
      */
     public function mount(): void
     {
         $this->appearance = session('appearance', 'light');
+        $this->siteSettings = SiteSetting::first();
     }
 
     /**
@@ -43,7 +50,7 @@ class Navbar extends Component
     {
         // Cycle through themes: light -> dark -> light
         $this->appearance = $this->appearance === 'light' ? 'dark' : 'light';
-        
+
         // Save to session
         session(['appearance' => $this->appearance]);
 
@@ -118,11 +125,48 @@ class Navbar extends Component
     }
 
     /**
+     * Check if current route is active
+     * 
+     * @param string $routeName
+     * @return bool
+     */
+    public function isActiveRoute(string $routeName): bool
+    {
+        return request()->routeIs($routeName);
+    }
+
+    /**
+     * Get active menu class
+     * 
+     * @param string $routeName
+     * @return string
+     */
+    public function getActiveClass(string $routeName): string
+    {
+        return $this->isActiveRoute($routeName)
+            ? 'text-primary bg-primary/10 border-primary/20'
+            : 'text-base-content hover:text-primary hover:bg-primary/5';
+    }
+
+    /**
+     * Get active mobile menu class
+     * 
+     * @param string $routeName
+     * @return string
+     */
+    public function getActiveMobileClass(string $routeName): string
+    {
+        return $this->isActiveRoute($routeName)
+            ? 'text-primary bg-primary/10 border-l-2 border-primary'
+            : 'text-base-content hover:text-primary hover:bg-primary/5';
+    }
+
+    /**
      * Get current theme icon
      */
     public function getThemeIconProperty(): string
     {
-        return match($this->appearance) {
+        return match ($this->appearance) {
             'dark' => 'o-moon',
             'light' => 'o-sun',
             'system' => 'o-computer-desktop',
@@ -135,9 +179,9 @@ class Navbar extends Component
      */
     public function getThemeTooltipProperty(): string
     {
-        return match($this->appearance) {
+        return match ($this->appearance) {
             'dark' => 'Switch to Light Mode',
-            'light' => 'Switch to Dark Mode', 
+            'light' => 'Switch to Dark Mode',
             'system' => 'Using System Theme',
             default => 'Toggle Theme'
         };
@@ -148,6 +192,8 @@ class Navbar extends Component
      */
     public function render()
     {
-        return view('livewire.frontend.navbar');
+        return view('livewire.frontend.navbar', [
+            'siteSettings' => $this->siteSettings
+        ]);
     }
 }

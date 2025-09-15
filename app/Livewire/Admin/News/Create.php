@@ -9,6 +9,7 @@ use Mary\Traits\Toast;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
+use Livewire\Attributes\Layout;
 
 /**
  * Komponen Livewire untuk membuat berita baru
@@ -19,6 +20,7 @@ use Illuminate\Validation\Rules\File;
  * - Auto generate slug dari judul
  * - Validasi form
  */
+#[Layout('livewire.admin.layout')]
 class Create extends Component
 {
     use WithFileUploads, Toast;
@@ -128,7 +130,7 @@ class Create extends Component
                 'judul' => $this->judul,
                 'slug' => $this->slug,
                 'konten' => $this->konten,
-                'status' => $this->status,
+                'status' => $this->status === 'aktif' ? 'published' : 'draft',
             ];
 
             // Upload gambar jika ada

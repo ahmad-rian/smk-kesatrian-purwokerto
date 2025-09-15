@@ -28,6 +28,10 @@
             <x-mary-input wire:model="judul" label="Judul Carousel *" placeholder="Masukkan judul carousel"
                 hint="Judul yang akan ditampilkan di carousel" required />
 
+            <!-- Deskripsi Carousel -->
+            <x-mary-textarea wire:model="deskripsi" label="Deskripsi" placeholder="Masukkan deskripsi carousel (opsional)"
+                hint="Deskripsi yang akan ditampilkan di overlay carousel. Jika kosong, akan menggunakan tagline sekolah" rows="3" />
+
             <!-- Upload Gambar -->
             <div class="space-y-4">
                 <x-mary-file wire:model="gambar" label="Ganti Gambar Carousel" accept="image/*"

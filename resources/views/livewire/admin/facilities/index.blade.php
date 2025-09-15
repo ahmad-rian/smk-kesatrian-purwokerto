@@ -27,36 +27,77 @@
     </div>
 
     {{-- Filters Section --}}
-    <x-mary-card class="mb-6">
-        <div class="flex flex-wrap gap-4 items-end">
-            {{-- Filter Program Studi --}}
-            <div class="flex-1 min-w-48">
-                <x-mary-select label="Filter Program Studi" wire:model.live="study_program_filter" :options="$studyPrograms"
-                    option-value="id" option-label="nama" placeholder="Semua Program Studi" clearable />
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div class="flex flex-col lg:flex-row gap-4">
+            {{-- Left Side: Main Filters --}}
+            <div class="flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {{-- Filter Program Studi --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Program Studi</label>
+                        <x-mary-select wire:model.live="study_program_filter" :options="$studyPrograms" option-value="id"
+                            option-label="nama" placeholder="Semua Program Studi" clearable class="w-full" />
+                    </div>
+
+                    {{-- Filter Kategori --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                        <x-mary-select wire:model.live="category_filter" :options="[
+                            ['id' => 'laboratorium', 'name' => 'Laboratorium'],
+                            ['id' => 'perpustakaan', 'name' => 'Perpustakaan'],
+                            ['id' => 'olahraga', 'name' => 'Olahraga'],
+                            ['id' => 'aula', 'name' => 'Aula'],
+                            ['id' => 'kantin', 'name' => 'Kantin'],
+                            ['id' => 'asrama', 'name' => 'Asrama'],
+                            ['id' => 'parkir', 'name' => 'Parkir'],
+                        ]" option-value="id"
+                            option-label="name" placeholder="Semua Kategori" clearable class="w-full" />
+                    </div>
+
+                    {{-- Filter Status Gambar --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status Gambar</label>
+                        <x-mary-select wire:model.live="image_filter" :options="[
+                            ['id' => 'with_image', 'name' => 'Dengan Gambar'],
+                            ['id' => 'without_image', 'name' => 'Tanpa Gambar'],
+                        ]" option-value="id"
+                            option-label="name" placeholder="Semua Status" clearable class="w-full" />
+                    </div>
+                </div>
             </div>
 
-            {{-- Items per page --}}
-            <div class="w-32">
-                <x-mary-select label="Per Halaman" wire:model.live="perPage" :options="collect($perPageOptions)->map(fn($val) => ['id' => $val, 'name' => $val])" option-value="id"
-                    option-label="name" />
-            </div>
+            {{-- Right Side: Sort & Display Options --}}
+            <div class="lg:w-80">
+                <div class="grid grid-cols-2 lg:grid-cols-1 gap-4">
+                    {{-- Sort Options --}}
+                    <div class="lg:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Urutkan</label>
+                        <div class="flex gap-2">
+                            <x-mary-select wire:model.live="sortBy" :options="collect($sortableColumns)->map(
+                                fn($label, $key) => ['id' => $key, 'name' => $label],
+                            )" option-value="id"
+                                option-label="name" class="flex-1" />
+                            <x-mary-select wire:model.live="sortDirection" :options="[['id' => 'asc', 'name' => 'A-Z'], ['id' => 'desc', 'name' => 'Z-A']]" option-value="id"
+                                option-label="name" class="w-20" />
+                        </div>
+                    </div>
 
-            {{-- Sort By --}}
-            <div class="w-48">
-                <x-mary-select label="Urutkan" wire:model.live="sortBy" :options="collect($sortableColumns)->map(fn($label, $key) => ['id' => $key, 'name' => $label])" option-value="id"
-                    option-label="name" />
-            </div>
+                    {{-- Items per page --}}
+                    <div class="lg:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Per Halaman</label>
+                        <x-mary-select wire:model.live="perPage" :options="collect($perPageOptions)->map(fn($val) => ['id' => $val, 'name' => $val])" option-value="id" option-label="name"
+                            class="w-full" />
+                    </div>
+                </div>
 
-            {{-- Sort Direction --}}
-            <div class="w-32">
-                <x-mary-select label="Arah" wire:model.live="sortDirection" :options="[['id' => 'asc', 'name' => 'A-Z'], ['id' => 'desc', 'name' => 'Z-A']]" option-value="id"
-                    option-label="name" />
+                {{-- Reset Button --}}
+                <div class="mt-4">
+                    <x-mary-button label="Reset Filter" icon="o-arrow-path" wire:click="resetFilters"
+                        class="btn-outline w-full" />
+                </div>
             </div>
-
-            {{-- Reset Button --}}
-            <x-mary-button label="Reset" icon="o-arrow-path" wire:click="resetFilters" class="btn-outline" />
         </div>
-    </x-mary-card>
+    </div>
 
     {{-- Table Section --}}
     <x-mary-card>
@@ -157,6 +198,9 @@
                 {{-- Actions Column --}}
                 @scope('cell_actions', $facility)
                     <div class="flex gap-2">
+                        <x-mary-button icon="o-eye" link="{{ route('admin.facilities.show', $facility) }}"
+                            class="btn-sm btn-outline" tooltip="Lihat Detail" />
+
                         <x-mary-button icon="o-pencil-square" link="{{ route('admin.facilities.edit', $facility) }}"
                             class="btn-sm btn-outline" tooltip="Edit Fasilitas" />
 

@@ -115,8 +115,29 @@ class Welcome extends Component
             return StudyProgram::where('aktif', true)
                 ->orderBy('urutan')
                 ->orderBy('nama')
-                ->get();
+                ->get()
+                ->map(function ($program) {
+                    $program->warna = $this->getProfessionalColor($program->kode);
+                    return $program;
+                });
         });
+    }
+
+    /**
+     * Mendapatkan warna profesional berdasarkan kode program studi
+     */
+    private function getProfessionalColor($kode)
+    {
+        $colorMap = [
+            'TKJ' => '#1e40af',  // Blue 700 - Teknologi Komputer
+            'RPL' => '#059669',  // Emerald 600 - Rekayasa Perangkat Lunak
+            'MM' => '#dc2626',   // Red 600 - Multimedia
+            'OTKP' => '#7c3aed', // Violet 600 - Otomatisasi Tata Kelola Perkantoran
+            'AKL' => '#ea580c',  // Orange 600 - Akuntansi Keuangan Lembaga
+            'BDP' => '#0891b2'   // Cyan 600 - Bisnis Daring Pemasaran
+        ];
+
+        return $colorMap[$kode] ?? '#6b7280'; // Gray 500 sebagai default
     }
 
     /**

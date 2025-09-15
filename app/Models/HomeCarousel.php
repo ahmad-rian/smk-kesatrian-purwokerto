@@ -29,6 +29,7 @@ class HomeCarousel extends Model
      */
     protected $fillable = [
         'judul',
+        'deskripsi',
         'gambar',
         'aktif',
         'urutan',

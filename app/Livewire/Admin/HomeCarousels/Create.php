@@ -23,6 +23,13 @@ class Create extends Component
     public string $judul = '';
 
     /**
+     * Deskripsi carousel
+     *
+     * @var string
+     */
+    public string $deskripsi = '';
+
+    /**
      * File gambar carousel
      *
      * @var mixed
@@ -110,13 +117,14 @@ class Create extends Component
             // Simpan carousel
             HomeCarousel::create([
                 'judul' => $this->judul,
+                'deskripsi' => $this->deskripsi,
                 'gambar' => $gambarPath,
                 'aktif' => $this->aktif,
                 'urutan' => $this->urutan,
             ]);
 
             // Reset form
-            $this->reset(['judul', 'gambar', 'aktif', 'urutan']);
+            $this->reset(['judul', 'deskripsi', 'gambar', 'aktif', 'urutan']);
             $this->urutan = 1;
             $this->aktif = true;
 

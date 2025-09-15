@@ -15,8 +15,7 @@
             <div class="text-center mb-8">
                 <a href="{{ route('home') }}" class="inline-block" wire:navigate>
                     {{-- Logo Dinamis dari Database --}}
-                    <x-app-logo size="xl" :showText="true" textPosition="bottom" logoClass="shadow-lg"
-                        class="justify-center" />
+                    <x-app-logo size="xl" :showText="true" textPosition="bottom" class="justify-center" />
                 </a>
             </div>
 

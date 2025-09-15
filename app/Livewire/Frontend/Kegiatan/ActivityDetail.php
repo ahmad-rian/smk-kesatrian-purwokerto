@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Frontend;
+namespace App\Livewire\Frontend\Kegiatan;
 
 use App\Models\SchoolActivity;
 use Livewire\Component;
@@ -21,12 +21,12 @@ class ActivityDetail extends Component
      * ID kegiatan yang akan ditampilkan
      */
     public string $activityId;
-    
+
     /**
      * Data kegiatan yang sedang ditampilkan
      */
     public ?SchoolActivity $activity = null;
-    
+
     /**
      * Daftar kegiatan terkait
      */
@@ -52,7 +52,7 @@ class ActivityDetail extends Component
             now()->addHours(1),
             fn() => SchoolActivity::find($this->activityId)
         );
-        
+
         // Jika kegiatan tidak ditemukan, set activity ke null
         // Handling akan dilakukan di view
     }
@@ -63,7 +63,7 @@ class ActivityDetail extends Component
     private function loadRelatedActivities(): void
     {
         if (!$this->activity) return;
-        
+
         $this->relatedActivities = Cache::remember(
             "related_activities_{$this->activityId}",
             now()->addHours(1),
@@ -80,9 +80,12 @@ class ActivityDetail extends Component
      */
     public function render()
     {
-        return view('livewire.frontend.activity-detail');
+        return view('livewire.frontend.kegiatan.activity-detail', [
+            'activity' => $this->activity,
+            'relatedActivities' => $this->relatedActivities,
+        ]);
     }
-    
+
     /**
      * Get page title untuk SEO
      */

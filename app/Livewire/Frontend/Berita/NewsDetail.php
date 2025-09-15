@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Frontend;
+namespace App\Livewire\Frontend\Berita;
 
 use App\Models\News;
 use Livewire\Component;
@@ -28,7 +28,7 @@ class NewsDetail extends Component
     {
         $this->newsSlug = $slug;
         $this->loadNews();
-        
+
         // Only load related news if main news is found
         if ($this->news) {
             $this->loadRelatedNews();
@@ -43,7 +43,7 @@ class NewsDetail extends Component
         $this->news = News::where('slug', $this->newsSlug)
             ->where('status', 'published')
             ->first();
-            
+
         if (!$this->news) {
             abort(404, 'Berita tidak ditemukan');
         }
@@ -82,6 +82,9 @@ class NewsDetail extends Component
      */
     public function render()
     {
-        return view('livewire.frontend.news-detail');
+        return view('livewire.frontend.berita.news-detail', [
+            'news' => $this->news,
+            'relatedNews' => $this->relatedNews,
+        ]);
     }
 }

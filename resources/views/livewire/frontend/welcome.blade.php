@@ -1,11 +1,11 @@
 <div>
-    {{-- Carousel Section - Truly Centered Version --}}
+    {{-- Carousel Section - Hanya padding atas yang diperkecil --}}
     <section class="carousel-section relative overflow-hidden bg-base-100">
         @if ($carouselData && $carouselData->count() > 0)
-            {{-- Truly Centered Carousel Container --}}
-            <div class="flex justify-center py-6 lg:py-8">
-                <div class="w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-                    <div class="carousel w-full h-64 md:h-80 lg:h-96" x-data="{
+            {{-- Carousel Container dengan padding atas minimal --}}
+            <div class="flex justify-center pt-2 pb-6 lg:pt-3 lg:pb-8">
+                <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="carousel w-full h-80 md:h-[28rem] lg:h-[32rem]" x-data="{
                         currentSlide: 0,
                         totalSlides: {{ $carouselData->count() }},
                         autoPlay: true,
@@ -41,8 +41,8 @@
                         goToSlide(index) {
                             this.currentSlide = index;
                         }
-                    }" @mouseenter="stopAutoPlay()"
-                        @mouseleave="startAutoPlay()">
+                    }"
+                        @mouseenter="stopAutoPlay()" @mouseleave="startAutoPlay()">
 
                         {{-- Simple Image Container --}}
                         <div class="relative w-full h-full rounded-xl lg:rounded-2xl overflow-hidden shadow-xl">
@@ -68,6 +68,30 @@
                                             </svg>
                                         </div>
                                     @endif
+
+                                    {{-- Text Overlay - Welcome dan Deskripsi --}}
+                                    <div class="absolute inset-0 flex items-center justify-center z-20">
+                                        <div class="text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+                                            {{-- Welcome Title --}}
+                                            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 drop-shadow-2xl"
+                                                style="font-family: 'Bricolage Grotesque', sans-serif; text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
+                                                Welcome
+                                            </h1>
+                                            
+                                            {{-- Dynamic Description --}}
+                                            @if ($carousel->deskripsi)
+                                                <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 font-medium leading-relaxed drop-shadow-lg max-w-3xl mx-auto"
+                                                   style="font-family: 'Inter', sans-serif; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);">
+                                                    {{ $carousel->deskripsi }}
+                                                </p>
+                                            @else
+                                                <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 font-medium leading-relaxed drop-shadow-lg max-w-3xl mx-auto"
+                                                   style="font-family: 'Inter', sans-serif; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);">
+                                                    {{ $siteSettings->tagline ?? 'Mencetak Generasi Unggul dan Berkarakter' }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             @endforeach
 
@@ -111,8 +135,8 @@
                 </div>
             </div>
         @else
-            {{-- Simple Fallback --}}
-            <div class="flex justify-center py-6 lg:py-8">
+            {{-- Simple Fallback dengan padding atas minimal --}}
+            <div class="flex justify-center pt-2 pb-6 lg:pt-3 lg:pb-8">
                 <div class="w-full max-w-6xl px-4 sm:px-6 lg:px-8">
                     <div
                         class="hero h-64 md:h-80 lg:h-[28rem] xl:h-[32rem] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl lg:rounded-2xl overflow-hidden shadow-xl">
@@ -194,7 +218,8 @@
                                 <div class="flex justify-between items-center text-xs text-base-content/60"
                                     style="font-family: 'Inter', sans-serif;">
                                     <span>{{ $news->tanggal_publikasi->format('d M Y') }}</span>
-                                    <span class="text-primary hover:underline">Baca Selengkapnya</span>
+                                    <a href="{{ route('berita.detail', $news->slug) }}"
+                                        class="text-primary hover:underline" wire:navigate>Baca Selengkapnya</a>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +227,8 @@
                 </div>
 
                 <div class="text-center mt-8">
-                    <a href="#" class="btn btn-outline btn-primary" style="font-family: 'Inter', sans-serif;">
+                    <a href="{{ route('berita') }}" class="btn btn-outline btn-primary"
+                        style="font-family: 'Inter', sans-serif;" wire:navigate>
                         Lihat Semua Berita
                     </a>
                 </div>
@@ -305,7 +331,7 @@
 
                                 <div class="card-actions justify-end mt-4">
                                     <a href="{{ route('activity.detail', $activity->id) }}"
-                                        class="btn btn-primary btn-sm">
+                                        class="btn btn-primary btn-sm" wire:navigate>
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -320,6 +346,14 @@
                             </div>
                         </div>
                     @endforeach
+                </div>
+
+                {{-- Tombol Lihat Semua Kegiatan --}}
+                <div class="text-center mt-8">
+                    <a href="{{ route('kegiatan') }}" class="btn btn-outline btn-primary"
+                        style="font-family: 'Inter', sans-serif;" wire:navigate>
+                        Lihat Semua Kegiatan
+                    </a>
                 </div>
             @else
                 <div class="text-center py-12">
@@ -337,16 +371,16 @@
         </div>
     </section>
 
-    {{-- Program Studi Section --}}
+    {{-- Jurusan Section --}}
     <section class="py-20 bg-base-200">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
             <div class="text-center mb-16">
                 <h2 class="text-4xl md:text-5xl font-bold mb-6"
                     style="font-family: 'Bricolage Grotesque', sans-serif;">
-                    Program Studi
+                    Jurusan
                 </h2>
                 <p class="text-xl text-base-content/70 max-w-3xl mx-auto" style="font-family: 'Inter', sans-serif;">
-                    Pilihan program studi yang sesuai dengan minat dan bakat untuk masa depan yang cerah.
+                    Pilihan jurusan yang sesuai dengan minat dan bakat untuk masa depan yang cerah.
                 </p>
             </div>
 
@@ -373,13 +407,8 @@
                                     </div>
                                 @endif
 
-                                {{-- Kode Program --}}
-                                @if ($program->kode)
-                                    <div class="badge badge-outline mb-2">{{ $program->kode }}</div>
-                                @endif
-
                                 {{-- Nama Program --}}
-                                <h3 class="card-title justify-center mb-3"
+                                <h3 class="card-title justify-center mb-4 text-lg"
                                     style="font-family: 'Bricolage Grotesque', sans-serif;">
                                     {{ $program->nama }}
                                 </h3>
@@ -402,6 +431,25 @@
                         </div>
                     @endforeach
                 </div>
+
+                {{-- Tombol Lihat Semua Jurusan --}}
+                <div class="text-center mt-12">
+                    <a href="{{ route('jurusan') }}"
+                        class="btn btn-outline btn-primary btn-lg group hover:scale-105 transition-all duration-300"
+                        style="font-family: 'Inter', sans-serif;" wire:navigate>
+                        <svg class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Lihat Semua Jurusan
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </a>
+                </div>
             @else
                 <div class="text-center py-12">
                     <svg class="w-24 h-24 mx-auto text-base-content/30 mb-4" fill="none" stroke="currentColor"
@@ -411,8 +459,27 @@
                         </path>
                     </svg>
                     <p class="text-base-content/60 text-lg" style="font-family: 'Inter', sans-serif;">
-                        Program studi akan segera tersedia.
+                        Jurusan akan segera tersedia.
                     </p>
+
+                    {{-- Tombol Lihat Semua Jurusan untuk kondisi kosong --}}
+                    <div class="mt-6">
+                        <a href="{{ route('jurusan') }}"
+                            class="btn btn-primary btn-lg group hover:scale-105 transition-all duration-300"
+                            style="font-family: 'Inter', sans-serif;" wire:navigate>
+                            <svg class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Lihat Semua Jurusan
+                            <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             @endif
         </div>

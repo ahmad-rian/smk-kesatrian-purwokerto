@@ -43,16 +43,16 @@
                             :active="request()->routeIs('admin.study-programs.*')" wire:navigate class="spa-nav-item" />
 
                         <!-- Kegiatan Sekolah -->
-        <x-mary-menu-item title="Kegiatan Sekolah" icon="o-calendar-days" :link="route('admin.school-activities.index')"
-            :active="request()->routeIs('admin.school-activities.*')" wire:navigate class="spa-nav-item" />
+                        <x-mary-menu-item title="Kegiatan Sekolah" icon="o-calendar-days" :link="route('admin.school-activities.index')"
+                            :active="request()->routeIs('admin.school-activities.*')" wire:navigate class="spa-nav-item" />
 
-        <!-- Berita -->
-        <x-mary-menu-item title="Berita" icon="o-newspaper" :link="route('admin.news.index')"
-            :active="request()->routeIs('admin.news.*')" wire:navigate class="spa-nav-item" />
+                        <!-- Berita -->
+                        <x-mary-menu-item title="Berita" icon="o-newspaper" :link="route('admin.news.index')" :active="request()->routeIs('admin.news.*')"
+                            wire:navigate class="spa-nav-item" />
 
-        <!-- Fasilitas -->
-        <x-mary-menu-item title="Fasilitas" icon="o-building-office-2" :link="route('admin.facilities.index')"
-            :active="request()->routeIs('admin.facilities.*')" wire:navigate class="spa-nav-item" />
+                        <!-- Fasilitas -->
+                        <x-mary-menu-item title="Fasilitas" icon="o-building-office-2" :link="route('admin.facilities.index')"
+                            :active="request()->routeIs('admin.facilities.*')" wire:navigate class="spa-nav-item" />
 
                         <!-- Gallery -->
                         <x-mary-menu-item title="Gallery" icon="o-photo" :link="route('admin.galleries.index')" :active="request()->routeIs('admin.galleries.*')"
@@ -64,6 +64,15 @@
 
                         <!-- Contact Messages -->
                         <x-mary-menu-item title="Pesan Kontak" icon="o-envelope" :link="route('admin.contact-messages.index')" :active="request()->routeIs('admin.contact-messages.*')"
+                            wire:navigate class="spa-nav-item" />
+                    </div>
+
+                    <!-- System Management Section -->
+                    <div class="mt-4">
+                        <x-mary-menu-title title="Manajemen Sistem" />
+
+                        <!-- Users Management -->
+                        <x-mary-menu-item title="Manajemen User" icon="o-users" :link="route('admin.users.index')" :active="request()->routeIs('admin.users.*')"
                             wire:navigate class="spa-nav-item" />
                     </div>
                 </x-mary-menu>

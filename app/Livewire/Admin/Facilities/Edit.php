@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Facilities;
 
 use App\Models\Facility;
+use App\Models\FacilityImage;
 use App\Models\StudyProgram;
 use App\Services\ImageConversionService;
 use Illuminate\Http\UploadedFile;
@@ -43,12 +44,12 @@ class Edit extends Component
     public ?string $kategori = null;
     public string $deskripsi = '';
     public string $study_program_id = '';
-    public ?UploadedFile $gambar = null;
+    public $images = [];
 
     /**
      * Gambar lama untuk preview
      */
-    public ?string $currentImage = null;
+    public array $currentImages = [];
 
     /**
      * Service untuk konversi gambar
@@ -81,7 +82,26 @@ class Edit extends Component
         $this->kategori = $this->facility->kategori;
         $this->deskripsi = $this->facility->deskripsi;
         $this->study_program_id = $this->facility->study_program_id;
-        $this->currentImage = $this->facility->gambar;
+
+        // Load existing images
+        $this->currentImages = $this->facility->images()->orderBy('urutan')->get()->map(function ($image) {
+            return [
+                'id' => $image->id,
+                'url' => Storage::url($image->gambar),
+                'alt_text' => $image->alt_text,
+                'is_primary' => $image->is_primary
+            ];
+        })->toArray();
+
+        // Fallback ke gambar lama jika tidak ada images
+        if (empty($this->currentImages) && $this->facility->gambar) {
+            $this->currentImages = [[
+                'id' => null,
+                'url' => Storage::url($this->facility->gambar),
+                'alt_text' => $this->facility->nama,
+                'is_primary' => true
+            ]];
+        }
     }
 
     /**
@@ -113,11 +133,16 @@ class Edit extends Component
                 'required',
                 'exists:study_programs,id'
             ],
-            'gambar' => [
+            'images.*' => [
                 'nullable',
                 'image',
                 'mimes:jpeg,jpg,png,gif,webp',
-                'max:2048' // 2MB
+                'max:2048' // 2MB per file
+            ],
+            'images' => [
+                'nullable',
+                'array',
+                'max:5' // Maksimal 5 gambar
             ]
         ];
     }
@@ -136,7 +161,7 @@ class Edit extends Component
     public function updatedNama()
     {
         $this->validateOnly('nama');
-        
+
         if ($this->nama) {
             $this->nama = trim($this->nama);
         }
@@ -145,14 +170,25 @@ class Edit extends Component
     /**
      * Validasi khusus untuk gambar
      */
-    public function updatedGambar()
+    public function updatedImages()
     {
-        $this->validateOnly('gambar');
-        
-        if ($this->gambar) {
-            if ($this->gambar->getSize() > 2048 * 1024) {
-                $this->addError('gambar', 'Ukuran file tidak boleh lebih dari 2MB.');
-                $this->gambar = null;
+        $this->validateOnly('images');
+
+        if ($this->images) {
+            // Validasi jumlah total gambar (existing + new)
+            $totalImages = count($this->currentImages) + count(array_filter($this->images));
+            if ($totalImages > 5) {
+                $this->addError('images', 'Total gambar tidak boleh lebih dari 5.');
+                $this->images = [];
+                return;
+            }
+
+            // Validasi setiap file
+            foreach ($this->images as $index => $image) {
+                if ($image && $image->getSize() > 2048 * 1024) {
+                    $this->addError("images.{$index}", 'Ukuran file tidak boleh lebih dari 2MB.');
+                    unset($this->images[$index]);
+                }
             }
         }
     }
@@ -173,9 +209,10 @@ class Edit extends Component
             'deskripsi.max' => 'Deskripsi maksimal 1000 karakter',
             'study_program_id.required' => 'Program studi wajib dipilih',
             'study_program_id.exists' => 'Program studi tidak valid',
-            'gambar.image' => 'File harus berupa gambar',
-            'gambar.mimes' => 'Format gambar harus: jpeg, jpg, png, gif, atau webp',
-            'gambar.max' => 'Ukuran gambar maksimal 2MB'
+            'images.*.image' => 'File harus berupa gambar',
+            'images.*.mimes' => 'Format gambar harus: jpeg, jpg, png, gif, atau webp',
+            'images.*.max' => 'Ukuran gambar maksimal 2MB',
+            'images.max' => 'Maksimal 5 gambar yang dapat diunggah'
         ];
     }
 
@@ -189,7 +226,7 @@ class Edit extends Component
             'kategori' => 'kategori',
             'deskripsi' => 'deskripsi',
             'study_program_id' => 'program studi',
-            'gambar' => 'gambar fasilitas'
+            'images' => 'gambar fasilitas'
         ];
     }
 
@@ -218,33 +255,18 @@ class Edit extends Component
             'study_program_id' => $this->study_program_id,
         ];
 
-        // Handle gambar upload jika ada gambar baru
-        if ($this->gambar) {
+        // Handle multiple images upload jika ada gambar baru
+        if (!empty($this->images) && count(array_filter($this->images)) > 0) {
             try {
-                // Hapus gambar lama jika ada
-                if ($this->facility->gambar) {
-                    $this->imageService->deleteOldImage($this->facility->gambar);
-                }
-                
-                // Upload gambar baru dengan error handling
-                $data['gambar'] = $this->imageService->convertToWebP(
-                    $this->gambar,
-                    'facilities/images'
-                );
-                
-                // Validasi bahwa file berhasil disimpan
-                if (!$data['gambar'] || !Storage::exists($data['gambar'])) {
-                    throw new \Exception('Gagal menyimpan file gambar.');
-                }
-                
+                // Upload gambar baru
+                $this->uploadNewImages();
             } catch (\Exception $e) {
-                Log::error('Error uploading facility image', [
+                Log::error('Error uploading facility images', [
                     'facility_id' => $this->facility->id,
                     'error' => $e->getMessage(),
-                    'file_size' => $this->gambar->getSize(),
-                    'file_type' => $this->gambar->getMimeType()
+                    'user_id' => Auth::id()
                 ]);
-                
+
                 throw new \Exception('Gagal mengupload gambar: ' . $e->getMessage());
             }
         }
@@ -260,17 +282,17 @@ class Edit extends Component
         try {
             // Validasi input
             $validatedData = $this->validateInput();
-            
+
             // Validasi business rules tambahan
             $this->validateBusinessRules();
-            
+
             // Persiapkan data untuk update
             $data = $this->prepareDataForUpdate($validatedData);
-            
+
             // Update ke database dengan transaction
             DB::transaction(function () use ($data) {
                 $this->facility->update($data);
-                
+
                 // Log untuk debugging
                 Log::info('Fasilitas berhasil diupdate', [
                     'facility_id' => $this->facility->id,
@@ -279,17 +301,16 @@ class Edit extends Component
                     'updated_at' => now()
                 ]);
             });
-            
+
             // Refresh data dan tampilkan pesan sukses
             $this->facility->refresh();
             $this->loadCurrentData();
-            $this->gambar = null; // Reset file input
-            
+            $this->images = []; // Reset file input
+
             $this->success('Fasilitas "' . $this->facility->nama . '" berhasil diperbarui!');
-            
+
             // Redirect ke halaman index
             $this->redirect(route('admin.facilities.index'), navigate: true);
-            
         } catch (ValidationException $e) {
             // Error sudah ditangani di validateInput()
             Log::warning('Validation error saat update fasilitas', [
@@ -311,7 +332,7 @@ class Edit extends Component
                     'kategori' => $this->kategori
                 ]
             ]);
-            
+
             $this->error('Gagal memperbarui fasilitas. Silakan periksa kembali data dan coba lagi.');
         }
     }
@@ -333,7 +354,7 @@ class Edit extends Component
             ->where('study_program_id', $this->study_program_id)
             ->where('id', '!=', $this->facility->id)
             ->first();
-        
+
         if ($existingFacility) {
             $this->addError('nama', 'Fasilitas dengan nama ini sudah ada di program studi yang sama.');
             throw new ValidationException(validator([], []));
@@ -341,40 +362,109 @@ class Edit extends Component
     }
 
     /**
-     * Hapus gambar fasilitas
+     * Upload gambar baru
      */
-    public function removeImage(): void
+    private function uploadNewImages(): void
+    {
+        $uploadedImages = [];
+        $currentOrder = $this->facility->images()->max('urutan') ?? 0;
+
+        foreach (array_filter($this->images) as $image) {
+            $imagePath = $this->imageService->convertToWebP(
+                $image,
+                'facilities/images'
+            );
+
+            if ($imagePath && Storage::exists($imagePath)) {
+                $uploadedImages[] = [
+                    'facility_id' => $this->facility->id,
+                    'gambar' => $imagePath,
+                    'alt_text' => $this->facility->nama,
+                    'urutan' => ++$currentOrder,
+                    'is_primary' => count($this->currentImages) === 0 && count($uploadedImages) === 0,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
+        }
+
+        if (!empty($uploadedImages)) {
+            FacilityImage::insert($uploadedImages);
+        }
+    }
+
+    /**
+     * Hapus gambar fasilitas berdasarkan ID
+     */
+    public function removeImage($imageId): void
     {
         try {
-            if ($this->facility->gambar) {
-                DB::transaction(function () {
+            $image = FacilityImage::where('facility_id', $this->facility->id)
+                ->where('id', $imageId)
+                ->first();
+
+            if ($image) {
+                DB::transaction(function () use ($image) {
                     // Hapus file gambar
-                    $this->imageService->deleteOldImage($this->facility->gambar);
-                    
-                    // Update database
-                    $this->facility->update(['gambar' => null]);
-                    
+                    $this->imageService->deleteOldImage($image->gambar);
+
+                    // Hapus dari database
+                    $image->delete();
+
                     // Log aktivitas
                     Log::info('Gambar fasilitas dihapus', [
                         'facility_id' => $this->facility->id,
-                        'facility_name' => $this->facility->nama,
+                        'image_id' => $image->id,
                         'deleted_by' => Auth::id()
                     ]);
                 });
-                
-                $this->currentImage = null;
+
+                // Reload current images
+                $this->loadCurrentData();
                 $this->success('Gambar berhasil dihapus');
             } else {
-                $this->warning('Tidak ada gambar untuk dihapus');
+                $this->warning('Gambar tidak ditemukan');
             }
         } catch (\Exception $e) {
             Log::error('Error removing facility image', [
                 'facility_id' => $this->facility->id,
+                'image_id' => $imageId,
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id()
             ]);
-            
+
             $this->error('Gagal menghapus gambar. Silakan coba lagi.');
+        }
+    }
+
+    /**
+     * Set gambar sebagai primary
+     */
+    public function setPrimaryImage($imageId): void
+    {
+        try {
+            DB::transaction(function () use ($imageId) {
+                // Reset semua gambar menjadi bukan primary
+                FacilityImage::where('facility_id', $this->facility->id)
+                    ->update(['is_primary' => false]);
+
+                // Set gambar terpilih sebagai primary
+                FacilityImage::where('facility_id', $this->facility->id)
+                    ->where('id', $imageId)
+                    ->update(['is_primary' => true]);
+            });
+
+            $this->loadCurrentData();
+            $this->success('Gambar utama berhasil diubah');
+        } catch (\Exception $e) {
+            Log::error('Error setting primary image', [
+                'facility_id' => $this->facility->id,
+                'image_id' => $imageId,
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+
+            $this->error('Gagal mengubah gambar utama.');
         }
     }
 
@@ -384,47 +474,51 @@ class Edit extends Component
     public function cancel(): void
     {
         // Reset form jika ada perubahan
-        if ($this->gambar) {
-            $this->gambar = null;
+        if ($this->images) {
+            $this->images = [];
         }
-        
+
         // Log aktivitas cancel
         Log::info('Edit fasilitas dibatalkan', [
             'facility_id' => $this->facility->id,
             'user_id' => Auth::id()
         ]);
-        
+
         $this->redirect(route('admin.facilities.index'), navigate: true);
     }
 
     /**
      * Method untuk preview gambar baru
      */
-    public function getImagePreviewProperty(): ?string
+    public function getImagePreviewsProperty(): array
     {
-        if (!$this->gambar) {
-            return null;
-        }
+        $previews = [];
 
-        try {
-            // Pastikan file adalah instance UploadedFile yang valid
-            if ($this->gambar instanceof UploadedFile) {
-                return $this->gambar->temporaryUrl();
+        if (!empty($this->images)) {
+            foreach ($this->images as $index => $image) {
+                if ($image) {
+                    try {
+                        if ($image instanceof UploadedFile) {
+                            $previews[$index] = $image->temporaryUrl();
+                        }
+                    } catch (\Exception $e) {
+                        Log::warning('Failed to generate temporary URL for image preview: ' . $e->getMessage());
+                        $previews[$index] = null;
+                    }
+                }
             }
-        } catch (\Exception $e) {
-            // Jika temporaryUrl gagal, return null untuk fallback ke placeholder
-            Log::warning('Failed to generate temporary URL for image preview: ' . $e->getMessage());
         }
 
-        return null;
+        return $previews;
     }
 
     /**
-     * Get URL gambar saat ini
+     * Get primary image URL
      */
-    public function getCurrentImageUrlProperty(): ?string
+    public function getPrimaryImageUrlProperty(): ?string
     {
-        return $this->currentImage ? Storage::url($this->currentImage) : null;
+        $primaryImage = collect($this->currentImages)->firstWhere('is_primary', true);
+        return $primaryImage ? $primaryImage['url'] : (isset($this->currentImages[0]) ? $this->currentImages[0]['url'] : null);
     }
 
     /**

@@ -1,8 +1,3 @@
-@extends('layouts.app')
-
-@section('title', 'Manajemen Berita')
-
-@section('content')
 <div class="container mx-auto px-4 py-8">
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
@@ -110,8 +105,8 @@
                                 <!-- Status -->
                                 <td>
                                     <button wire:click="toggleStatus({{ $news->id }})" 
-                                            class="badge {{ $news->status === 'aktif' ? 'badge-success' : 'badge-error' }} cursor-pointer hover:opacity-80">
-                                        {{ ucfirst($news->status) }}
+                                            class="badge {{ $news->status === 'published' ? 'badge-success' : 'badge-error' }} cursor-pointer hover:opacity-80">
+                                        {{ $news->status === 'published' ? 'Aktif' : 'Draft' }}
                                     </button>
                                 </td>
 
@@ -175,21 +170,19 @@
             </div>
         @endif
     </div>
-</div>
-
-<!-- Delete Confirmation Modal -->
-@if($showDeleteModal && $newsToDelete)
-    <div class="modal modal-open">
-        <div class="modal-box">
-            <h3 class="font-bold text-lg mb-4">Konfirmasi Hapus</h3>
-            <p class="mb-4">Apakah Anda yakin ingin menghapus berita "{{ $newsToDelete->judul }}"?</p>
-            <p class="text-warning text-sm mb-6">Tindakan ini tidak dapat dibatalkan.</p>
-            
-            <div class="modal-action">
-                <button wire:click="cancelDelete" class="btn btn-ghost">Batal</button>
-                <button wire:click="deleteNews" class="btn btn-error">Hapus</button>
+    <!-- Delete Confirmation Modal -->
+    @if($showDeleteModal && $newsToDelete)
+        <div class="modal modal-open">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg mb-4">Konfirmasi Hapus</h3>
+                <p class="mb-4">Apakah Anda yakin ingin menghapus berita "{{ $newsToDelete->judul }}"?</p>
+                <p class="text-warning text-sm mb-6">Tindakan ini tidak dapat dibatalkan.</p>
+                
+                <div class="modal-action">
+                    <button wire:click="cancelDelete" class="btn btn-ghost">Batal</button>
+                    <button wire:click="deleteNews" class="btn btn-error">Hapus</button>
+                </div>
             </div>
         </div>
-    </div>
-@endif
-@endsection
+    @endif
+</div>

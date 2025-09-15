@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
@@ -97,6 +98,23 @@ class Facility extends Model
     }
 
     /**
+     * Relasi dengan FacilityImage
+     * Fasilitas bisa memiliki multiple gambar (1-5)
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(FacilityImage::class)->ordered();
+    }
+
+    /**
+     * Relasi untuk gambar utama
+     */
+    public function primaryImage(): HasMany
+    {
+        return $this->hasMany(FacilityImage::class)->primary();
+    }
+
+    /**
      * Scope untuk fasilitas aktif
      */
     public function scopeActive($query)
@@ -131,11 +149,11 @@ class Facility extends Model
         if ($search) {
             return $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('kategori', 'like', "%{$search}%")
-                  ->orWhere('deskripsi', 'like', "%{$search}%")
-                  ->orWhereHas('studyProgram', function ($sq) use ($search) {
-                      $sq->where('nama', 'like', "%{$search}%");
-                  });
+                    ->orWhere('kategori', 'like', "%{$search}%")
+                    ->orWhere('deskripsi', 'like', "%{$search}%")
+                    ->orWhereHas('studyProgram', function ($sq) use ($search) {
+                        $sq->where('nama', 'like', "%{$search}%");
+                    });
             });
         }
         return $query;
@@ -181,12 +199,12 @@ class Facility extends Model
     public function uploadImage(UploadedFile $file): string
     {
         $imageService = app(ImageConversionService::class);
-        
+
         // Hapus gambar lama jika ada
         if ($this->gambar) {
             $imageService->deleteOldImage($this->gambar);
         }
-        
+
         // Konversi dan simpan gambar baru
         return $imageService->convertToWebP($file, 'facilities/images');
     }
@@ -199,14 +217,14 @@ class Facility extends Model
         if (!$this->gambar) {
             return true;
         }
-        
+
         $imageService = app(ImageConversionService::class);
         $deleted = $imageService->deleteOldImage($this->gambar);
-        
+
         if ($deleted) {
             $this->update(['gambar' => null]);
         }
-        
+
         return $deleted;
     }
 
@@ -236,6 +254,67 @@ class Facility extends Model
     {
         $categories = static::getAvailableCategories();
         return $categories[$this->kategori] ?? $this->kategori ?? 'Tidak Dikategorikan';
+    }
+
+    /**
+     * Method untuk mendapatkan gambar utama
+     * Fallback ke kolom gambar lama jika tidak ada gambar baru
+     */
+    public function getPrimaryImageUrl(): ?string
+    {
+        // Cek gambar baru dari relasi
+        $primaryImage = $this->images()->primary()->first();
+        if ($primaryImage) {
+            return $primaryImage->gambar_url;
+        }
+
+        // Fallback ke kolom gambar lama
+        return $this->gambar_url;
+    }
+
+    /**
+     * Method untuk mendapatkan semua URL gambar
+     */
+    public function getAllImageUrls(): array
+    {
+        $urls = [];
+
+        // Ambil dari relasi images
+        foreach ($this->images as $image) {
+            $urls[] = $image->gambar_url;
+        }
+
+        // Jika tidak ada gambar baru, fallback ke gambar lama
+        if (empty($urls) && $this->gambar_url) {
+            $urls[] = $this->gambar_url;
+        }
+
+        return array_filter($urls);
+    }
+
+    /**
+     * Method untuk upload multiple images
+     */
+    public function uploadImages(array $files): array
+    {
+        $uploadedImages = [];
+
+        foreach ($files as $index => $file) {
+            if ($file instanceof UploadedFile) {
+                $facilityImage = new FacilityImage([
+                    'facility_id' => $this->id,
+                    'urutan' => $index + 1,
+                    'is_primary' => $index === 0, // Gambar pertama sebagai primary
+                ]);
+
+                $facilityImage->gambar = $file;
+                $facilityImage->save();
+
+                $uploadedImages[] = $facilityImage;
+            }
+        }
+
+        return $uploadedImages;
     }
 
     /**

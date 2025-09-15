@@ -29,14 +29,7 @@ new class extends Component {
         $validated = $this->validate([
             'nama' => ['required', 'string', 'max:255'],
 
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($user->id)
-            ],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
         ]);
 
         $user->fill($validated);
@@ -73,49 +66,54 @@ new class extends Component {
     <!-- Profile Form -->
     <x-mary-card>
         <x-slot:title class="title text-xl font-semibold">{{ __('Profile Information') }}</x-slot:title>
-                
-                <form wire:submit="updateProfileInformation" class="space-y-6">
-                    <x-mary-input wire:model="nama" :label="__('Name')" type="text" required autofocus autocomplete="name">
-                        <x-slot:prepend>
-                            <x-mary-icon name="user" class="w-4 h-4" />
-                        </x-slot:prepend>
-                    </x-mary-input>
 
-                    <div>
-                        <x-mary-input wire:model="email" :label="__('Email')" type="email" required autocomplete="email">
-                            <x-slot:prepend>
-                                <x-mary-icon name="envelope" class="w-4 h-4" />
-                            </x-slot:prepend>
-                        </x-mary-input>
+        <form wire:submit="updateProfileInformation" class="space-y-6">
+            <x-mary-input wire:model="nama" :label="__('Name')" type="text" required autofocus autocomplete="name">
+                <x-slot:prepend>
+                    <div class="flex items-center justify-center w-10 h-10 text-gray-500">
+                        <x-mary-icon name="o-user" class="w-5 h-5" />
+                    </div>
+                </x-slot:prepend>
+            </x-mary-input>
 
-                        @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&! auth()->user()->hasVerifiedEmail())
-                            <div class="mt-4">
-                                <x-mary-alert icon="o-exclamation-triangle" class="alert-warning">
-                                    <x-slot:title>{{ __('Email Unverified') }}</x-slot:title>
-                                    <x-mary-button wire:click.prevent="resendVerificationNotification" class="btn-sm btn-ghost" spinner>
-                                        {{ __('Click here to re-send the verification email.') }}
-                                    </x-mary-button>
-                                </x-mary-alert>
+            <div>
+                <x-mary-input wire:model="email" :label="__('Email')" type="email" required autocomplete="email">
+                    <x-slot:prepend>
+                        <div class="flex items-center justify-center w-10 h-10 text-gray-500">
+                            <x-mary-icon name="o-envelope" class="w-5 h-5" />
+                        </div>
+                    </x-slot:prepend>
+                </x-mary-input>
 
-                                @if (session('status') === 'verification-link-sent')
-                                    <x-mary-alert icon="o-check-circle" class="alert-success mt-2">
-                                        {{ __('A new verification link has been sent to your email address.') }}
-                                    </x-mary-alert>
-                                @endif
-                            </div>
+                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
+                    <div class="mt-4">
+                        <x-mary-alert icon="o-exclamation-triangle" class="alert-warning">
+                            <x-slot:title>{{ __('Email Unverified') }}</x-slot:title>
+                            <x-mary-button wire:click.prevent="resendVerificationNotification" class="btn-sm btn-ghost"
+                                spinner>
+                                {{ __('Click here to re-send the verification email.') }}
+                            </x-mary-button>
+                        </x-mary-alert>
+
+                        @if (session('status') === 'verification-link-sent')
+                            <x-mary-alert icon="o-check-circle" class="alert-success mt-2">
+                                {{ __('A new verification link has been sent to your email address.') }}
+                            </x-mary-alert>
                         @endif
                     </div>
+                @endif
+            </div>
 
-                    <div class="flex items-center gap-4">
-                        <x-mary-button type="submit" class="btn-primary" spinner="updateProfileInformation">
-                            {{ __('Save Changes') }}
-                        </x-mary-button>
+            <div class="flex items-center gap-4">
+                <x-mary-button type="submit" class="btn-primary" spinner="updateProfileInformation">
+                    {{ __('Save Changes') }}
+                </x-mary-button>
 
-                        <x-action-message class="text-success" on="profile-updated">
-                            {{ __('Saved.') }}
-                        </x-action-message>
-                    </div>
-                </form>
+                <x-action-message class="text-success" on="profile-updated">
+                    {{ __('Saved.') }}
+                </x-action-message>
+            </div>
+        </form>
     </x-mary-card>
 
     <!-- Delete Account Section -->

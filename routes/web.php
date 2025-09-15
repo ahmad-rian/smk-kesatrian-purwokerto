@@ -26,7 +26,11 @@ use App\Livewire\Admin\HomeCarousels\Create as HomeCarouselsCreate;
 use App\Livewire\Admin\HomeCarousels\Edit as HomeCarouselsEdit;
 use App\Livewire\Admin\ContactMessages\Index as ContactMessagesIndex;
 use App\Livewire\Admin\ContactMessages\Show as ContactMessagesShow;
+use App\Livewire\Admin\Users\Index as UsersIndex;
 use App\Http\Controllers\ActivityController;
+use App\Livewire\Frontend\Jurusan\Index as JurusanIndex;
+use App\Livewire\Frontend\Fasilitas\Index as FasilitasIndex;
+use App\Livewire\Frontend\Fasilitas\Detail as FasilitasDetail;
 
 // Home route - menggunakan Livewire Welcome component
 Route::get('/', \App\Livewire\Frontend\Welcome::class)->name('home');
@@ -48,6 +52,30 @@ Route::get('/berita', [\App\Http\Controllers\NewsController::class, 'index'])
 Route::get('/berita/{slug}', [\App\Http\Controllers\NewsController::class, 'show'])
     ->name('berita.detail');
 
+// Halaman profil sekolah
+Route::get('/profil', \App\Livewire\Frontend\SchoolProfile\Index::class)
+    ->name('profil');
+
+// Halaman kontak
+Route::get('/kontak', \App\Livewire\Frontend\Contact\Index::class)
+    ->name('kontak');
+
+// Route alias untuk kompatibilitas
+Route::get('/contact', \App\Livewire\Frontend\Contact\Index::class)
+    ->name('frontend.contact');
+
+// Halaman jurusan
+Route::get('/jurusan', JurusanIndex::class)
+    ->name('jurusan');
+
+// Halaman fasilitas
+Route::get('/fasilitas', FasilitasIndex::class)
+    ->name('fasilitas.index');
+
+// Detail fasilitas
+Route::get('/fasilitas/{slug}', FasilitasDetail::class)
+    ->name('fasilitas.detail');
+
 // Dashboard route alias untuk kompatibilitas tes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)
@@ -64,7 +92,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Admin routes dengan SPA support
-Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(function () {
     // Dashboard route
     Route::get('/dashboard', Dashboard::class)
         ->name('admin.dashboard');
@@ -118,6 +146,8 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
         ->name('admin.facilities.index');
     Route::get('/facilities/create', FacilitiesCreate::class)
         ->name('admin.facilities.create');
+    Route::get('/facilities/{facility}', \App\Livewire\Admin\Facilities\Show::class)
+        ->name('admin.facilities.show');
     Route::get('/facilities/{facility}/edit', FacilitiesEdit::class)
         ->name('admin.facilities.edit');
 
@@ -144,6 +174,10 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
         ->name('admin.contact-messages.show');
     Route::get('/galleries/{gallery}/images', GalleryImagesIndex::class)
         ->name('admin.gallery-images.index');
+
+    // Users Management
+    Route::get('/users', UsersIndex::class)
+        ->name('admin.users.index');
 });
 
 require __DIR__ . '/auth.php';

@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Layout;
 
 /**
  * Komponen Livewire untuk manajemen berita di admin
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
  * - Delete berita
  * - Status toggle (aktif/nonaktif)
  */
+#[Layout('livewire.admin.layout')]
 class Index extends Component
 {
     use WithPagination, Toast;
@@ -107,12 +109,11 @@ class Index extends Component
     public function toggleStatus(News $news): void
     {
         try {
-            $news->update([
-                'status' => $news->status === 'aktif' ? 'nonaktif' : 'aktif'
-            ]);
+            $newStatus = $news->status === 'published' ? 'draft' : 'published';
+            $news->update(['status' => $newStatus]);
             
-            $status = $news->status === 'aktif' ? 'diaktifkan' : 'dinonaktifkan';
-            $this->success("Berita berhasil {$status}!");
+            $statusText = $newStatus === 'published' ? 'diaktifkan' : 'dinonaktifkan';
+            $this->success("Berita berhasil {$statusText}!");
             
         } catch (\Exception $e) {
             $this->error('Gagal mengubah status: ' . $e->getMessage());
@@ -130,7 +131,8 @@ class Index extends Component
                       ->orWhere('konten', 'like', '%' . $this->search . '%');
             })
             ->when($this->statusFilter !== 'all', function ($query) {
-                $query->where('status', $this->statusFilter);
+                $dbStatus = $this->statusFilter === 'aktif' ? 'published' : 'draft';
+                $query->where('status', $dbStatus);
             })
             ->orderBy('created_at', 'desc');
 

@@ -5,7 +5,7 @@
             Detail Pesan Kontak
         </h1>
         <a href="{{ route('admin.contact-messages.index') }}" wire:navigate class="btn btn-outline">
-            <x-mary-icon name="arrow-left" class="w-4 h-4 mr-2" />
+            <x-mary-icon name="o-arrow-left" class="w-4 h-4 mr-2" />
             Kembali
         </a>
     </div>
@@ -14,7 +14,7 @@
     @if (session('message'))
         <x-mary-alert class="mb-4">
             <x-slot:icon>
-                <x-mary-icon name="check-circle" class="w-5 h-5" />
+                <x-mary-icon name="o-check-circle" class="w-5 h-5" />
             </x-slot:icon>
             {{ session('message') }}
         </x-mary-alert>
@@ -29,12 +29,14 @@
                     <div>
                         <span class="text-sm font-medium text-gray-500 dark:text-gray-400 block mb-1">Status:</span>
                         @if ($message->isUnread())
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
                                 <span class="w-2 h-2 mr-1 bg-blue-500 rounded-full"></span>
                                 Belum Dibaca
                             </span>
                         @else
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                 <span class="w-2 h-2 mr-1 bg-gray-500 rounded-full"></span>
                                 Sudah Dibaca
                             </span>
@@ -51,7 +53,8 @@
                     <div>
                         <span class="text-sm font-medium text-gray-500 dark:text-gray-400 block mb-1">Email:</span>
                         <p class="text-base text-gray-900 dark:text-white">
-                            <a href="mailto:{{ $message->email }}" class="text-blue-600 hover:underline dark:text-blue-400">
+                            <a href="mailto:{{ $message->email }}"
+                                class="text-blue-600 hover:underline dark:text-blue-400">
                                 {{ $message->email }}
                             </a>
                         </p>
@@ -60,9 +63,11 @@
                     <!-- Telepon -->
                     @if ($message->telepon)
                         <div>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400 block mb-1">Telepon:</span>
+                            <span
+                                class="text-sm font-medium text-gray-500 dark:text-gray-400 block mb-1">Telepon:</span>
                             <p class="text-base text-gray-900 dark:text-white">
-                                <a href="tel:{{ $message->telepon }}" class="text-blue-600 hover:underline dark:text-blue-400">
+                                <a href="tel:{{ $message->telepon }}"
+                                    class="text-blue-600 hover:underline dark:text-blue-400">
                                     {{ $message->telepon }}
                                 </a>
                             </p>
@@ -72,19 +77,21 @@
                     <!-- Tanggal -->
                     <div>
                         <span class="text-sm font-medium text-gray-500 dark:text-gray-400 block mb-1">Tanggal:</span>
-                        <p class="text-base text-gray-900 dark:text-white">{{ $message->created_at->format('d M Y H:i') }}</p>
+                        <p class="text-base text-gray-900 dark:text-white">
+                            {{ $message->created_at->format('d M Y H:i') }}</p>
                     </div>
 
                     <!-- Aksi -->
                     <div class="flex space-x-2 pt-4">
                         @if ($message->isRead())
                             <button wire:click="markAsUnread" class="btn btn-sm btn-secondary">
-                                <x-mary-icon name="envelope" class="w-4 h-4 mr-2" />
+                                <x-mary-icon name="o-envelope" class="w-4 h-4 mr-2" />
                                 Tandai Belum Dibaca
                             </button>
                         @endif
-                        <button wire:click="delete" wire:confirm="Apakah Anda yakin ingin menghapus pesan ini?" class="btn btn-sm btn-error">
-                            <x-mary-icon name="trash" class="w-4 h-4 mr-2" />
+                        <button wire:click="delete" wire:confirm="Apakah Anda yakin ingin menghapus pesan ini?"
+                            class="btn btn-sm btn-error">
+                            <x-mary-icon name="o-trash" class="w-4 h-4 mr-2" />
                             Hapus
                         </button>
                     </div>

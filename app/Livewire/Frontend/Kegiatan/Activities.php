@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Frontend;
+namespace App\Livewire\Frontend\Kegiatan;
 
 use App\Models\SchoolActivity;
 use Livewire\Component;
@@ -76,7 +76,7 @@ class Activities extends Component
             ->pluck('kategori')
             ->sort()
             ->values()
-            ->toArray();
+            ->toArray() ?? [];
     }
 
     /**
@@ -88,8 +88,8 @@ class Activities extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('nama_kegiatan', 'like', '%' . $this->search . '%')
-                      ->orWhere('deskripsi', 'like', '%' . $this->search . '%')
-                      ->orWhere('lokasi', 'like', '%' . $this->search . '%');
+                        ->orWhere('deskripsi', 'like', '%' . $this->search . '%')
+                        ->orWhere('lokasi', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->selectedCategory !== 'semua', function ($query) {
@@ -114,7 +114,7 @@ class Activities extends Component
     public function formatDate($date): string
     {
         if (!$date) return '';
-        
+
         return \Carbon\Carbon::parse($date)->format('d M Y');
     }
 
@@ -123,9 +123,9 @@ class Activities extends Component
      */
     public function render()
     {
-        return view('livewire.frontend.activities', [
+        return view('livewire.frontend.kegiatan.activities', [
             'activities' => $this->activities,
-            'categories' => $this->categories,
+            'categories' => $this->categories ?? [],
             'selectedCategory' => $this->selectedCategory,
         ]);
     }
