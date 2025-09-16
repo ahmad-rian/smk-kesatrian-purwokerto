@@ -77,17 +77,17 @@
                         Program Studi
                     </h3>
                     <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
-                        <x-button wire:click="filterByProgram('all')"
-                            class="{{ $selectedProgram === 'all' ? 'btn-primary' : 'btn-outline' }} transition-all duration-300 transform hover:scale-105"
+                        <button wire:click="filterByProgram('all')"
+                            class="btn {{ $selectedProgram === 'all' ? 'btn-primary' : 'btn-outline border-base-content text-base-content hover:bg-base-content hover:text-base-100' }} transition-all duration-300 transform hover:scale-105"
                             style="font-family: 'Inter', sans-serif;">
                             Semua Program
-                        </x-button>
+                        </button>
                         @foreach ($studyPrograms as $program)
-                            <x-button wire:click="filterByProgram('{{ $program->id }}')"
-                                class="{{ $selectedProgram == $program->id ? 'btn-primary' : 'btn-outline' }} transition-all duration-300 transform hover:scale-105"
+                            <button wire:click="filterByProgram('{{ $program->id }}')"
+                                class="btn {{ $selectedProgram == $program->id ? 'btn-primary' : 'btn-outline border-base-content text-base-content hover:bg-base-content hover:text-base-100' }} transition-all duration-300 transform hover:scale-105"
                                 style="font-family: 'Inter', sans-serif;">
                                 {{ $program->nama }}
-                            </x-button>
+                            </button>
                         @endforeach
                     </div>
                 </div>
@@ -105,11 +105,11 @@
                     </h3>
                     <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
                         @foreach ($categories as $key => $category)
-                            <x-button wire:click="filterByCategory('{{ $key }}')"
-                                class="{{ $selectedCategory === $key ? 'btn-primary' : 'btn-outline' }} transition-all duration-300 transform hover:scale-105"
+                            <button wire:click="filterByCategory('{{ $key }}')"
+                                class="btn {{ $selectedCategory === $key ? 'btn-primary' : 'btn-outline border-base-content text-base-content hover:bg-base-content hover:text-base-100' }} transition-all duration-300 transform hover:scale-105"
                                 style="font-family: 'Inter', sans-serif;">
                                 {{ $category }}
-                            </x-button>
+                            </button>
                         @endforeach
                     </div>
                 </div>
