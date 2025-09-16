@@ -25,7 +25,7 @@ use Livewire\Attributes\Layout;
  * dengan validasi dan upload gambar otomatis
  * 
  * @author Laravel Expert Agent
- * @version 1.0
+ * @version 1.2
  */
 #[Layout('livewire.admin.layout')]
 class Edit extends Component
@@ -50,6 +50,12 @@ class Edit extends Component
      * Gambar lama untuk preview
      */
     public array $currentImages = [];
+
+    /**
+     * Properties untuk modal hapus gambar
+     */
+    public ?string $imageToDelete = null;
+    public bool $showDeleteModal = false;
 
     /**
      * Service untuk konversi gambar
@@ -81,13 +87,13 @@ class Edit extends Component
         $this->nama = $this->facility->nama;
         $this->kategori = $this->facility->kategori;
         $this->deskripsi = $this->facility->deskripsi;
-        $this->study_program_id = $this->facility->study_program_id;
+        $this->study_program_id = (string) $this->facility->study_program_id;
 
         // Load existing images
         $this->currentImages = $this->facility->images()->orderBy('urutan')->get()->map(function ($image) {
             return [
                 'id' => $image->id,
-                'url' => Storage::url($image->gambar),
+                'url' => $image->gambar_url,
                 'alt_text' => $image->alt_text,
                 'is_primary' => $image->is_primary
             ];
@@ -97,7 +103,7 @@ class Edit extends Component
         if (empty($this->currentImages) && $this->facility->gambar) {
             $this->currentImages = [[
                 'id' => null,
-                'url' => Storage::url($this->facility->gambar),
+                'url' => $this->facility->gambar_url,
                 'alt_text' => $this->facility->nama,
                 'is_primary' => true
             ]];
@@ -121,7 +127,7 @@ class Edit extends Component
                 'nullable',
                 'string',
                 'max:100',
-                'in:laboratorium,perpustakaan,olahraga,aula,kantin,asrama,parkir,lainnya'
+                'in:' . implode(',', array_keys(Facility::getAvailableCategories()))
             ],
             'deskripsi' => [
                 'required',
@@ -366,8 +372,8 @@ class Edit extends Component
      */
     private function uploadNewImages(): void
     {
-        $uploadedImages = [];
         $currentOrder = $this->facility->images()->max('urutan') ?? 0;
+        $isFirstImage = count($this->currentImages) === 0;
 
         foreach (array_filter($this->images) as $image) {
             $imagePath = $this->imageService->convertToWebP(
@@ -375,65 +381,15 @@ class Edit extends Component
                 'facilities/images'
             );
 
-            if ($imagePath && Storage::exists($imagePath)) {
-                $uploadedImages[] = [
+            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                FacilityImage::create([
                     'facility_id' => $this->facility->id,
                     'gambar' => $imagePath,
                     'alt_text' => $this->facility->nama,
                     'urutan' => ++$currentOrder,
-                    'is_primary' => count($this->currentImages) === 0 && count($uploadedImages) === 0,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ];
+                    'is_primary' => $isFirstImage && $currentOrder === 1
+                ]);
             }
-        }
-
-        if (!empty($uploadedImages)) {
-            FacilityImage::insert($uploadedImages);
-        }
-    }
-
-    /**
-     * Hapus gambar fasilitas berdasarkan ID
-     */
-    public function removeImage($imageId): void
-    {
-        try {
-            $image = FacilityImage::where('facility_id', $this->facility->id)
-                ->where('id', $imageId)
-                ->first();
-
-            if ($image) {
-                DB::transaction(function () use ($image) {
-                    // Hapus file gambar
-                    $this->imageService->deleteOldImage($image->gambar);
-
-                    // Hapus dari database
-                    $image->delete();
-
-                    // Log aktivitas
-                    Log::info('Gambar fasilitas dihapus', [
-                        'facility_id' => $this->facility->id,
-                        'image_id' => $image->id,
-                        'deleted_by' => Auth::id()
-                    ]);
-                });
-
-                // Reload current images
-                $this->loadCurrentData();
-                $this->success('Gambar berhasil dihapus');
-            } else {
-                $this->warning('Gambar tidak ditemukan');
-            }
-        } catch (\Exception $e) {
-            Log::error('Error removing facility image', [
-                'facility_id' => $this->facility->id,
-                'image_id' => $imageId,
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id()
-            ]);
-
-            $this->error('Gagal menghapus gambar. Silakan coba lagi.');
         }
     }
 
@@ -442,6 +398,11 @@ class Edit extends Component
      */
     public function setPrimaryImage($imageId): void
     {
+        if (!$imageId) {
+            $this->error('ID gambar tidak valid');
+            return;
+        }
+
         try {
             DB::transaction(function () use ($imageId) {
                 // Reset semua gambar menjadi bukan primary
@@ -449,9 +410,19 @@ class Edit extends Component
                     ->update(['is_primary' => false]);
 
                 // Set gambar terpilih sebagai primary
-                FacilityImage::where('facility_id', $this->facility->id)
+                $updated = FacilityImage::where('facility_id', $this->facility->id)
                     ->where('id', $imageId)
                     ->update(['is_primary' => true]);
+
+                if (!$updated) {
+                    throw new \Exception('Gambar tidak ditemukan');
+                }
+
+                Log::info('Primary image updated', [
+                    'facility_id' => $this->facility->id,
+                    'new_primary_image_id' => $imageId,
+                    'updated_by' => Auth::id()
+                ]);
             });
 
             $this->loadCurrentData();
@@ -469,22 +440,320 @@ class Edit extends Component
     }
 
     /**
+     * Konfirmasi penghapusan gambar
+     */
+    public function confirmDeleteImage($imageId): void
+    {
+        if (!$imageId) {
+            $this->error('ID gambar tidak valid');
+            return;
+        }
+
+        // Cek apakah gambar ada dan milik fasilitas ini
+        $image = FacilityImage::where('facility_id', $this->facility->id)
+            ->where('id', $imageId)
+            ->first();
+
+        if (!$image) {
+            $this->error('Gambar tidak ditemukan');
+            return;
+        }
+
+        Log::info('confirmDeleteImage called', [
+            'facility_id' => $this->facility->id,
+            'image_id' => $imageId,
+            'user_id' => Auth::id()
+        ]);
+
+        $this->imageToDelete = $imageId;
+        $this->showDeleteModal = true;
+    }
+
+    /**
+     * Batalkan penghapusan gambar
+     */
+    public function cancelDeleteImage(): void
+    {
+        $this->imageToDelete = null;
+        $this->showDeleteModal = false;
+    }
+
+    /**
+     * Hapus gambar fasilitas berdasarkan ID
+     */
+    public function removeImage(): void
+    {
+        if (!$this->imageToDelete) {
+            $this->warning('Tidak ada gambar yang dipilih untuk dihapus');
+            $this->showDeleteModal = false;
+            return;
+        }
+
+        try {
+            $image = FacilityImage::where('facility_id', $this->facility->id)
+                ->where('id', $this->imageToDelete)
+                ->first();
+
+            if (!$image) {
+                $this->warning('Gambar tidak ditemukan');
+                $this->resetDeleteModal();
+                return;
+            }
+
+            DB::transaction(function () use ($image) {
+                // Hapus file gambar dari storage
+                if ($image->gambar && Storage::disk('public')->exists($image->gambar)) {
+                    Storage::disk('public')->delete($image->gambar);
+                }
+
+                // Jika ini adalah gambar primary, set gambar lain sebagai primary
+                if ($image->is_primary) {
+                    $nextPrimaryImage = FacilityImage::where('facility_id', $this->facility->id)
+                        ->where('id', '!=', $image->id)
+                        ->orderBy('urutan')
+                        ->first();
+
+                    if ($nextPrimaryImage) {
+                        $nextPrimaryImage->update(['is_primary' => true]);
+                    }
+                }
+
+                // Hapus dari database
+                $image->delete();
+
+                Log::info('Gambar fasilitas dihapus', [
+                    'facility_id' => $this->facility->id,
+                    'image_id' => $image->id,
+                    'image_path' => $image->gambar,
+                    'was_primary' => $image->is_primary,
+                    'deleted_by' => Auth::id()
+                ]);
+            });
+
+            $this->resetDeleteModal();
+            $this->loadCurrentData();
+            $this->success('Gambar berhasil dihapus');
+        } catch (\Exception $e) {
+            Log::error('Error removing facility image', [
+                'facility_id' => $this->facility->id,
+                'image_id' => $this->imageToDelete,
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+
+            $this->resetDeleteModal();
+            $this->error('Gagal menghapus gambar. Silakan coba lagi.');
+        }
+    }
+
+    /**
+     * Execute hapus gambar setelah konfirmasi
+     */
+    public function executeDeleteImage($imageId): void
+    {
+        if (!$imageId) {
+            $this->error('ID gambar tidak valid');
+            return;
+        }
+
+        try {
+            $image = FacilityImage::where('facility_id', $this->facility->id)
+                ->where('id', $imageId)
+                ->first();
+
+            if (!$image) {
+                $this->warning('Gambar tidak ditemukan');
+                return;
+            }
+
+            DB::transaction(function () use ($image) {
+                // Hapus file gambar dari storage
+                if ($image->gambar && Storage::disk('public')->exists($image->gambar)) {
+                    Storage::disk('public')->delete($image->gambar);
+                }
+
+                // Jika ini adalah gambar primary, set gambar lain sebagai primary
+                if ($image->is_primary) {
+                    $nextPrimaryImage = FacilityImage::where('facility_id', $this->facility->id)
+                        ->where('id', '!=', $image->id)
+                        ->orderBy('urutan')
+                        ->first();
+
+                    if ($nextPrimaryImage) {
+                        $nextPrimaryImage->update(['is_primary' => true]);
+                    }
+                }
+
+                // Hapus dari database
+                $image->delete();
+
+                Log::info('Gambar fasilitas dihapus (execute)', [
+                    'facility_id' => $this->facility->id,
+                    'image_id' => $image->id,
+                    'image_path' => $image->gambar,
+                    'was_primary' => $image->is_primary,
+                    'deleted_by' => Auth::id()
+                ]);
+            });
+
+            $this->loadCurrentData();
+            $this->success('Gambar berhasil dihapus');
+        } catch (\Exception $e) {
+            Log::error('Error executing delete image', [
+                'facility_id' => $this->facility->id,
+                'image_id' => $imageId,
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+
+            $this->error('Gagal menghapus gambar. Silakan coba lagi.');
+        }
+    }
+
+    /**
+     * Reset modal delete state
+     */
+    private function resetDeleteModal(): void
+    {
+        $this->imageToDelete = null;
+        $this->showDeleteModal = false;
+    }
+
+    /**
+     * Remove preview image dari array images
+     */
+    public function removePreviewImage($index): void
+    {
+        if (isset($this->images[$index])) {
+            unset($this->images[$index]);
+            $this->images = array_values($this->images); // Reset array index
+
+            Log::info('Preview image removed', [
+                'facility_id' => $this->facility->id,
+                'removed_index' => $index,
+                'remaining_images' => count($this->images),
+                'user_id' => Auth::id()
+            ]);
+        }
+    }
+
+    /**
      * Batal dan kembali ke halaman index
      */
     public function cancel(): void
     {
-        // Reset form jika ada perubahan
         if ($this->images) {
             $this->images = [];
         }
 
-        // Log aktivitas cancel
         Log::info('Edit fasilitas dibatalkan', [
             'facility_id' => $this->facility->id,
             'user_id' => Auth::id()
         ]);
 
         $this->redirect(route('admin.facilities.index'), navigate: true);
+    }
+
+    /**
+     * Duplikasi fasilitas dengan konfirmasi
+     */
+    public function duplicate(): void
+    {
+        $this->js("
+            if (confirm('Yakin ingin menduplikasi fasilitas ini?')) {
+                \$wire.call('executeDuplicate');
+            }
+        ");
+    }
+
+    /**
+     * Execute duplikasi fasilitas
+     */
+    public function executeDuplicate(): void
+    {
+        try {
+            DB::transaction(function () {
+                // Clone fasilitas
+                $newFacility = $this->facility->replicate();
+                $newFacility->nama = $this->facility->nama . ' (Copy)';
+                $newFacility->save();
+
+                // Clone images if any
+                foreach ($this->facility->images as $image) {
+                    $newImage = $image->replicate();
+                    $newImage->facility_id = $newFacility->id;
+                    $newImage->save();
+                }
+
+                Log::info('Fasilitas berhasil diduplikasi', [
+                    'original_facility_id' => $this->facility->id,
+                    'new_facility_id' => $newFacility->id,
+                    'user_id' => Auth::id()
+                ]);
+            });
+
+            $this->success('Fasilitas berhasil diduplikasi!');
+            $this->redirect(route('admin.facilities.index'), navigate: true);
+        } catch (\Exception $e) {
+            Log::error('Error duplicating facility', [
+                'facility_id' => $this->facility->id,
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+
+            $this->error('Gagal menduplikasi fasilitas.');
+        }
+    }
+
+    /**
+     * Hapus fasilitas dengan konfirmasi
+     */
+    public function delete(): void
+    {
+        $this->js("
+            if (confirm('Yakin ingin menghapus fasilitas ini?\\n\\nTindakan ini tidak dapat dibatalkan.')) {
+                \$wire.call('executeDelete');
+            }
+        ");
+    }
+
+    /**
+     * Execute hapus fasilitas
+     */
+    public function executeDelete(): void
+    {
+        try {
+            DB::transaction(function () {
+                // Hapus semua gambar terkait
+                foreach ($this->facility->images as $image) {
+                    if ($image->gambar && Storage::disk('public')->exists($image->gambar)) {
+                        Storage::disk('public')->delete($image->gambar);
+                    }
+                    $image->delete();
+                }
+
+                // Hapus fasilitas
+                $facilityName = $this->facility->nama;
+                $this->facility->delete();
+
+                Log::info('Fasilitas berhasil dihapus', [
+                    'facility_id' => $this->facility->id,
+                    'facility_name' => $facilityName,
+                    'user_id' => Auth::id()
+                ]);
+            });
+
+            $this->success('Fasilitas berhasil dihapus!');
+            $this->redirect(route('admin.facilities.index'), navigate: true);
+        } catch (\Exception $e) {
+            Log::error('Error deleting facility', [
+                'facility_id' => $this->facility->id,
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+
+            $this->error('Gagal menghapus fasilitas.');
+        }
     }
 
     /**
@@ -534,16 +803,11 @@ class Edit extends Component
      */
     public function getKategoriOptionsProperty()
     {
-        return [
-            ['value' => 'laboratorium', 'label' => 'Laboratorium'],
-            ['value' => 'perpustakaan', 'label' => 'Perpustakaan'],
-            ['value' => 'olahraga', 'label' => 'Fasilitas Olahraga'],
-            ['value' => 'aula', 'label' => 'Aula'],
-            ['value' => 'kantin', 'label' => 'Kantin'],
-            ['value' => 'asrama', 'label' => 'Asrama'],
-            ['value' => 'parkir', 'label' => 'Area Parkir'],
-            ['value' => 'lainnya', 'label' => 'Lainnya'],
-        ];
+        $categories = [];
+        foreach (Facility::getAvailableCategories() as $value => $label) {
+            $categories[] = ['value' => $value, 'label' => $label];
+        }
+        return $categories;
     }
 
     /**

@@ -234,16 +234,18 @@ class Facility extends Model
     public static function getAvailableCategories(): array
     {
         return [
-            'laboratorium' => 'Laboratorium',
-            'ruang_kelas' => 'Ruang Kelas',
-            'perpustakaan' => 'Perpustakaan',
-            'olahraga' => 'Fasilitas Olahraga',
-            'workshop' => 'Workshop/Bengkel',
-            'kantin' => 'Kantin',
+            'Laboratorium' => 'Laboratorium',
+            'Ruang Kelas' => 'Ruang Kelas',
+            'Ruang Praktik' => 'Ruang Praktik',
+            'Studio' => 'Studio',
+            'Ruang Kolaborasi' => 'Ruang Kolaborasi',
+            'Fasilitas Umum' => 'Fasilitas Umum',
+            'Fasilitas Olahraga' => 'Fasilitas Olahraga',
+            'Fasilitas Teknologi' => 'Fasilitas Teknologi',
+            'Fasilitas Kesehatan' => 'Fasilitas Kesehatan',
+            'Fasilitas Ibadah' => 'Fasilitas Ibadah',
+            'Fasilitas Penunjang' => 'Fasilitas Penunjang',
             'asrama' => 'Asrama',
-            'musholla' => 'Musholla/Tempat Ibadah',
-            'parkir' => 'Area Parkir',
-            'lainnya' => 'Lainnya',
         ];
     }
 

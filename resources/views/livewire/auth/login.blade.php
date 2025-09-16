@@ -29,9 +29,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 </div>
 
                 <!-- Welcome Text -->
-                <div class="text-black">
+                <div class="text-base-content">
                     <h3 class="text-lg font-bold mb-2">{{ __('Selamat Datang') }}</h3>
-                    <p class="text-sm opacity-80">{{ __('SMK Kesatrian Purwokerto') }}</p>
+                    <p class="text-sm opacity-70">{{ __('SMK Kesatrian Purwokerto') }}</p>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
                 <!-- Google SSO Button -->
                 <a href="{{ route('auth.google') }}"
-                    class="btn btn-outline btn-lg w-full flex items-center justify-center gap-3 hover:bg-base-200 transition-all duration-200 group border-2">
+                    class="btn btn-outline btn-lg w-full flex items-center justify-center gap-3 hover:bg-base-200 transition-all duration-200 group border-2 border-base-300 hover:border-base-content/20">
                     <!-- Google Icon SVG -->
                     <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-200" viewBox="0 0 24 24">
                         <path fill="#4285F4"
@@ -72,17 +72,17 @@ new #[Layout('components.layouts.auth')] class extends Component {
                         <path fill="#EA4335"
                             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                     </svg>
-                    <span class="font-semibold">{{ __('Masuk dengan Google') }}</span>
+                    <span class="font-semibold text-base-content">{{ __('Masuk dengan Google') }}</span>
                 </a>
-                <!-- Divider Line - Mobile -->
-                <div class="border-b border-gray-200 my-4"></div>
 
-                <!-- SSO Text - Mobile -->
+                <!-- Divider Line -->
+                <div class="border-b border-base-300 my-4"></div>
+
+                <!-- SSO Text -->
                 <div class="text-center">
-                    <p class="text-sm font-medium text-black">{{ __('Single Sign-On (SSO)') }}</p>
+                    <p class="text-sm font-medium text-base-content/70">{{ __('Single Sign-On (SSO)') }}</p>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -94,7 +94,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 <h1 class="text-xl sm:text-2xl font-bold text-base-content mb-2">{{ __('Masuk ke Akun Anda') }}</h1>
                 <p class="text-sm sm:text-base text-base-content/70 mb-1">
                     {{ __('Gunakan akun Google untuk masuk ke sistem') }}</p>
-
             </div>
 
             <!-- Error/Success Messages - Mobile -->
@@ -112,7 +111,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
             <!-- Google SSO Button - Mobile -->
             <a href="{{ route('auth.google') }}"
-                class="btn btn-outline btn-lg w-full flex items-center justify-center gap-3 hover:bg-base-200 transition-all duration-200 group border-2 py-4">
+                class="btn btn-outline btn-lg w-full flex items-center justify-center gap-3 hover:bg-base-200 transition-all duration-200 group border-2 border-base-300 hover:border-base-content/20 py-4">
                 <!-- Google Icon SVG -->
                 <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-200"
                     viewBox="0 0 24 24">
@@ -125,15 +124,16 @@ new #[Layout('components.layouts.auth')] class extends Component {
                     <path fill="#EA4335"
                         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                 </svg>
-                <span class="font-medium sm:font-semibold text-sm sm:text-base">{{ __('Masuk dengan Google') }}</span>
+                <span
+                    class="font-medium sm:font-semibold text-sm sm:text-base text-base-content">{{ __('Masuk dengan Google') }}</span>
             </a>
 
             <!-- Divider Line - Mobile -->
-            <div class="border-b border-gray-200 my-4"></div>
+            <div class="border-b border-base-300 my-4"></div>
 
             <!-- SSO Text - Mobile -->
             <div class="text-center">
-                <p class="text-sm font-medium text-black">{{ __('Single Sign-On (SSO)') }}</p>
+                <p class="text-sm font-medium text-base-content/70">{{ __('Single Sign-On (SSO)') }}</p>
             </div>
         </div>
     </div>

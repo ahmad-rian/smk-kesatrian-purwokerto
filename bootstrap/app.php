@@ -14,6 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         // Daftarkan middleware admin untuk proteksi admin panel
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'seo' => \App\Http\Middleware\SeoOptimization::class,
+        ]);
+        
+        // Tambahkan SEO middleware ke web group
+        $middleware->web(append: [
+            \App\Http\Middleware\SeoOptimization::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

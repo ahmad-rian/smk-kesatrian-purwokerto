@@ -98,14 +98,14 @@
 
                 <!-- Featured Image Section -->
                 @if ($news->gambar)
-                    <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-slate-200">
+                    <div class="bg-base-100 rounded-3xl shadow-lg overflow-hidden border border-base-300">
                         <div class="relative group">
                             <!-- Container with aspect ratio that adapts to image -->
                             <div class="relative w-full">
                                 <img src="{{ Storage::url($news->gambar) }}" alt="{{ $news->judul }}"
-                                    class="w-full h-auto max-h-[600px] object-contain bg-gradient-to-br from-slate-50 to-blue-50"
+                                    class="w-full h-auto max-h-[600px] object-contain bg-gradient-to-br from-base-200 to-primary/20"
                                     onload="this.parentElement.style.minHeight = 'auto'"
-                                    onerror="this.parentElement.innerHTML='<div class=&quot;w-full h-96 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 flex items-center justify-center&quot;><div class=&quot;text-center p-8&quot;><div class=&quot;p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg&quot;><svg class=&quot;w-16 h-16 text-blue-600 mx-auto mb-4&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z&quot;></path></svg><h3 class=&quot;text-lg font-semibold text-slate-700 mb-2&quot;>Gambar Tidak Dapat Dimuat</h3><p class=&quot;text-sm text-slate-600&quot;>Terjadi kesalahan saat memuat gambar</p></div></div></div>'"
+                                    onerror="this.parentElement.innerHTML='<div class=&quot;w-full h-96 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center&quot;><div class=&quot;text-center p-8&quot;><div class=&quot;p-6 bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-lg&quot;><svg class=&quot;w-16 h-16 text-primary mx-auto mb-4&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z&quot;></path></svg><h3 class=&quot;text-lg font-semibold text-base-content mb-2&quot;>Gambar Tidak Dapat Dimuat</h3><p class=&quot;text-sm text-base-content/70&quot;>Terjadi kesalahan saat memuat gambar</p></div></div></div>'"
                                     style="min-height: 300px;">
 
                                 <!-- Overlay untuk zoom effect -->
@@ -126,10 +126,10 @@
                         </div>
 
                         <!-- Image Caption -->
-                        <div class="p-6 bg-gradient-to-r from-slate-50 to-blue-50">
-                            <p class="text-slate-600 text-sm font-medium flex items-center"
+                        <div class="p-6 bg-base-200">
+                            <p class="text-base-content/70 text-sm font-medium flex items-center"
                                 style="font-family: 'Inter', sans-serif;">
-                                <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor"
+                                <svg class="w-4 h-4 mr-2 text-primary" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
@@ -141,22 +141,22 @@
                     </div>
                 @else
                     <!-- Placeholder Image -->
-                    <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-slate-200">
+                    <div class="bg-base-100 rounded-3xl shadow-lg overflow-hidden border border-base-300">
                         <div
-                            class="w-full h-96 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 flex items-center justify-center">
+                            class="w-full h-96 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
                             <div class="text-center p-8">
-                                <div class="p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
-                                    <svg class="w-16 h-16 text-blue-600 mx-auto mb-4" fill="none"
+                                <div class="p-6 bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-lg">
+                                    <svg class="w-16 h-16 text-primary mx-auto mb-4" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
                                         </path>
                                     </svg>
-                                    <h3 class="text-lg font-semibold text-slate-700 mb-2"
+                                    <h3 class="text-lg font-semibold text-base-content mb-2"
                                         style="font-family: 'Bricolage Grotesque', sans-serif;">
                                         Dokumentasi Berita
                                     </h3>
-                                    <p class="text-sm text-slate-600" style="font-family: 'Inter', sans-serif;">
+                                    <p class="text-sm text-base-content/70" style="font-family: 'Inter', sans-serif;">
                                         Gambar berita akan ditampilkan di sini
                                     </p>
                                 </div>
@@ -164,10 +164,10 @@
                         </div>
 
                         <!-- Image Caption -->
-                        <div class="p-6 bg-gradient-to-r from-slate-50 to-blue-50">
-                            <p class="text-slate-600 text-sm font-medium flex items-center"
+                        <div class="p-6 bg-base-200">
+                            <p class="text-base-content/70 text-sm font-medium flex items-center"
                                 style="font-family: 'Inter', sans-serif;">
-                                <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor"
+                                <svg class="w-4 h-4 mr-2 text-primary" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
@@ -180,12 +180,12 @@
                 @endif
 
                 <!-- Article Content -->
-                <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+                <div class="bg-base-100 rounded-3xl shadow-lg border border-base-300 overflow-hidden">
                     <div class="p-8">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center"
+                        <h2 class="text-2xl font-bold text-base-content mb-6 flex items-center"
                             style="font-family: 'Bricolage Grotesque', sans-serif;">
-                            <div class="p-2 bg-blue-100 rounded-xl mr-3">
-                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
+                            <div class="p-2 bg-primary/20 rounded-xl mr-3">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
@@ -196,7 +196,7 @@
                         </h2>
 
                         <!-- Content -->
-                        <div class="prose prose-lg max-w-none text-slate-700 leading-relaxed"
+                        <div class="prose prose-lg max-w-none text-base-content leading-relaxed"
                             style="font-family: 'Inter', sans-serif;">
                             @php
                                 // Bersihkan konten dari tag P yang tidak diperlukan
@@ -219,11 +219,11 @@
                         </div>
 
                         <!-- Share Section -->
-                        <div class="mt-10 pt-8 border-t border-slate-200">
-                            <h3 class="text-xl font-bold mb-6 text-slate-900 flex items-center"
+                        <div class="mt-10 pt-8 border-t border-base-300">
+                            <h3 class="text-xl font-bold mb-6 text-base-content flex items-center"
                                 style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                <div class="p-2 bg-indigo-100 rounded-xl mr-3">
-                                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor"
+                                <div class="p-2 bg-secondary/20 rounded-xl mr-3">
+                                    <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z">
@@ -236,7 +236,7 @@
                                 <!-- Facebook -->
                                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
                                     target="_blank"
-                                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
+                                    class="inline-flex items-center px-4 py-2 bg-[#1877F2] hover:bg-[#166FE5] text-white rounded-lg transition-colors duration-200 text-sm font-medium">
                                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                                         <path
                                             d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -247,7 +247,7 @@
                                 <!-- Twitter -->
                                 <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($news->judul) }}"
                                     target="_blank"
-                                    class="inline-flex items-center px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
+                                    class="inline-flex items-center px-4 py-2 bg-[#1DA1F2] hover:bg-[#1A91DA] text-white rounded-lg transition-colors duration-200 text-sm font-medium">
                                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                                         <path
                                             d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
@@ -258,7 +258,7 @@
                                 <!-- WhatsApp -->
                                 <a href="https://wa.me/?text={{ urlencode($news->judul . ' - ' . request()->url()) }}"
                                     target="_blank"
-                                    class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
+                                    class="inline-flex items-center px-4 py-2 bg-[#25D366] hover:bg-[#22C55E] text-white rounded-lg transition-colors duration-200 text-sm font-medium">
                                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                                         <path
                                             d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
@@ -274,12 +274,12 @@
             <!-- Sidebar -->
             <div class="lg:col-span-1 space-y-6">
                 <!-- Info Berita -->
-                <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+                <div class="bg-base-100 rounded-3xl shadow-lg border border-base-300 overflow-hidden">
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center"
+                        <h3 class="text-xl font-bold text-base-content mb-6 flex items-center"
                             style="font-family: 'Bricolage Grotesque', sans-serif;">
-                            <div class="p-2 bg-blue-100 rounded-xl mr-3">
-                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
+                            <div class="p-2 bg-primary/20 rounded-xl mr-3">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -289,8 +289,8 @@
                         </h3>
                         <div class="space-y-6">
                             <div class="flex items-start gap-4">
-                                <div class="p-3 bg-blue-100 rounded-xl">
-                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
+                                <div class="p-3 bg-primary/20 rounded-xl">
+                                    <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
@@ -298,8 +298,8 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-sm font-medium text-slate-500 mb-1">Tanggal Publikasi</p>
-                                    <p class="text-lg font-semibold text-slate-900"
+                                    <p class="text-sm font-medium text-base-content/60 mb-1">Tanggal Publikasi</p>
+                                    <p class="text-lg font-semibold text-base-content"
                                         style="font-family: 'Inter', sans-serif;">
                                         {{ $this->getFormattedDate($news->created_at) }}
                                     </p>
@@ -307,8 +307,8 @@
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="p-3 bg-green-100 rounded-xl">
-                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor"
+                                <div class="p-3 bg-success/20 rounded-xl">
+                                    <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
@@ -316,8 +316,8 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-sm font-medium text-slate-500 mb-1">Status</p>
-                                    <p class="text-lg font-semibold text-slate-900"
+                                    <p class="text-sm font-medium text-base-content/60 mb-1">Status</p>
+                                    <p class="text-lg font-semibold text-base-content"
                                         style="font-family: 'Inter', sans-serif;">
                                         {{ ucfirst($news->status) }}
                                     </p>
@@ -325,8 +325,8 @@
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="p-3 bg-purple-100 rounded-xl">
-                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor"
+                                <div class="p-3 bg-secondary/20 rounded-xl">
+                                    <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
@@ -334,8 +334,8 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-sm font-medium text-slate-500 mb-1">Kategori</p>
-                                    <p class="text-lg font-semibold text-slate-900"
+                                    <p class="text-sm font-medium text-base-content/60 mb-1">Kategori</p>
+                                    <p class="text-lg font-semibold text-base-content"
                                         style="font-family: 'Inter', sans-serif;">
                                         Berita Sekolah
                                     </p>
@@ -347,12 +347,12 @@
 
                 <!-- Berita Terkait -->
                 @if ($relatedNews->count() > 0)
-                    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+                    <div class="bg-base-100 rounded-3xl shadow-lg border border-base-300 overflow-hidden">
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center"
+                            <h3 class="text-xl font-bold text-base-content mb-6 flex items-center"
                                 style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                <div class="p-2 bg-indigo-100 rounded-xl mr-3">
-                                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor"
+                                <div class="p-2 bg-secondary/20 rounded-xl mr-3">
+                                    <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
@@ -363,7 +363,7 @@
                             </h3>
                             <div class="space-y-4">
                                 @foreach ($relatedNews as $related)
-                                    <div class="border border-slate-200 rounded-2xl p-4 hover:shadow-lg hover:border-blue-300 transition-all duration-300 group cursor-pointer"
+                                    <div class="border border-base-300 rounded-2xl p-4 hover:shadow-lg hover:border-primary transition-all duration-300 group cursor-pointer"
                                         onclick="window.location.href='{{ route('berita.detail', $related->slug) }}'">
                                         <div class="flex gap-4">
                                             @if ($related->gambar)
@@ -372,8 +372,8 @@
                                                     class="w-20 h-20 object-cover rounded-xl flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                                             @else
                                                 <div
-                                                    class="w-20 h-20 bg-slate-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                    <svg class="w-8 h-8 text-slate-400" fill="none"
+                                                    class="w-20 h-20 bg-base-200 rounded-xl flex items-center justify-center flex-shrink-0">
+                                                    <svg class="w-8 h-8 text-base-content/40" fill="none"
                                                         stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             stroke-width="2"
@@ -383,13 +383,13 @@
                                                 </div>
                                             @endif
                                             <div class="flex-1 min-w-0">
-                                                <h4 class="font-bold text-base line-clamp-2 mb-2 text-slate-900 group-hover:text-blue-600 transition-colors"
+                                                <h4 class="font-bold text-base line-clamp-2 mb-2 text-base-content group-hover:text-primary transition-colors"
                                                     style="font-family: 'Bricolage Grotesque', sans-serif;">
                                                     {{ $related->judul }}
                                                 </h4>
-                                                <div class="flex items-center gap-2 text-sm text-slate-500">
-                                                    <div class="p-1 bg-blue-100 rounded-lg">
-                                                        <svg class="w-4 h-4 text-blue-600" fill="none"
+                                                <div class="flex items-center gap-2 text-sm text-base-content/60">
+                                                    <div class="p-1 bg-primary/20 rounded-lg">
+                                                        <svg class="w-4 h-4 text-primary" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 stroke-width="2"
@@ -412,10 +412,10 @@
                 @endif
 
                 <!-- Tombol Kembali -->
-                <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+                <div class="bg-base-100 rounded-3xl shadow-lg border border-base-300 overflow-hidden">
                     <div class="p-6">
                         <a href="{{ route('berita') }}"
-                            class="inline-flex items-center justify-center w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-2xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                            class="inline-flex items-center justify-center w-full px-6 py-4 bg-gradient-to-r from-primary to-secondary text-primary-content font-semibold rounded-2xl hover:from-primary/90 hover:to-secondary/90 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                             style="font-family: 'Inter', sans-serif;" wire:navigate>
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -427,12 +427,12 @@
                 </div>
 
                 <!-- Share Section -->
-                <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+                <div class="bg-base-100 rounded-3xl shadow-lg border border-base-300 overflow-hidden">
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center"
+                        <h3 class="text-xl font-bold text-base-content mb-6 flex items-center"
                             style="font-family: 'Bricolage Grotesque', sans-serif;">
-                            <div class="p-2 bg-blue-100 rounded-xl mr-3">
-                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
+                            <div class="p-2 bg-primary/20 rounded-xl mr-3">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z">
@@ -442,24 +442,24 @@
                             Bagikan Berita
                         </h3>
                         <div class="flex gap-4">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
-                                target="_blank"
-                                class="flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                                </svg>
-                            </a>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
+                                    target="_blank"
+                                    class="flex items-center justify-center w-14 h-14 bg-[#1877F2] text-white rounded-2xl hover:bg-[#166FE5] hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                    </svg>
+                                </a>
 
-                            <a href="https://wa.me/?text={{ urlencode($news->judul . ' - ' . request()->url()) }}"
-                                target="_blank"
-                                class="flex items-center justify-center w-14 h-14 bg-green-600 text-white rounded-2xl hover:bg-green-700 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
-                                </svg>
-                            </a>
-                        </div>
+                                <a href="https://wa.me/?text={{ urlencode($news->judul . ' - ' . request()->url()) }}"
+                                    target="_blank"
+                                    class="flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-2xl hover:bg-[#22C55E] hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
+                                    </svg>
+                                </a>
+                            </div>
                     </div>
                 </div>
             </div>

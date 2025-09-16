@@ -2,8 +2,23 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ session('appearance', 'light') }}">
 
 <head>
+    <!-- SEO Meta Tags & Favicon - DISABLED FOR DISPLAY -->
+     {{-- <x-seo-meta 
+         :title="$title ?? $siteSettings->nama_sekolah"
+         :description="$description ?? $siteSettings->deskripsi"
+         :keywords="$keywords ?? 'SMK, Sekolah Menengah Kejuruan, Pendidikan'"
+         :image="$image ?? ($siteSettings->logo_url ? asset($siteSettings->logo_url) : null)"
+         :breadcrumbs="$breadcrumbs ?? []"
+     /> --}}
+    
+    <!-- Structured Data (JSON-LD) -->
+    <x-structured-data 
+        :page-type="$pageType ?? 'home'"
+        :data="$structuredData ?? []"
+        :include-defaults="$includeDefaults ?? true"
+    />
+    
     @include('partials.head')
-    <title>{{ $title ?? config('app.name') }}</title>
 
     <!-- Frontend Specific Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

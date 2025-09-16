@@ -28,6 +28,7 @@ use App\Livewire\Admin\ContactMessages\Index as ContactMessagesIndex;
 use App\Livewire\Admin\ContactMessages\Show as ContactMessagesShow;
 use App\Livewire\Admin\Users\Index as UsersIndex;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\SeoController;
 use App\Livewire\Frontend\Jurusan\Index as JurusanIndex;
 use App\Livewire\Frontend\Fasilitas\Index as FasilitasIndex;
 use App\Livewire\Frontend\Fasilitas\Detail as FasilitasDetail;
@@ -178,6 +179,33 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(functio
     // Users Management
     Route::get('/users', UsersIndex::class)
         ->name('admin.users.index');
+
+
+});
+
+// SEO Routes - untuk optimasi mesin pencari
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/sitemap-pages.xml', [SeoController::class, 'sitemapPages'])->name('sitemap.pages');
+Route::get('/sitemap-news.xml', [SeoController::class, 'sitemapNews'])->name('sitemap.news');
+Route::get('/sitemap-activities.xml', [SeoController::class, 'sitemapActivities'])->name('sitemap.activities');
+Route::get('/sitemap-galleries.xml', [SeoController::class, 'sitemapGalleries'])->name('sitemap.galleries');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
+Route::get('/.well-known/security.txt', [SeoController::class, 'security'])->name('security');
+Route::get('/manifest.json', [SeoController::class, 'manifest'])->name('manifest');
+Route::get('/opensearch.xml', [SeoController::class, 'opensearch'])->name('opensearch');
+Route::get('/browserconfig.xml', [SeoController::class, 'browserconfig'])->name('browserconfig');
+Route::get('/humans.txt', [SeoController::class, 'humans'])->name('humans');
+Route::get('/favicon-{size}.png', [SeoController::class, 'favicon'])->name('seo.favicon')->where('size', '[0-9]+');
+// Route favicon.ico dihapus agar file asli di public/ bisa diakses langsung
+// Route::get('/favicon.ico', [SeoController::class, 'favicon'])->name('seo.favicon.ico');
+
+// SEO Admin API Routes
+Route::prefix('api/seo')->middleware(['auth'])->group(function () {
+    Route::post('/generate-sitemap', [SeoController::class, 'generateSitemap'])->name('api.seo.generate-sitemap');
+    Route::post('/generate-robots', [SeoController::class, 'generateRobots'])->name('api.seo.generate-robots');
+    Route::get('/status', [SeoController::class, 'status'])->name('api.seo.status');
+    Route::post('/clear-cache', [SeoController::class, 'clearCache'])->name('api.seo.clear-cache');
+    Route::post('/ping-sitemap', [SeoController::class, 'pingSitemapUpdate'])->name('api.seo.ping-sitemap');
 });
 
 require __DIR__ . '/auth.php';

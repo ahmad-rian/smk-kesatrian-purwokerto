@@ -2,11 +2,15 @@
     {{-- Header Section --}}
     <x-mary-header title="Detail Fasilitas" separator>
         <x-slot:middle class="!justify-end">
-            <x-mary-breadcrumbs class="text-sm">
-                <x-mary-breadcrumb label="Dashboard" link="{{ route('admin.dashboard') }}" />
-                <x-mary-breadcrumb label="Fasilitas" link="{{ route('admin.facilities.index') }}" />
-                <x-mary-breadcrumb label="{{ $facility->nama }}" />
-            </x-mary-breadcrumbs>
+            <nav class="text-sm mb-4">
+    <ol class="flex items-center space-x-2 text-gray-600">
+        <li><a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600">Dashboard</a></li>
+        <li class="text-gray-400">/</li>
+        <li><a href="{{ route('admin.facilities.index') }}" class="hover:text-blue-600">Fasilitas</a></li>
+        <li class="text-gray-400">/</li>
+        <li class="text-gray-900 font-medium">{{ $facility->nama }}</li>
+    </ol>
+</nav>
         </x-slot:middle>
         <x-slot:actions>
             <x-mary-button label="Kembali" icon="o-arrow-left" wire:click="backToIndex" class="btn-outline" />
@@ -17,28 +21,53 @@
 
     {{-- Main Content --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {{-- Left Column: Facility Image --}}
+        {{-- Left Column: Facility Images --}}
         <div class="lg:col-span-1">
-            <x-mary-card title="Gambar Fasilitas" class="h-fit">
-                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                    @if ($facility->gambar)
-                        <img src="{{ $facility->gambar_url }}" alt="{{ $facility->nama }}"
-                            class="w-full h-full object-cover"
-                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAyNkM5IDI2IDkgMTQgMjAgMTRTMzEgMjYgMjAgMjZaIiBmaWxsPSIjOUNBM0FGIi8+CjxjaXJjbGUgY3g9IjIwIiBjeT0iMTgiIHI9IjMiIGZpbGw9IiM2QjcyODAiLz4KPC9zdmc+'" />
-                    @else
+            <x-mary-card title="Gambar Fasilitas ({{ $facility->images->count() }})" class="h-fit">
+                @if ($facility->images->count() > 0)
+                    {{-- Primary Image --}}
+                    <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
+                        @php
+                            $primaryImage = $facility->primaryImage->first() ?? $facility->images->first();
+                        @endphp
+                        @if ($primaryImage)
+                            <img src="{{ $primaryImage->gambar_url }}" alt="{{ $facility->nama }}"
+                                class="w-full h-full object-cover"
+                                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAyNkM5IDI2IDkgMTQgMjAgMTRTMzEgMjYgMjAgMjZaIiBmaWxsPSIjOUNBM0FGIi8+CjxjaXJjbGUgY3g9IjIwIiBjeT0iMTgiIHI9IjMiIGZpbGw9IiM2QjcyODAiLz4KPC9zdmc+'" />
+                        @else
+                            <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                                <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Thumbnail Gallery --}}
+                    @if ($facility->images->count() > 1)
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            @foreach ($facility->images->take(6) as $image)
+                                <div class="aspect-square bg-gray-100 rounded overflow-hidden cursor-pointer hover:opacity-75 transition-opacity"
+                                     onclick="showImageModal('{{ $image->gambar_url }}', '{{ $image->alt_text }}')">
+                                    <img src="{{ $image->gambar_url }}" alt="{{ $image->alt_text }}"
+                                        class="w-full h-full object-cover" />
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <div class="text-center">
+                        <x-mary-button label="Lihat Semua Gambar"
+                            onclick="document.getElementById('gallery-modal').showModal()" class="btn-outline btn-sm" />
+                    </div>
+                @else
+                    <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                         <div class="w-full h-full flex items-center justify-center bg-gray-200">
                             <div class="text-center">
                                 <x-mary-icon name="o-photo" class="w-16 h-16 text-gray-400 mx-auto mb-2" />
                                 <p class="text-gray-500 text-sm">Tidak ada gambar</p>
                             </div>
                         </div>
-                    @endif
-                </div>
-
-                @if ($facility->gambar)
-                    <div class="mt-4 text-center">
-                        <x-mary-button label="Lihat Gambar Penuh"
-                            onclick="document.getElementById('image-modal').showModal()" class="btn-outline btn-sm" />
                     </div>
                 @endif
             </x-mary-card>
@@ -64,13 +93,16 @@
                                         @case('laboratorium')
                                             bg-blue-100 text-blue-800
                                             @break
-                                        @case('perpustakaan')
+                                        @case('ruang_kelas')
                                             bg-green-100 text-green-800
+                                            @break
+                                        @case('perpustakaan')
+                                            bg-emerald-100 text-emerald-800
                                             @break
                                         @case('olahraga')
                                             bg-orange-100 text-orange-800
                                             @break
-                                        @case('aula')
+                                        @case('workshop')
                                             bg-purple-100 text-purple-800
                                             @break
                                         @case('kantin')
@@ -79,13 +111,22 @@
                                         @case('asrama')
                                             bg-indigo-100 text-indigo-800
                                             @break
+                                        @case('musholla')
+                                            bg-teal-100 text-teal-800
+                                            @break
                                         @case('parkir')
                                             bg-gray-100 text-gray-800
+                                            @break
+                                        @case('lainnya')
+                                            bg-slate-100 text-slate-800
                                             @break
                                         @default
                                             bg-gray-100 text-gray-800
                                     @endswitch">
-                                    {{ ucfirst($facility->kategori) }}
+                                    @php
+                                        $categories = \App\Models\Facility::getAvailableCategories();
+                                        echo $categories[$facility->kategori] ?? ucfirst($facility->kategori);
+                                    @endphp
                                 </span>
                             @else
                                 <span class="text-gray-400">Tidak ada kategori</span>
@@ -127,11 +168,11 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Status Gambar</label>
-                        @if ($facility->gambar)
+                        @if ($facility->images->count() > 0)
                             <span
                                 class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                 <x-mary-icon name="o-check-circle" class="w-3 h-3 mr-1" />
-                                Ada Gambar
+                                {{ $facility->images->count() }} Gambar
                             </span>
                         @else
                             <span
@@ -156,15 +197,54 @@
         </div>
     </div>
 
-    {{-- Image Modal --}}
-    @if ($facility->gambar)
-        <dialog id="image-modal" class="modal">
+    {{-- Gallery Modal --}}
+    @if ($facility->images->count() > 0)
+        <dialog id="gallery-modal" class="modal">
+            <div class="modal-box max-w-6xl">
+                <form method="dialog">
+                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
+                <h3 class="font-bold text-lg mb-4">Galeri {{ $facility->nama }} ({{ $facility->images->count() }} Gambar)</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach ($facility->images as $image)
+                        <div class="relative group">
+                            <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                                <img src="{{ $image->gambar_url }}" alt="{{ $image->alt_text }}"
+                                    class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                                    onclick="showFullImage('{{ $image->gambar_url }}', '{{ $image->alt_text }}')" />
+                            </div>
+                            @if ($image->is_primary)
+                                <div class="absolute top-2 left-2">
+                                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                                        Utama
+                                    </span>
+                                </div>
+                            @endif
+                            @if ($image->alt_text)
+                                <div class="mt-2 text-sm text-gray-600 text-center">
+                                    {{ $image->alt_text }}
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
+        </dialog>
+
+        {{-- Full Image Modal --}}
+        <dialog id="full-image-modal" class="modal">
             <div class="modal-box max-w-4xl">
                 <form method="dialog">
                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
-                <h3 class="font-bold text-lg mb-4">{{ $facility->nama }}</h3>
-                <img src="{{ $facility->gambar_url }}" alt="{{ $facility->nama }}" class="w-full h-auto rounded-lg" />
+                <div id="full-image-container" class="text-center">
+                    <img id="full-image" src="" alt="" class="w-full h-auto rounded-lg" />
+                    <p id="full-image-caption" class="mt-2 text-sm text-gray-600"></p>
+                </div>
             </div>
             <form method="dialog" class="modal-backdrop">
                 <button>close</button>
@@ -215,3 +295,28 @@
         </x-slot:actions>
     </x-mary-modal>
 </div>
+
+<script>
+    /**
+     * Tampilkan modal gambar dari thumbnail gallery
+     */
+    function showImageModal(imageUrl, altText) {
+        showFullImage(imageUrl, altText);
+    }
+
+    /**
+     * Tampilkan gambar dalam ukuran penuh
+     */
+    function showFullImage(imageUrl, altText) {
+        const fullImage = document.getElementById('full-image');
+        const fullImageCaption = document.getElementById('full-image-caption');
+        
+        if (fullImage && fullImageCaption) {
+            fullImage.src = imageUrl;
+            fullImage.alt = altText || '';
+            fullImageCaption.textContent = altText || '';
+            
+            document.getElementById('full-image-modal').showModal();
+        }
+    }
+</script>

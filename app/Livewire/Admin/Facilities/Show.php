@@ -42,7 +42,7 @@ class Show extends Component
      */
     public function mount(Facility $facility): void
     {
-        $this->facility = $facility->load('studyProgram');
+        $this->facility = $facility->load(['studyProgram', 'images', 'primaryImage']);
     }
 
     /**
@@ -67,15 +67,21 @@ class Show extends Component
     public function deleteFacility(): void
     {
         try {
-            // Hapus gambar jika ada
-            if ($this->facility->gambar) {
-                Storage::disk('public')->delete($this->facility->gambar);
+            // Hapus semua gambar terkait fasilitas
+            foreach ($this->facility->images as $image) {
+                // Hapus file dari storage
+                if (Storage::disk('public')->exists($image->gambar)) {
+                    Storage::disk('public')->delete($image->gambar);
+                }
+                
+                // Hapus record dari database
+                $image->delete();
             }
 
             // Hapus fasilitas dari database
             $this->facility->delete();
 
-            $this->success('Fasilitas berhasil dihapus!');
+            $this->success('Fasilitas dan semua gambar berhasil dihapus!');
 
             // Redirect ke halaman index
             $this->redirect(route('admin.facilities.index'), navigate: true);

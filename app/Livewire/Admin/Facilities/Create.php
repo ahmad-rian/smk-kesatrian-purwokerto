@@ -62,7 +62,7 @@ class Create extends Component
             'nama' => 'required|string|max:255|unique:facilities,nama',
             'deskripsi' => 'required|string|min:10|max:1000',
             'study_program_id' => 'required|exists:study_programs,id',
-            'kategori' => 'nullable|string|max:100|in:laboratorium,perpustakaan,olahraga,aula,kantin,asrama,parkir,lainnya',
+            'kategori' => 'nullable|string|max:100|in:' . implode(',', array_keys(Facility::getAvailableCategories())),
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Backward compatibility
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'images' => 'nullable|array|min:1|max:5',
@@ -418,16 +418,11 @@ class Create extends Component
      */
     public function getKategoriOptionsProperty()
     {
-        return [
-            ['value' => 'laboratorium', 'label' => 'Laboratorium'],
-            ['value' => 'perpustakaan', 'label' => 'Perpustakaan'],
-            ['value' => 'olahraga', 'label' => 'Fasilitas Olahraga'],
-            ['value' => 'aula', 'label' => 'Aula'],
-            ['value' => 'kantin', 'label' => 'Kantin'],
-            ['value' => 'asrama', 'label' => 'Asrama'],
-            ['value' => 'parkir', 'label' => 'Area Parkir'],
-            ['value' => 'lainnya', 'label' => 'Lainnya'],
-        ];
+        $categories = [];
+        foreach (Facility::getAvailableCategories() as $value => $label) {
+            $categories[] = ['value' => $value, 'label' => $label];
+        }
+        return $categories;
     }
 
     /**

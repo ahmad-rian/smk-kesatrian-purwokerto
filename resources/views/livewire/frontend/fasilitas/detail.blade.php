@@ -71,33 +71,32 @@
                         <div class="card-body p-0">
                             @if ($imageCount > 1)
                                 <!-- Multiple Images Carousel -->
-                                <div class="carousel w-full rounded-t-2xl" x-data="{ currentSlide: 0, totalSlides: {{ $imageCount }} }">
-                                    @foreach ($allImages as $index => $imageUrl)
-                                        <div class="carousel-item relative w-full {{ $index === 0 ? 'block' : 'hidden' }}"
-                                            x-show="currentSlide === {{ $index }}"
-                                            x-transition:enter="transition ease-out duration-500"
-                                            x-transition:enter-start="opacity-0 transform scale-95"
-                                            x-transition:enter-end="opacity-100 transform scale-100">
-                                            <img src="{{ $imageUrl }}"
-                                                alt="{{ $facility->nama }} - Gambar {{ $index + 1 }}"
-                                                class="w-full h-96 object-cover">
-                                        </div>
-                                    @endforeach
+                                <div class="relative w-full rounded-t-2xl overflow-hidden">
+                                    <!-- Carousel Container -->
+                                    <div class="carousel-container" id="facilityCarousel">
+                                        @foreach ($allImages as $index => $imageUrl)
+                                            <div class="carousel-slide {{ $index === 0 ? 'active' : '' }}"
+                                                data-slide="{{ $index }}">
+                                                <img src="{{ $imageUrl }}"
+                                                    alt="{{ $facility->nama }} - Gambar {{ $index + 1 }}"
+                                                    class="w-full h-96 object-cover">
+                                            </div>
+                                        @endforeach
+                                    </div>
 
                                     <!-- Navigation Controls -->
-                                    <div class="absolute inset-0 flex items-center justify-between p-4">
-                                        <button
-                                            @click="currentSlide = currentSlide > 0 ? currentSlide - 1 : totalSlides - 1"
-                                            class="btn btn-circle bg-black/50 border-none text-white hover:bg-black/70">
+                                    <div
+                                        class="absolute inset-0 flex items-center justify-between p-4 pointer-events-none">
+                                        <button onclick="previousSlide()"
+                                            class="btn btn-circle bg-black/50 border-none text-white hover:bg-black/70 pointer-events-auto">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M15 19l-7-7 7-7"></path>
                                             </svg>
                                         </button>
-                                        <button
-                                            @click="currentSlide = currentSlide < totalSlides - 1 ? currentSlide + 1 : 0"
-                                            class="btn btn-circle bg-black/50 border-none text-white hover:bg-black/70">
+                                        <button onclick="nextSlide()"
+                                            class="btn btn-circle bg-black/50 border-none text-white hover:bg-black/70 pointer-events-auto">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -107,18 +106,19 @@
                                     </div>
 
                                     <!-- Slide Indicators -->
-                                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"
+                                        id="carouselIndicators">
                                         @foreach ($allImages as $index => $imageUrl)
-                                            <button @click="currentSlide = {{ $index }}"
-                                                class="w-3 h-3 rounded-full transition-all duration-200"
-                                                :class="currentSlide === {{ $index }} ? 'bg-white' : 'bg-white/50'"></button>
+                                            <button onclick="goToSlide({{ $index }})"
+                                                data-indicator="{{ $index }}"
+                                                class="carousel-indicator w-3 h-3 rounded-full transition-all duration-200 {{ $index === 0 ? 'bg-white' : 'bg-white/50' }}"></button>
                                         @endforeach
                                     </div>
 
                                     <!-- Image Counter -->
                                     <div class="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        <span x-text="currentSlide + 1"></span> / {{ $imageCount }}
+                                        style="font-family: 'Inter', sans-serif;" id="imageCounter">
+                                        1 / {{ $imageCount }}
                                     </div>
                                 </div>
                             @else
@@ -143,7 +143,7 @@
                             </svg>
                             Deskripsi Fasilitas
                         </h2>
-                        <div class="prose max-w-none" style="font-family: 'Inter', sans-serif;">
+                        <div class="prose max-w-none text-base-content" style="font-family: 'Inter', sans-serif;">
                             {!! nl2br(e($facility->deskripsi)) !!}
                         </div>
                     </div>
@@ -167,17 +167,21 @@
                         <div class="space-y-3" style="font-family: 'Inter', sans-serif;">
                             <div class="flex justify-between items-center">
                                 <span class="text-base-content/70">Kategori:</span>
-                                <span class="font-medium">{{ ucfirst($facility->kategori) }}</span>
+                                <span class="font-medium text-base-content">
+                                    @php
+                                        $categories = \App\Models\Facility::getAvailableCategories();
+                                        echo $categories[$facility->kategori] ?? ucfirst($facility->kategori);
+                                    @endphp
+                                </span>
                             </div>
 
                             @if ($facility->studyProgram)
                                 <div class="flex justify-between items-center">
                                     <span class="text-base-content/70">Program Studi:</span>
-                                    <span class="font-medium">{{ $facility->studyProgram->nama }}</span>
+                                    <span
+                                        class="font-medium text-base-content">{{ $facility->studyProgram->nama }}</span>
                                 </div>
                             @endif
-
-
                         </div>
                     </div>
                 </div>
@@ -228,7 +232,7 @@
                                                 @endif
 
                                                 <div class="flex-1">
-                                                    <h4 class="font-medium text-sm"
+                                                    <h4 class="font-medium text-sm text-base-content"
                                                         style="font-family: 'Inter', sans-serif;">
                                                         {{ $related->nama }}
                                                     </h4>
@@ -253,4 +257,130 @@
             </div>
         </div>
     </div>
+
+    <!-- Carousel Styles and JavaScript -->
+    <style>
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 384px;
+            /* h-96 equivalent */
+            overflow: hidden;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+        .carousel-indicator {
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = {{ $imageCount }};
+
+        function showSlide(index) {
+            // Hide all slides
+            const slides = document.querySelectorAll('.carousel-slide');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(indicator => {
+                indicator.classList.remove('bg-white');
+                indicator.classList.add('bg-white/50');
+            });
+
+            // Show current slide
+            if (slides[index]) {
+                slides[index].classList.add('active');
+            }
+
+            if (indicators[index]) {
+                indicators[index].classList.remove('bg-white/50');
+                indicators[index].classList.add('bg-white');
+            }
+
+            // Update counter
+            const counter = document.getElementById('imageCounter');
+            if (counter) {
+                counter.textContent = `${index + 1} / ${totalSlides}`;
+            }
+        }
+
+        function nextSlide() {
+            if (totalSlides <= 1) return;
+
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            if (totalSlides <= 1) return;
+
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function goToSlide(index) {
+            if (totalSlides <= 1) return;
+
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+
+        // Auto-play carousel (optional)
+        let autoplayInterval;
+
+        function startAutoplay() {
+            if (totalSlides <= 1) return;
+
+            autoplayInterval = setInterval(() => {
+                nextSlide();
+            }, 5000); // Change slide every 5 seconds
+        }
+
+        function stopAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+            }
+        }
+
+        // Initialize carousel when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (totalSlides > 1) {
+                showSlide(0);
+                startAutoplay();
+
+                // Pause autoplay on hover
+                const carousel = document.getElementById('facilityCarousel');
+                if (carousel) {
+                    carousel.addEventListener('mouseenter', stopAutoplay);
+                    carousel.addEventListener('mouseleave', startAutoplay);
+                }
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (totalSlides <= 1) return;
+
+            if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        });
+    </script>
 </div>

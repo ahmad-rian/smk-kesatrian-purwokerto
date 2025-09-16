@@ -1,2 +1,28 @@
+# Robots.txt untuk SMK Kesatrian Purwokerto
+# Generated automatically
+
 User-agent: *
-Disallow:
+Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /storage/
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /vendor/
+Disallow: /*.pdf$
+Disallow: /search?
+Crawl-delay: 1
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+Sitemap: https://www.smkkesatrian.sch.id/sitemap.xml

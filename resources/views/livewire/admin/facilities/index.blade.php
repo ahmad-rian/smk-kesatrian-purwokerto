@@ -115,8 +115,12 @@
                 @scope('cell_gambar', $facility)
                     <div class="avatar">
                         <div class="w-12 h-12 rounded-lg">
-                            @if ($facility->gambar)
-                                <img src="{{ $facility->gambar_url }}" alt="{{ $facility->nama }}"
+                            @if ($facility->primaryImage->first())
+                                <img src="{{ $facility->primaryImage->first()->gambar_url }}" alt="{{ $facility->nama }}"
+                                    class="object-cover w-full h-full rounded-lg"
+                                    onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAyNkM5IDI2IDkgMTQgMjAgMTRTMzEgMjYgMjAgMjZaIiBmaWxsPSIjOUNBM0FGIi8+CjxjaXJjbGUgY3g9IjIwIiBjeT0iMTgiIHI9IjMiIGZpbGw9IiM2QjcyODAiLz4KPC9zdmc+'"/>
+                            @elseif ($facility->images->count() > 0)
+                                <img src="{{ $facility->images->first()->gambar_url }}" alt="{{ $facility->nama }}"
                                     class="object-cover w-full h-full rounded-lg"
                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAyNkM5IDI2IDkgMTQgMjAgMTRTMzEgMjYgMjAgMjZaIiBmaWxsPSIjOUNBM0FGIi8+CjxjaXJjbGUgY3g9IjIwIiBjeT0iMTgiIHI9IjMiIGZpbGw9IiM2QjcyODAiLz4KPC9zdmc+'" />
                             @else
@@ -140,18 +144,21 @@
                 @scope('cell_kategori', $facility)
                     @if ($facility->kategori)
                         <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                            class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
                             @switch($facility->kategori)
                                 @case('laboratorium')
                                     bg-blue-100 text-blue-800
                                     @break
-                                @case('perpustakaan')
+                                @case('ruang_kelas')
                                     bg-green-100 text-green-800
+                                    @break
+                                @case('perpustakaan')
+                                    bg-emerald-100 text-emerald-800
                                     @break
                                 @case('olahraga')
                                     bg-orange-100 text-orange-800
                                     @break
-                                @case('aula')
+                                @case('workshop')
                                     bg-purple-100 text-purple-800
                                     @break
                                 @case('kantin')
@@ -160,13 +167,22 @@
                                 @case('asrama')
                                     bg-indigo-100 text-indigo-800
                                     @break
+                                @case('musholla')
+                                    bg-teal-100 text-teal-800
+                                    @break
                                 @case('parkir')
                                     bg-gray-100 text-gray-800
+                                    @break
+                                @case('lainnya')
+                                    bg-slate-100 text-slate-800
                                     @break
                                 @default
                                     bg-gray-100 text-gray-800
                             @endswitch">
-                            {{ ucfirst($facility->kategori) }}
+                            @php
+                                $categories = \App\Models\Facility::getAvailableCategories();
+                                echo $categories[$facility->kategori] ?? ucfirst($facility->kategori);
+                            @endphp
                         </span>
                     @else
                         <span class="text-gray-400 text-sm">-</span>

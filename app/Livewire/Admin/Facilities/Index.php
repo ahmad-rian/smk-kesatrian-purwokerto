@@ -185,7 +185,7 @@ class Index extends Component
     public function getFacilitiesProperty()
     {
         return Facility::query()
-            ->with(['studyProgram'])
+            ->with(['studyProgram', 'images', 'primaryImage'])
             ->when($this->search, function (Builder $query) {
                 $query->where(function (Builder $q) {
                     $q->where('nama', 'like', '%' . $this->search . '%')

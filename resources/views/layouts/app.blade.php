@@ -1,5 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
+{{-- Favicon - Menggunakan asset() untuk konsistensi URL --}}
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ filemtime(public_path('favicon.ico')) }}">
+<link rel="shortcut icon" type="image/x-icon"
+    href="{{ asset('favicon.ico') }}?v={{ filemtime(public_path('favicon.ico')) }}">
+{{-- Multiple favicon sizes untuk kompabilitas maksimal --}}
+<link rel="icon" type="image/png" sizes="32x32" href="{{ route('seo.favicon', ['size' => 32]) }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ route('seo.favicon', ['size' => 16]) }}">
+<link rel="apple-touch-icon" href="{{ route('seo.favicon', ['size' => 180]) }}">
+lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 
 <head>
     <meta charset="utf-8">
@@ -8,30 +16,50 @@
 
     <title>@yield('title', config('app.name', 'SMK Kesatrian'))</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@100..900&display=swap"
-        rel="stylesheet">
+    <!-- Fonts loaded via preload for better performance -->
 
     <!-- Favicon -->
     @php
         $siteSettings = \App\Models\SiteSetting::first();
     @endphp
+    {{-- Favicon - Prioritas favicon.ico untuk konsistensi --}}
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v={{ filemtime(public_path('favicon.ico')) }}">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v={{ filemtime(public_path('favicon.ico')) }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ route('seo.favicon', ['size' => 32]) }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ route('seo.favicon', ['size' => 16]) }}">
+    <link rel="apple-touch-icon" href="{{ route('seo.favicon', ['size' => 180]) }}">
     @if ($siteSettings && $siteSettings->logo)
-        <link rel="icon" type="image/x-icon" href="{{ Storage::url($siteSettings->logo) }}">
-    @else
-        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ route('seo.favicon', ['size' => 192]) }}">
+        <link rel="icon" type="image/png" sizes="512x512" href="{{ route('seo.favicon', ['size' => 512]) }}">
     @endif
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="{{ $siteSettings->nama_singkat ?? 'SMK Kesatrian' }}">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Meta Tags -->
     @if ($siteSettings)
         <meta name="description"
             content="{{ $siteSettings->deskripsi ?? ($siteSettings->tagline ?? 'SMK Kesatrian - Membangun Generasi Unggul') }}">
         <meta name="keywords"
-            content="SMK, Sekolah Menengah Kejuruan, {{ $siteSettings->nama_sekolah ?? 'SMK Kesatrian' }}, Pendidikan, Teknologi">
+            content="SMK, Sekolah Menengah Kejuruan, {{ $siteSettings->nama_sekolah ?? 'SMK Kesatrian' }}, Pendidikan, Teknologi, Lulusan Berkualitas, Kompetensi Keahlian">
         <meta name="author" content="{{ $siteSettings->nama_sekolah ?? 'SMK Kesatrian' }}">
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+        <meta name="googlebot" content="index, follow">
+        <meta name="bingbot" content="index, follow">
+        <meta name="language" content="Indonesian">
+        <meta name="geo.region" content="ID">
+        <meta name="geo.country" content="Indonesia">
+        @if ($siteSettings->alamat)
+            <meta name="geo.placename" content="{{ $siteSettings->alamat }}">
+        @endif
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
@@ -54,8 +82,34 @@
         @endif
     @endif
 
+    <!-- DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload"
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@100..900&display=swap"
+        as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@100..900&display=swap">
+    </noscript>
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- Additional SEO Meta -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-TileColor" content="#3b82f6">
+    <meta name="msapplication-config" content="/browserconfig.xml">
 
     <!-- Additional Styles -->
     @stack('styles')

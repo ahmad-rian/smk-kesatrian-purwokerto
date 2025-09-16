@@ -74,6 +74,9 @@
                         <!-- Users Management -->
                         <x-mary-menu-item title="Manajemen User" icon="o-users" :link="route('admin.users.index')" :active="request()->routeIs('admin.users.*')"
                             wire:navigate class="spa-nav-item" />
+
+                        <!-- SEO Management -->
+
                     </div>
                 </x-mary-menu>
             </div>

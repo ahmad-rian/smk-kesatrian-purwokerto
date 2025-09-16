@@ -1,0 +1,7 @@
+# Security.txt untuk SMK Kesatrian Purwokerto
+# Generated automatically
+
+Contact: mailto:info@smkkesatrian.sch.id
+Expires: 2026-09-15T10:14:10.314184Z
+Preferred-Languages: id, en
+Canonical: https://www.smkkesatrian.sch.id/.well-known/security.txt

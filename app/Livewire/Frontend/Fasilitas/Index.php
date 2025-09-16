@@ -50,11 +50,16 @@ class Index extends Component
      */
     public array $categories = [
         'all' => 'Semua Kategori',
-        'Laboratorium' => 'Laboratorium',
-        'Fasilitas Umum' => 'Fasilitas Umum',
-        'Olahraga' => 'Olahraga',
-        'Teknologi' => 'Teknologi',
-        'Penunjang' => 'Penunjang'
+        'laboratorium' => 'Laboratorium',
+        'ruang_kelas' => 'Ruang Kelas',
+        'perpustakaan' => 'Perpustakaan',
+        'olahraga' => 'Fasilitas Olahraga',
+        'workshop' => 'Workshop/Bengkel',
+        'kantin' => 'Kantin',
+        'asrama' => 'Asrama',
+        'musholla' => 'Musholla/Tempat Ibadah',
+        'parkir' => 'Area Parkir',
+        'lainnya' => 'Lainnya'
     ];
 
     /**
