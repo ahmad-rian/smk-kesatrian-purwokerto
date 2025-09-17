@@ -133,16 +133,82 @@
                                     </div>
                                 @endif
                             </a>
-                            <a href="{{ route('berita') }}"
-                                class="relative {{ $this->getActiveClass('berita') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm"
-                                wire:navigate>
-                                Berita
-                                @if ($this->isActiveRoute('berita'))
-                                    <div
-                                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
-                                    </div>
-                                @endif
-                            </a>
+                            {{-- Berita Dropdown --}}
+                            <div class="relative group" x-data="{ open: false }" @mouseleave="open = false">
+                                <button @mouseenter="open = true" @click="open = !open"
+                                    class="relative {{ $this->getActiveClass('berita') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm flex items-center">
+                                    Berita
+                                    <svg class="w-4 h-4 ml-1 transform transition-transform duration-200"
+                                        :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                    @if ($this->isActiveRoute('berita'))
+                                        <div
+                                            class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
+                                        </div>
+                                    @endif
+                                </button>
+
+                                {{-- Dropdown Menu --}}
+                                <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 transform scale-95"
+                                    x-transition:enter-end="opacity-100 transform scale-100"
+                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave-start="opacity-100 transform scale-100"
+                                    x-transition:leave-end="opacity-0 transform scale-95" @mouseenter="open = true"
+                                    class="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
+                                    style="display: none;">
+
+                                    {{-- All News --}}
+                                    <a href="{{ route('berita') }}" wire:navigate
+                                        class="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                        <div
+                                            class="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg mr-3">
+                                            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900 dark:text-white">Semua Berita
+                                            </div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">Lihat semua artikel
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    {{-- Categories --}}
+                                    @if ($newsCategories && $newsCategories->count() > 0)
+                                        <div class="border-t border-gray-100 dark:border-gray-700 my-2"></div>
+                                        @foreach ($newsCategories as $category)
+                                            <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
+                                                wire:navigate
+                                                class="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                                <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3"
+                                                    style="background-color: {{ $category->color }}20;">
+                                                    @if ($category->icon)
+                                                        <x-mary-icon name="{{ $category->icon }}" class="w-4 h-4"
+                                                            style="color: {{ $category->color }}" />
+                                                    @else
+                                                        <div class="w-4 h-4 rounded-full"
+                                                            style="background-color: {{ $category->color }}"></div>
+                                                    @endif
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                        {{ $category->name }}</div>
+                                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                        {{ $category->news_count }} artikel</div>
+                                                </div>
+                                            </a>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
                             <a href="{{ route('kontak') }}"
                                 class="relative {{ $this->getActiveClass('kontak') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm"
                                 wire:navigate>
@@ -211,16 +277,6 @@
                                     class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900">
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Login Button (Desktop) -->
-                        <div class="hidden sm:block">
-                            <a href="{{ route('login') }}"
-                                class="btn btn-primary btn-sm hover:scale-105 transition-transform duration-300 text-xs px-3 py-1"
-                                style="font-family: 'Inter', sans-serif;" wire:navigate>
-                                <x-mary-icon name="o-user" class="w-3 h-3 sm:w-4 sm:h-4" />
-                                <span class="hidden sm:inline">Masuk</span>
-                            </a>
                         </div>
 
                         <!-- Mobile Menu Toggle -->
@@ -299,14 +355,68 @@
                                     <span>Kegiatan</span>
                                 </div>
                             </a>
-                            <a href="{{ route('berita') }}" @click="mobileMenuOpen = false"
-                                class="block px-3 py-2 {{ $this->getActiveMobileClass('berita') }} rounded-lg transition-all font-medium text-sm"
-                                wire:navigate>
-                                <div class="flex items-center space-x-3">
-                                    <x-mary-icon name="o-newspaper" class="w-4 h-4" />
-                                    <span>Berita</span>
+                            {{-- Mobile Berita Accordion --}}
+                            <div x-data="{ open: false }">
+                                <button @click="open = !open"
+                                    class="w-full flex items-center justify-between px-3 py-2 {{ $this->getActiveMobileClass('berita') }} rounded-lg transition-all font-medium text-sm">
+                                    <div class="flex items-center space-x-3">
+                                        <x-mary-icon name="o-newspaper" class="w-4 h-4" />
+                                        <span>Berita</span>
+                                    </div>
+                                    <svg class="w-4 h-4 transform transition-transform duration-200"
+                                        :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+
+                                <div x-show="open" x-collapse class="ml-6 mt-2 space-y-1">
+                                    {{-- All News --}}
+                                    <a href="{{ route('berita') }}" @click="mobileMenuOpen = false"
+                                        class="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
+                                        wire:navigate>
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                <svg class="w-3 h-3 text-blue-500" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <span>Semua Berita</span>
+                                        </div>
+                                    </a>
+
+                                    {{-- Categories --}}
+                                    @if ($newsCategories && $newsCategories->count() > 0)
+                                        @foreach ($newsCategories as $category)
+                                            <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
+                                                @click="mobileMenuOpen = false"
+                                                class="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
+                                                wire:navigate>
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="w-4 h-4 flex items-center justify-center">
+                                                        @if ($category->icon)
+                                                            <x-mary-icon name="{{ $category->icon }}" class="w-3 h-3"
+                                                                style="color: {{ $category->color }}" />
+                                                        @else
+                                                            <div class="w-3 h-3 rounded-full"
+                                                                style="background-color: {{ $category->color }}">
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <span>{{ $category->name }}</span>
+                                                    <span
+                                                        class="text-xs text-gray-400">({{ $category->news_count }})</span>
+                                                </div>
+                                            </a>
+                                        @endforeach
+                                    @endif
                                 </div>
-                            </a>
+                            </div>
                             <a href="{{ route('kontak') }}" @click="mobileMenuOpen = false"
                                 class="block px-3 py-2 {{ $this->getActiveMobileClass('kontak') }} rounded-lg transition-all font-medium text-sm"
                                 wire:navigate>
@@ -316,16 +426,6 @@
                                 </div>
                             </a>
                         </nav>
-
-                        <!-- Mobile Login Button -->
-                        <div class="pt-3 border-t border-base-300">
-                            <a href="{{ route('login') }}" @click="mobileMenuOpen = false"
-                                class="flex items-center justify-center space-x-2 w-full btn btn-primary btn-sm"
-                                style="font-family: 'Inter', sans-serif;" wire:navigate>
-                                <x-mary-icon name="o-user" class="w-4 h-4" />
-                                <span>Masuk</span>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,9 @@
 <div>
     {{-- Carousel Section - Hanya padding atas yang diperkecil --}}
+    {{-- Carousel Section - Mobile Navigation Fixed --}}
     <section class="carousel-section relative overflow-hidden bg-base-100">
         @if ($carouselData && $carouselData->count() > 0)
-            {{-- Carousel Container dengan padding atas minimal --}}
+            {{-- Carousel Container --}}
             <div class="flex justify-center pt-2 pb-6 lg:pt-3 lg:pb-8">
                 <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="carousel w-full h-80 md:h-[28rem] lg:h-[32rem]" x-data="{
@@ -44,7 +45,7 @@
                     }"
                         @mouseenter="stopAutoPlay()" @mouseleave="startAutoPlay()">
 
-                        {{-- Simple Image Container --}}
+                        {{-- Image Container with proper overflow handling --}}
                         <div class="relative w-full h-full rounded-xl lg:rounded-2xl overflow-hidden shadow-xl">
                             @foreach ($carouselData as $index => $carousel)
                                 <div class="carousel-item absolute inset-0 w-full h-full"
@@ -69,25 +70,23 @@
                                         </div>
                                     @endif
 
-                                    {{-- Text Overlay - Welcome dan Deskripsi --}}
-                                    <div class="absolute inset-0 flex items-center justify-center z-20">
-                                        <div class="text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-                                            {{-- Welcome Title --}}
-                                            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 drop-shadow-2xl"
-                                                style="font-family: 'Bricolage Grotesque', sans-serif; text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
-                                                Welcome
-                                            </h1>
-                                            
-                                            {{-- Dynamic Description --}}
+                                    {{-- Text Overlay --}}
+                                    <div
+                                        class="absolute inset-0 flex items-center justify-center z-20 px-4 sm:px-6 lg:px-8">
+                                        <div class="text-center max-w-4xl mx-auto">
+                                            {{-- Carousel Title --}}
+                                            @if ($carousel->judul)
+                                                <h1 class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-2 sm:mb-4 drop-shadow-2xl"
+                                                    style="font-family: 'Bricolage Grotesque', sans-serif; text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
+                                                    {{ $carousel->judul }}
+                                                </h1>
+                                            @endif
+
+                                            {{-- Carousel Description --}}
                                             @if ($carousel->deskripsi)
-                                                <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 font-medium leading-relaxed drop-shadow-lg max-w-3xl mx-auto"
-                                                   style="font-family: 'Inter', sans-serif; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);">
+                                                <p class="text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-white/95 font-medium leading-relaxed drop-shadow-lg max-w-3xl mx-auto"
+                                                    style="font-family: 'Inter', sans-serif; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);">
                                                     {{ $carousel->deskripsi }}
-                                                </p>
-                                            @else
-                                                <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/95 font-medium leading-relaxed drop-shadow-lg max-w-3xl mx-auto"
-                                                   style="font-family: 'Inter', sans-serif; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);">
-                                                    {{ $siteSettings->tagline ?? 'Mencetak Generasi Unggul dan Berkarakter' }}
                                                 </p>
                                             @endif
                                         </div>
@@ -95,37 +94,42 @@
                                 </div>
                             @endforeach
 
-                            {{-- Simple Navigation Controls --}}
+                            {{-- Fixed Navigation Controls for Mobile --}}
                             @if ($carouselData->count() > 1)
-                                {{-- Previous/Next Buttons --}}
+                                {{-- Previous/Next Buttons - Improved positioning --}}
                                 <div
-                                    class="absolute left-4 right-4 top-1/2 flex -translate-y-1/2 transform justify-between pointer-events-none z-10">
+                                    class="absolute left-2 right-2 sm:left-4 sm:right-4 top-1/2 flex -translate-y-1/2 transform justify-between z-30 pointer-events-none">
                                     <button @click="prevSlide()"
-                                        class="btn btn-circle bg-black/20 hover:bg-black/40 text-white border-none backdrop-blur-sm transition-all duration-300 pointer-events-auto hover:scale-105 w-10 h-10 md:w-12 md:h-12">
-                                        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        class="btn btn-circle bg-black/40 hover:bg-black/60 text-white border-none backdrop-blur-sm transition-all duration-300 hover:scale-105 
+                                           w-10 h-10 min-h-10 sm:w-12 sm:h-12 sm:min-h-12 md:w-14 md:h-14 md:min-h-14 
+                                           shadow-lg pointer-events-auto flex-shrink-0">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M15 19l-7-7 7-7"></path>
                                         </svg>
                                     </button>
                                     <button @click="nextSlide()"
-                                        class="btn btn-circle bg-black/20 hover:bg-black/40 text-white border-none backdrop-blur-sm transition-all duration-300 pointer-events-auto hover:scale-105 w-10 h-10 md:w-12 md:h-12">
-                                        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        class="btn btn-circle bg-black/40 hover:bg-black/60 text-white border-none backdrop-blur-sm transition-all duration-300 hover:scale-105 
+                                           w-10 h-10 min-h-10 sm:w-12 sm:h-12 sm:min-h-12 md:w-14 md:h-14 md:min-h-14 
+                                           shadow-lg pointer-events-auto flex-shrink-0">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M9 5l7 7-7 7"></path>
                                         </svg>
                                     </button>
                                 </div>
 
-                                {{-- Simple Dots Indicator --}}
-                                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+                                {{-- Dots Indicator - Mobile optimized --}}
+                                <div
+                                    class="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1.5 sm:space-x-2 z-30">
                                     @foreach ($carouselData as $index => $carousel)
                                         <button @click="goToSlide({{ $index }})"
                                             class="transition-all duration-300 rounded-full"
                                             :class="currentSlide === {{ $index }} ?
-                                                'w-8 h-3 bg-white shadow-lg' :
-                                                'w-3 h-3 bg-white/60 hover:bg-white/80 hover:scale-110'">
+                                                'w-6 h-2.5 sm:w-8 sm:h-3 bg-white shadow-lg' :
+                                                'w-2.5 h-2.5 sm:w-3 sm:h-3 bg-white/60 hover:bg-white/80 hover:scale-110'">
                                         </button>
                                     @endforeach
                                 </div>
@@ -135,7 +139,7 @@
                 </div>
             </div>
         @else
-            {{-- Simple Fallback dengan padding atas minimal --}}
+            {{-- Fallback content unchanged --}}
             <div class="flex justify-center pt-2 pb-6 lg:pt-3 lg:pb-8">
                 <div class="w-full max-w-6xl px-4 sm:px-6 lg:px-8">
                     <div
@@ -158,94 +162,91 @@
                 </div>
             </div>
         @endif
-    </section>
+    </section {{-- Berita Terbaru Section --}} <section id="berita" class="py-16 bg-base-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-base-content mb-4"
+                style="font-family: 'Bricolage Grotesque', sans-serif;">
+                Berita Terbaru
+            </h2>
+            <p class="text-base-content/70 max-w-2xl mx-auto" style="font-family: 'Inter', sans-serif;">
+                Ikuti perkembangan terbaru dan informasi penting dari
+                {{ $siteSettings->nama_sekolah ?? 'SMK Kesatrian' }}
+            </p>
+        </div>
 
-    {{-- Berita Terbaru Section --}}
-    <section id="berita" class="py-16 bg-base-200">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-base-content mb-4"
-                    style="font-family: 'Bricolage Grotesque', sans-serif;">
-                    Berita Terbaru
-                </h2>
-                <p class="text-base-content/70 max-w-2xl mx-auto" style="font-family: 'Inter', sans-serif;">
-                    Ikuti perkembangan terbaru dan informasi penting dari
-                    {{ $siteSettings->nama_sekolah ?? 'SMK Kesatrian' }}
-                </p>
-            </div>
+        @if ($latestNews && $latestNews->count() > 0)
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach ($latestNews as $news)
+                    <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                        onclick="window.location.href='{{ route('berita.detail', $news->slug) }}'">
+                        @if ($news->gambar)
+                            <figure class="h-48 overflow-hidden">
+                                <img src="{{ Storage::url($news->gambar) }}" alt="{{ $news->judul }}"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                            </figure>
+                        @else
+                            <figure class="h-48 bg-base-300 flex items-center justify-center">
+                                <svg class="w-16 h-16 text-base-content/20" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
+                                    </path>
+                                </svg>
+                            </figure>
+                        @endif
 
-            @if ($latestNews && $latestNews->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @foreach ($latestNews as $news)
-                        <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-                            onclick="window.location.href='{{ route('berita.detail', $news->slug) }}'">
-                            @if ($news->gambar)
-                                <figure class="h-48 overflow-hidden">
-                                    <img src="{{ Storage::url($news->gambar) }}" alt="{{ $news->judul }}"
-                                        class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-                                </figure>
-                            @else
-                                <figure class="h-48 bg-base-300 flex items-center justify-center">
-                                    <svg class="w-16 h-16 text-base-content/20" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
-                                        </path>
-                                    </svg>
-                                </figure>
+                        <div class="card-body p-4">
+                            @if ($news->kategori)
+                                <div class="badge badge-primary badge-sm mb-2"
+                                    style="font-family: 'Inter', sans-serif;">
+                                    {{ $news->kategori }}
+                                </div>
                             @endif
 
-                            <div class="card-body p-4">
-                                @if ($news->kategori)
-                                    <div class="badge badge-primary badge-sm mb-2"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        {{ $news->kategori }}
-                                    </div>
-                                @endif
+                            <h3 class="card-title text-base line-clamp-2 mb-2"
+                                style="font-family: 'Bricolage Grotesque', sans-serif;">
+                                {{ $news->judul }}
+                            </h3>
 
-                                <h3 class="card-title text-base line-clamp-2 mb-2"
-                                    style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                    {{ $news->judul }}
-                                </h3>
-
-                                @if ($news->ringkasan)
-                                    <p class="text-sm text-base-content/70 line-clamp-3 mb-3"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        {{ $news->ringkasan }}
-                                    </p>
-                                @endif
-
-                                <div class="flex justify-between items-center text-xs text-base-content/60"
+                            @if ($news->ringkasan)
+                                <p class="text-sm text-base-content/70 line-clamp-3 mb-3"
                                     style="font-family: 'Inter', sans-serif;">
-                                    <span>{{ $news->tanggal_publikasi->format('d M Y') }}</span>
-                                    <a href="{{ route('berita.detail', $news->slug) }}"
-                                        class="text-primary hover:underline" wire:navigate>Baca Selengkapnya</a>
-                                </div>
+                                    {{ $news->ringkasan }}
+                                </p>
+                            @endif
+
+                            <div class="flex justify-between items-center text-xs text-base-content/60"
+                                style="font-family: 'Inter', sans-serif;">
+                                <span>{{ $news->tanggal_publikasi->format('d M Y') }}</span>
+                                <a href="{{ route('berita.detail', $news->slug) }}"
+                                    class="text-primary hover:underline" wire:navigate>Baca Selengkapnya</a>
                             </div>
                         </div>
-                    @endforeach
-                </div>
+                    </div>
+                @endforeach
+            </div>
 
-                <div class="text-center mt-8">
-                    <a href="{{ route('berita') }}" class="btn btn-outline btn-primary"
-                        style="font-family: 'Inter', sans-serif;" wire:navigate>
-                        Lihat Semua Berita
-                    </a>
-                </div>
-            @else
-                <div class="text-center py-12">
-                    <svg class="w-16 h-16 mx-auto text-base-content/20 mb-4" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
-                        </path>
-                    </svg>
-                    <p class="text-base-content/60" style="font-family: 'Inter', sans-serif;">
-                        Belum ada berita yang dipublikasikan
-                    </p>
-                </div>
-            @endif
-        </div>
+            <div class="text-center mt-8">
+                <a href="{{ route('berita') }}" class="btn btn-outline btn-primary"
+                    style="font-family: 'Inter', sans-serif;" wire:navigate>
+                    Lihat Semua Berita
+                </a>
+            </div>
+        @else
+            <div class="text-center py-12">
+                <svg class="w-16 h-16 mx-auto text-base-content/20 mb-4" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
+                    </path>
+                </svg>
+                <p class="text-base-content/60" style="font-family: 'Inter', sans-serif;">
+                    Belum ada berita yang dipublikasikan
+                </p>
+            </div>
+        @endif
+    </div>
     </section>
 
     {{-- Kegiatan Sekolah Section --}}

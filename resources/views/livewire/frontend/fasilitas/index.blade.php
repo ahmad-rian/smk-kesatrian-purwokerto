@@ -25,7 +25,7 @@
                 Nikmati fasilitas modern dan lengkap yang mendukung proses pembelajaran berkualitas tinggi
             </p>
 
-            <!-- Professional Stats -->
+            {{-- <!-- Professional Stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12">
                 <div class="text-center">
                     <div class="text-3xl font-bold text-blue-400 mb-2">{{ $facilities->count() }}</div>
@@ -43,7 +43,7 @@
                     <div class="text-3xl font-bold text-emerald-400 mb-2">24/7</div>
                     <div class="text-slate-300 text-sm">Akses</div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </section>
 

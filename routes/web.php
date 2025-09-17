@@ -24,8 +24,6 @@ use App\Livewire\Admin\GalleryImages\Index as GalleryImagesIndex;
 use App\Livewire\Admin\HomeCarousels\Index as HomeCarouselsIndex;
 use App\Livewire\Admin\HomeCarousels\Create as HomeCarouselsCreate;
 use App\Livewire\Admin\HomeCarousels\Edit as HomeCarouselsEdit;
-use App\Livewire\Admin\ContactMessages\Index as ContactMessagesIndex;
-use App\Livewire\Admin\ContactMessages\Show as ContactMessagesShow;
 use App\Livewire\Admin\Users\Index as UsersIndex;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\SeoController;
@@ -46,7 +44,7 @@ Route::get('/kegiatan/{id}', [\App\Http\Controllers\ActivityController::class, '
     ->name('activity.detail');
 
 // Halaman berita
-Route::get('/berita', [\App\Http\Controllers\NewsController::class, 'index'])
+Route::get('/berita', \App\Livewire\Frontend\Berita\Index::class)
     ->name('berita');
 
 // Detail berita
@@ -142,6 +140,15 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(functio
         ->where('id', '[0-9]+')
         ->name('admin.news.edit');
 
+    // News Categories Management
+    Route::get('/news-categories', \App\Livewire\Admin\NewsCategories\Index::class)
+        ->name('admin.news-categories.index');
+    Route::get('/news-categories/create', \App\Livewire\Admin\NewsCategories\Create::class)
+        ->name('admin.news-categories.create');
+    Route::get('/news-categories/{newsCategory}/edit', \App\Livewire\Admin\NewsCategories\Edit::class)
+        ->name('admin.news-categories.edit');
+
+
     // Facilities Management
     Route::get('/facilities', FacilitiesIndex::class)
         ->name('admin.facilities.index');
@@ -168,19 +175,12 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(functio
     Route::get('/home-carousels/{homeCarousel}/edit', HomeCarouselsEdit::class)
         ->name('admin.home-carousels.edit');
 
-    // Contact Messages Management
-    Route::get('/contact-messages', ContactMessagesIndex::class)
-        ->name('admin.contact-messages.index');
-    Route::get('/contact-messages/{contactMessage}/show', ContactMessagesShow::class)
-        ->name('admin.contact-messages.show');
     Route::get('/galleries/{gallery}/images', GalleryImagesIndex::class)
         ->name('admin.gallery-images.index');
 
     // Users Management
     Route::get('/users', UsersIndex::class)
         ->name('admin.users.index');
-
-
 });
 
 // SEO Routes - untuk optimasi mesin pencari

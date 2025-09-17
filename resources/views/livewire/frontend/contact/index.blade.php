@@ -27,267 +27,116 @@
         </div>
     </section>
 
-    <!-- Contact Form Section -->
+    <!-- Contact Information Section -->
     <section class="py-16 bg-base-200/50 transition-colors duration-300">
         <div class="container mx-auto px-4">
             <div class="max-w-7xl mx-auto">
-
-
-                <!-- Contact Form and Info Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Contact Form -->
-                    <div class="lg:col-span-2">
-                        <div
-                            class="bg-base-100 p-6 sm:p-8 rounded-2xl shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300">
-                            <div class="flex items-center mb-6">
-                                <div
-                                    class="w-10 h-10 sm:w-12 sm:h-12 bg-green-600 rounded-full flex items-center justify-center mr-4 shadow-md">
-                                    <x-mary-icon name="o-paper-airplane" class="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                                </div>
-                                <h2 class="text-2xl sm:text-3xl font-bold text-base-content transition-colors duration-300"
-                                    style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                    Kirim Pesan
-                                </h2>
+                <!-- Contact Information Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                    <!-- Address Card -->
+                    <div
+                        class="bg-base-100 p-6 rounded-2xl shadow-lg border border-base-300 hover:shadow-xl hover:border-green-500/30 transition-all duration-300 group">
+                        <div class="text-center">
+                            <div
+                                class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 mx-auto mb-4">
+                                <x-mary-icon name="o-map-pin" class="w-8 h-8 text-white" />
                             </div>
-
-                            <!-- Success Message -->
-                            @if ($successMessage)
-                                <div class="mb-6 p-4 bg-green-500/10 border border-green-500/30 text-green-600 rounded-lg transition-colors duration-300"
-                                    x-data="{ show: true }" x-show="show"
-                                    x-transition:enter="transition ease-out duration-300"
-                                    x-transition:enter-start="opacity-0 transform scale-90"
-                                    x-transition:enter-end="opacity-100 transform scale-100">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <x-mary-icon name="o-check-circle" class="w-5 h-5 mr-2" />
-                                            <span class="text-base-content transition-colors duration-300"
-                                                style="font-family: 'Inter', sans-serif;">{{ $successMessage }}</span>
-                                        </div>
-                                        <button @click="show = false; $wire.resetSuccessMessage()"
-                                            class="text-green-600 hover:text-green-700 transition-colors duration-200">
-                                            <x-mary-icon name="o-x-mark" class="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <!-- Error Messages -->
-                            @if (session()->has('error'))
-                                <div
-                                    class="mb-6 p-4 bg-red-500/10 border border-red-500/30 text-red-600 rounded-lg transition-colors duration-300">
-                                    <div class="flex items-center">
-                                        <x-mary-icon name="o-exclamation-circle" class="w-5 h-5 mr-2" />
-                                        <span class="text-base-content transition-colors duration-300"
-                                            style="font-family: 'Inter', sans-serif;">{{ session('error') }}</span>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <form wire:submit="submitContact" class="space-y-6">
-                                <!-- Name Field -->
-                                <div>
-                                    <label for="name"
-                                        class="block text-sm font-semibold text-base-content mb-2 transition-colors duration-300"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        Nama Lengkap *
-                                    </label>
-                                    <input type="text" id="name" wire:model="name"
-                                        class="w-full px-4 py-3 border border-base-300 bg-base-100 text-base-content rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                                        placeholder="Masukkan nama lengkap Anda"
-                                        style="font-family: 'Inter', sans-serif;">
-                                    @error('name')
-                                        <p class="mt-1 text-sm text-red-600 transition-colors duration-300"
-                                            style="font-family: 'Inter', sans-serif;">
-                                            {{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Email Field -->
-                                <div>
-                                    <label for="email"
-                                        class="block text-sm font-semibold text-base-content mb-2 transition-colors duration-300"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        Email *
-                                    </label>
-                                    <input type="email" id="email" wire:model="email"
-                                        class="w-full px-4 py-3 border border-base-300 bg-base-100 text-base-content rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                                        placeholder="Masukkan alamat email Anda"
-                                        style="font-family: 'Inter', sans-serif;">
-                                    @error('email')
-                                        <p class="mt-1 text-sm text-red-600 transition-colors duration-300"
-                                            style="font-family: 'Inter', sans-serif;">
-                                            {{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Phone Field -->
-                                <div>
-                                    <label for="phone"
-                                        class="block text-sm font-semibold text-base-content mb-2 transition-colors duration-300"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        Nomor Telepon
-                                    </label>
-                                    <input type="tel" id="phone" wire:model="phone"
-                                        class="w-full px-4 py-3 border border-base-300 bg-base-100 text-base-content rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                                        placeholder="Masukkan nomor telepon Anda"
-                                        style="font-family: 'Inter', sans-serif;">
-                                    @error('phone')
-                                        <p class="mt-1 text-sm text-red-600 transition-colors duration-300"
-                                            style="font-family: 'Inter', sans-serif;">
-                                            {{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Subject Field -->
-                                <div>
-                                    <label for="subject"
-                                        class="block text-sm font-semibold text-base-content mb-2 transition-colors duration-300"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        Subjek *
-                                    </label>
-                                    <input type="text" id="subject" wire:model="subject"
-                                        class="w-full px-4 py-3 border border-base-300 bg-base-100 text-base-content rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                                        placeholder="Masukkan subjek pesan" style="font-family: 'Inter', sans-serif;">
-                                    @error('subject')
-                                        <p class="mt-1 text-sm text-red-600 transition-colors duration-300"
-                                            style="font-family: 'Inter', sans-serif;">
-                                            {{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Message Field -->
-                                <div>
-                                    <label for="message"
-                                        class="block text-sm font-semibold text-base-content mb-2 transition-colors duration-300"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        Pesan *
-                                    </label>
-                                    <textarea id="message" wire:model="message" rows="6"
-                                        class="w-full px-4 py-3 border border-base-300 bg-base-100 text-base-content rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 resize-none"
-                                        placeholder="Tulis pesan Anda di sini..." style="font-family: 'Inter', sans-serif;"></textarea>
-                                    @error('message')
-                                        <p class="mt-1 text-sm text-red-600 transition-colors duration-300"
-                                            style="font-family: 'Inter', sans-serif;">
-                                            {{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Submit Button -->
-                                <div>
-                                    <button type="submit" wire:loading.attr="disabled"
-                                        class="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
-                                        style="font-family: 'Inter', sans-serif;">
-                                        <span wire:loading.remove class="flex items-center">
-                                            <x-mary-icon name="o-paper-airplane" class="w-5 h-5 mr-2" />
-                                            Kirim Pesan
-                                        </span>
-                                        <span wire:loading class="flex items-center">
-                                            <x-mary-icon name="o-arrow-path" class="w-5 h-5 mr-2 animate-spin" />
-                                            Mengirim...
-                                        </span>
-                                    </button>
-                                </div>
-                            </form>
+                            <h3 class="text-lg font-bold text-base-content mb-2 transition-colors duration-300"
+                                style="font-family: 'Bricolage Grotesque', sans-serif;">
+                                Alamat
+                            </h3>
+                            <p class="text-base-content/70 text-sm leading-relaxed transition-colors duration-300"
+                                style="font-family: 'Inter', sans-serif;">
+                                {{ $schoolAddress }}
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Contact Information -->
-                    <div class="lg:col-span-1">
-                        <div
-                            class="bg-base-100 rounded-2xl shadow-lg border border-base-300 p-6 transition-all duration-300">
-                            <h3 class="text-xl font-bold text-base-content mb-6 transition-colors duration-300"
+                    <!-- Phone Card -->
+                    <div
+                        class="bg-base-100 p-6 rounded-2xl shadow-lg border border-base-300 hover:shadow-xl hover:border-green-500/30 transition-all duration-300 group">
+                        <div class="text-center">
+                            <div
+                                class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 mx-auto mb-4">
+                                <x-mary-icon name="o-phone" class="w-8 h-8 text-white" />
+                            </div>
+                            <h3 class="text-lg font-bold text-base-content mb-2 transition-colors duration-300"
                                 style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                Informasi Kontak
+                                Telepon
                             </h3>
+                            <a href="tel:{{ str_replace(['(', ')', ' ', '-'], '', $schoolPhone) }}"
+                                class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors duration-200"
+                                style="font-family: 'Inter', sans-serif;">
+                                {{ $schoolPhone }}
+                            </a>
+                        </div>
+                    </div>
 
-                            <!-- Contact Cards -->
-                            <div class="space-y-4">
-                                <!-- Address Card -->
-                                <div
-                                    class="bg-base-200/50 p-4 rounded-xl border border-base-300 hover:shadow-md hover:border-green-500/30 transition-all duration-300 group">
-                                    <div class="flex items-start space-x-3">
-                                        <div
-                                            class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                                            <x-mary-icon name="o-map-pin" class="w-5 h-5 text-white" />
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-bold text-base-content mb-1 transition-colors duration-300"
-                                                style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                                Alamat
-                                            </h4>
-                                            <p class="text-base-content/70 text-xs leading-relaxed transition-colors duration-300"
-                                                style="font-family: 'Inter', sans-serif;">
-                                                {{ $schoolAddress }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Email Card -->
+                    <div
+                        class="bg-base-100 p-6 rounded-2xl shadow-lg border border-base-300 hover:shadow-xl hover:border-green-500/30 transition-all duration-300 group">
+                        <div class="text-center">
+                            <div
+                                class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 mx-auto mb-4">
+                                <x-mary-icon name="o-envelope" class="w-8 h-8 text-white" />
+                            </div>
+                            <h3 class="text-lg font-bold text-base-content mb-2 transition-colors duration-300"
+                                style="font-family: 'Bricolage Grotesque', sans-serif;">
+                                Email
+                            </h3>
+                            <a href="mailto:{{ $schoolEmail }}"
+                                class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors duration-200 break-all"
+                                style="font-family: 'Inter', sans-serif;">
+                                {{ $schoolEmail }}
+                            </a>
+                        </div>
+                    </div>
 
-                                <!-- Phone Card -->
-                                <div
-                                    class="bg-base-200/50 p-4 rounded-xl border border-base-300 hover:shadow-md hover:border-green-500/30 transition-all duration-300 group">
-                                    <div class="flex items-start space-x-3">
-                                        <div
-                                            class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                                            <x-mary-icon name="o-phone" class="w-5 h-5 text-white" />
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-bold text-base-content mb-1 transition-colors duration-300"
-                                                style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                                Telepon
-                                            </h4>
-                                            <a href="tel:{{ str_replace(['(', ')', ' ', '-'], '', $schoolPhone) }}"
-                                                class="text-green-600 hover:text-green-700 font-medium text-xs transition-colors duration-200"
-                                                style="font-family: 'Inter', sans-serif;">
-                                                {{ $schoolPhone }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Website Card -->
+                    <div
+                        class="bg-base-100 p-6 rounded-2xl shadow-lg border border-base-300 hover:shadow-xl hover:border-green-500/30 transition-all duration-300 group">
+                        <div class="text-center">
+                            <div
+                                class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 mx-auto mb-4">
+                                <x-mary-icon name="o-globe-alt" class="w-8 h-8 text-white" />
+                            </div>
+                            <h3 class="text-lg font-bold text-base-content mb-2 transition-colors duration-300"
+                                style="font-family: 'Bricolage Grotesque', sans-serif;">
+                                Website
+                            </h3>
+                            <a href="https://{{ $schoolWebsite }}" target="_blank"
+                                class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors duration-200"
+                                style="font-family: 'Inter', sans-serif;">
+                                {{ $schoolWebsite }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
-                                <!-- Email Card -->
-                                <div
-                                    class="bg-base-200/50 p-4 rounded-xl border border-base-300 hover:shadow-md hover:border-green-500/30 transition-all duration-300 group">
-                                    <div class="flex items-start space-x-3">
-                                        <div
-                                            class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                                            <x-mary-icon name="o-envelope" class="w-5 h-5 text-white" />
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-bold text-base-content mb-1 transition-colors duration-300"
-                                                style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                                Email
-                                            </h4>
-                                            <a href="mailto:{{ $schoolEmail }}"
-                                                class="text-green-600 hover:text-green-700 font-medium text-xs transition-colors duration-200"
-                                                style="font-family: 'Inter', sans-serif;">
-                                                {{ $schoolEmail }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                <!-- Google Maps Section -->
+                <div class="max-w-4xl mx-auto">
+                    <div
+                        class="bg-base-100 p-6 sm:p-8 rounded-2xl shadow-lg border border-base-300 transition-all duration-300 hover:shadow-xl">
+                        <div class="relative">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15833.567890123456!2d109.2366495!3d-7.4189099!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655ee7ae9a4f5f%3A0x9eaa60babff78f95!2sSMK%20Kesatrian%20Purwokerto!5e0!3m2!1sen!2sid!4v1234567890123&output=embed"
+                                width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                class="rounded-lg shadow-md border border-base-300">
+                            </iframe>
 
-                                <!-- Website Card -->
-                                <div
-                                    class="bg-base-200/50 p-4 rounded-xl border border-base-300 hover:shadow-md hover:border-green-500/30 transition-all duration-300 group">
-                                    <div class="flex items-start space-x-3">
-                                        <div
-                                            class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                                            <x-mary-icon name="o-globe-alt" class="w-5 h-5 text-white" />
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-bold text-base-content mb-1 transition-colors duration-300"
-                                                style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                                Website
-                                            </h4>
-                                            <a href="https://{{ $schoolWebsite }}" target="_blank"
-                                                class="text-green-600 hover:text-green-700 font-medium text-xs transition-colors duration-200"
-                                                style="font-family: 'Inter', sans-serif;">
-                                                {{ $schoolWebsite }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                                <a href="https://www.google.com/maps/dir//SMK+Kesatrian+Purwokerto,+Jalan+Ksatrian,+Karangjengkol,+Sokanegara,+Banyumas+Regency,+Central+Java/@-7.418908,109.19545,13z"
+                                    target="_blank"
+                                    class="btn bg-green-600 hover:bg-green-700 text-white border-green-600"
+                                    style="font-family: 'Inter', sans-serif;">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                        </path>
+                                    </svg>
+                                    Buka di Google Maps
+                                </a>
                             </div>
                         </div>
                     </div>

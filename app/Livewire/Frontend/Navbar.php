@@ -5,6 +5,7 @@ namespace App\Livewire\Frontend;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\SiteSetting;
+use App\Models\NewsCategory;
 
 /**
  * Navbar Component untuk Frontend
@@ -14,6 +15,7 @@ use App\Models\SiteSetting;
  * - Dark/Light mode toggle
  * - Mobile menu toggle
  * - Theme switching dengan session storage
+ * - News categories dropdown
  */
 class Navbar extends Component
 {
@@ -34,12 +36,34 @@ class Navbar extends Component
     public ?SiteSetting $siteSettings = null;
 
     /**
+     * News categories for dropdown
+     */
+    public $newsCategories;
+
+    /**
      * Initialize component dengan theme dari session
      */
     public function mount(): void
     {
         $this->appearance = session('appearance', 'light');
         $this->siteSettings = SiteSetting::first();
+        $this->loadNewsCategories();
+    }
+
+    /**
+     * Load news categories untuk dropdown
+     */
+    public function loadNewsCategories(): void
+    {
+        $this->newsCategories = NewsCategory::active()
+            ->withCount(['publishedNews'])
+            ->having('published_news_count', '>', 0)
+            ->ordered()
+            ->get()
+            ->map(function ($category) {
+                $category->news_count = $category->published_news_count;
+                return $category;
+            });
     }
 
     /**
@@ -132,7 +156,20 @@ class Navbar extends Component
      */
     public function isActiveRoute(string $routeName): bool
     {
-        return request()->routeIs($routeName);
+        // Handle specific route patterns for better highlighting
+        switch ($routeName) {
+            case 'fasilitas':
+                return request()->routeIs('fasilitas.*');
+            case 'berita':
+                return request()->routeIs('berita.*');
+            case 'kegiatan':
+                return request()->routeIs('kegiatan') || request()->routeIs('activity.*');
+            case 'kontak':
+                return request()->routeIs('kontak') || request()->routeIs('frontend.contact');
+            default:
+                // For exact matches like 'home', 'profil', 'jurusan'
+                return request()->routeIs($routeName);
+        }
     }
 
     /**

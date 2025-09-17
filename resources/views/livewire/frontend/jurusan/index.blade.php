@@ -26,7 +26,7 @@
                 Setiap jurusan dirancang untuk mempersiapkan lulusan yang kompeten dan siap kerja.
             </p>
 
-            {{-- Professional Stats --}}
+            {{-- Professional Stats
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12">
                 <div class="text-center">
                     <div class="text-3xl font-bold text-blue-400 mb-2">6</div>
@@ -44,7 +44,7 @@
                     <div class="text-3xl font-bold text-emerald-400 mb-2">50+</div>
                     <div class="text-slate-300 text-sm">Mitra Industri</div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </section>
 
@@ -191,8 +191,8 @@
                                     style="font-family: 'Inter', sans-serif;">
                                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
-                                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                            clip-rule="evenodd"></path>
+                                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd">
+                                        </path>
                                     </svg>
                                     {{ $program['ketua_program'] }}
                                 </div>

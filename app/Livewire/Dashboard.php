@@ -7,6 +7,8 @@ use App\Models\Gallery;
 use App\Models\HomeCarousel;
 use App\Models\SchoolActivity;
 use App\Models\StudyProgram;
+use App\Services\WebsiteVisitorService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
@@ -33,6 +35,11 @@ class Dashboard extends Component
     public int $totalKelas = 0;
     public int $totalMapel = 0;
 
+    // Website visitor stats
+    public int $todayVisitors = 0;
+    public int $totalVisitors = 0;
+    public array $visitorChart = [];
+
     // Chart configuration properties
     public array $facilitiesChart = [];
     public array $activitiesChart = [];
@@ -48,6 +55,7 @@ class Dashboard extends Component
     public function mount(): void
     {
         $this->loadDashboardStats();
+        $this->loadWebsiteVisitorStats();
         $this->loadChartConfigs();
         $this->loadRecentStudents();
     }
@@ -92,6 +100,88 @@ class Dashboard extends Component
             $this->totalMapel = 24;
 
             Log::warning('Dashboard stats fallback used: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Load website visitor statistics
+     */
+    private function loadWebsiteVisitorStats(): void
+    {
+        try {
+            $visitorService = app(WebsiteVisitorService::class);
+
+            $this->todayVisitors = $visitorService->getTodayVisitors();
+            $this->totalVisitors = $visitorService->getTotalVisitors();
+
+            // Load visitor chart for last 7 days
+            $this->loadVisitorChart($visitorService);
+        } catch (\Exception $e) {
+            Log::warning('Website visitor stats error: ' . $e->getMessage());
+            $this->todayVisitors = 0;
+            $this->totalVisitors = 0;
+            $this->visitorChart = [];
+        }
+    }
+
+    /**
+     * Load visitor chart data for last 7 days
+     */
+    private function loadVisitorChart(WebsiteVisitorService $visitorService): void
+    {
+        try {
+            $chartData = Cache::remember('visitor_chart_data', 300, function () use ($visitorService) {
+                $days = [];
+                $visitors = [];
+
+                for ($i = 6; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $dayVisitors = DB::table('website_visitors')
+                        ->whereDate('visit_date', $date->toDateString())
+                        ->distinct('ip_address')
+                        ->count();
+
+                    $days[] = $date->format('M d');
+                    $visitors[] = $dayVisitors;
+                }
+
+                return [
+                    'labels' => $days,
+                    'visitors' => $visitors
+                ];
+            });
+
+            $this->visitorChart = [
+                'type' => 'line',
+                'data' => [
+                    'labels' => $chartData['labels'],
+                    'datasets' => [
+                        [
+                            'label' => 'Pengunjung Harian',
+                            'data' => $chartData['visitors'],
+                            'borderColor' => 'rgb(59, 130, 246)',
+                            'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
+                            'fill' => true,
+                            'tension' => 0.4
+                        ]
+                    ]
+                ],
+                'options' => [
+                    'responsive' => true,
+                    'maintainAspectRatio' => false,
+                    'scales' => [
+                        'y' => [
+                            'beginAtZero' => true,
+                            'ticks' => [
+                                'stepSize' => 1
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        } catch (\Exception $e) {
+            Log::warning('Visitor chart error: ' . $e->getMessage());
+            $this->visitorChart = [];
         }
     }
 
@@ -518,6 +608,7 @@ class Dashboard extends Component
         $this->clearDashboardCache();
 
         $this->loadDashboardStats();
+        $this->loadWebsiteVisitorStats();
         $this->loadChartConfigs();
         $this->loadRecentStudents();
 

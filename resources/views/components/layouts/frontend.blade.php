@@ -3,21 +3,17 @@
 
 <head>
     <!-- SEO Meta Tags & Favicon - DISABLED FOR DISPLAY -->
-     {{-- <x-seo-meta 
+    {{-- <x-seo-meta 
          :title="$title ?? $siteSettings->nama_sekolah"
          :description="$description ?? $siteSettings->deskripsi"
          :keywords="$keywords ?? 'SMK, Sekolah Menengah Kejuruan, Pendidikan'"
          :image="$image ?? ($siteSettings->logo_url ? asset($siteSettings->logo_url) : null)"
          :breadcrumbs="$breadcrumbs ?? []"
      /> --}}
-    
+
     <!-- Structured Data (JSON-LD) -->
-    <x-structured-data 
-        :page-type="$pageType ?? 'home'"
-        :data="$structuredData ?? []"
-        :include-defaults="$includeDefaults ?? true"
-    />
-    
+    <x-structured-data :page-type="$pageType ?? 'home'" :data="$structuredData ?? []" :include-defaults="$includeDefaults ?? true" />
+
     @include('partials.head')
 
     <!-- Frontend Specific Fonts -->
@@ -52,6 +48,9 @@
     <!-- Floating Components -->
     <x-scroll-to-top />
     <x-whatsapp-button />
+
+    <!-- Website Visitor Counter -->
+    @livewire('frontend.visitor-counter')
 
     @vite(['resources/js/app.js'])
     @livewireScripts

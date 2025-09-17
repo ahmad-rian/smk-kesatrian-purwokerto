@@ -90,47 +90,50 @@
 
 <body class="font-sans antialiased bg-base-100">
 
-        <!-- SPA Loading Indicator -->
-        <div id="spa-loading" class="spa-loading" style="display: none;"></div>
+    <!-- SPA Loading Indicator -->
+    <div id="spa-loading" class="spa-loading" style="display: none;"></div>
 
-        <!-- Page Content with SPA transitions -->
-        <div id="page-content" class="page-transition">
-            {{ $slot }}
-        </div>
+    <!-- Page Content with SPA transitions -->
+    <div id="page-content" class="page-transition">
+        {{ $slot }}
+    </div>
 
-        <!-- MaryUI Toast Component -->
-        <x-mary-toast />
+    <!-- Website Visitor Counter -->
+    @livewire('frontend.visitor-counter')
 
-        <!-- Scripts -->
-        @livewireScripts
+    <!-- MaryUI Toast Component -->
+    <x-mary-toast />
 
-        <!-- SPA Navigation Script -->
-        <script>
-            // Initialize SPA only once
-            if (!window.spaInitialized) {
-                // Global SPA variables
-                window.spaState = {
-                    loading: false,
-                    transition: false,
-                    timeout: null,
-                    errorCount: 0
-                };
+    <!-- Scripts -->
+    @livewireScripts
 
-                // SPA UI Elements - declare in window scope
-                window.spaElements = {
-                    loading: null,
-                    content: null
-                };
+    <!-- SPA Navigation Script -->
+    <script>
+        // Initialize SPA only once
+        if (!window.spaInitialized) {
+            // Global SPA variables
+            window.spaState = {
+                loading: false,
+                transition: false,
+                timeout: null,
+                errorCount: 0
+            };
 
-                // Initialize SPA function
-                window.initializeSPA = function() {
-                    console.log('Initializing SPA navigation...');
-                    
-                    // Get UI elements and store in window scope
-                    window.spaElements.loading = document.getElementById('spa-loading');
-                    window.spaElements.content = document.getElementById('page-content');
-                    
-                    // Enhanced Livewire navigation events
+            // SPA UI Elements - declare in window scope
+            window.spaElements = {
+                loading: null,
+                content: null
+            };
+
+            // Initialize SPA function
+            window.initializeSPA = function() {
+                console.log('Initializing SPA navigation...');
+
+                // Get UI elements and store in window scope
+                window.spaElements.loading = document.getElementById('spa-loading');
+                window.spaElements.content = document.getElementById('page-content');
+
+                // Enhanced Livewire navigation events
                 document.addEventListener('livewire:navigating', () => {
                     console.log('SPA Navigation starting...');
                     window.spaState.loading = true;
@@ -142,7 +145,7 @@
                         window.spaElements.loading.style.display = 'block';
                         window.spaElements.loading.classList.add('active');
                     }
-                    
+
                     // Add loading class to page content
                     if (window.spaElements.content) {
                         window.spaElements.content.classList.add('loading');
@@ -167,32 +170,32 @@
                     const timeout = setTimeout(() => {
                         window.spaState.loading = false;
                         window.spaState.transition = false;
-                        
+
                         // Hide loading indicator
                         if (window.spaElements.loading) {
                             window.spaElements.loading.style.display = 'none';
                             window.spaElements.loading.classList.remove('active');
                         }
-                        
+
                         // Remove loading class from page content
                         if (window.spaElements.content) {
                             window.spaElements.content.classList.remove('loading');
                         }
                     }, 150);
-                    
+
                     window.spaState.timeout = timeout;
                 });
 
                 // Enhanced preloading on hover
                 document.addEventListener('mouseover', (e) => {
                     const link = e.target.closest('a[wire\\:navigate], a[href^="/admin"]');
-                    if (link && link.href && !link.dataset.preloaded && 
-                        link.href.startsWith(window.location.origin) && 
+                    if (link && link.href && !link.dataset.preloaded &&
+                        link.href.startsWith(window.location.origin) &&
                         !link.classList.contains('no-spa')) {
-                        
+
                         link.dataset.preloaded = 'true';
                         console.log('Preloading:', link.href);
-                        
+
                         // Preload the page
                         const preloadLink = document.createElement('link');
                         preloadLink.rel = 'prefetch';
@@ -207,20 +210,20 @@
                     window.spaState.loading = false;
                     window.spaState.transition = false;
                     window.spaState.errorCount++;
-                    
+
                     // Hide loading indicator
                     if (window.spaElements.loading) {
                         window.spaElements.loading.style.display = 'none';
                         window.spaElements.loading.classList.remove('active');
                     }
-                    
+
                     // Remove loading class from page content
                     if (window.spaElements.content) {
                         window.spaElements.content.classList.remove('loading');
                     }
 
                     // Only fallback if error count is low and we have a valid URL
-                    if (window.spaState.errorCount <= 2 && e.detail && e.detail.url && 
+                    if (window.spaState.errorCount <= 2 && e.detail && e.detail.url &&
                         e.detail.url !== window.location.href) {
                         console.log('Attempting fallback to regular navigation:', e.detail.url);
                         setTimeout(() => {
@@ -230,102 +233,102 @@
                         console.log('SPA navigation failed, staying on current page');
                     }
                 });
-                
-                    console.log('SPA navigation initialized successfully');
-                }; // End of initializeSPA function
-            
+
+                console.log('SPA navigation initialized successfully');
+            }; // End of initializeSPA function
+
             // Mark SPA as initialized
             window.spaInitialized = true;
         }
-        </script>
+    </script>
 
-        <!-- Theme Management Script -->
-        <script>
-            // Global theme management
-            window.currentAppearance = @js(session('appearance', 'light'));
+    <!-- Theme Management Script -->
+    <script>
+        // Global theme management
+        window.currentAppearance = @js(session('appearance', 'light'));
 
-            // Theme application function
-            window.applyTheme = function(appearance) {
-                const html = document.documentElement;
-                console.log('Applying theme:', appearance);
+        // Theme application function
+        window.applyTheme = function(appearance) {
+            const html = document.documentElement;
+            console.log('Applying theme:', appearance);
 
-                if (appearance === 'system') {
-                    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    const theme = systemPrefersDark ? 'dark' : 'light';
-                    html.setAttribute('data-theme', theme);
-                    console.log('System theme applied:', theme);
-                } else {
-                    html.setAttribute('data-theme', appearance);
-                    console.log('Theme applied:', appearance);
-                }
-
-                window.currentAppearance = appearance;
+            if (appearance === 'system') {
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const theme = systemPrefersDark ? 'dark' : 'light';
+                html.setAttribute('data-theme', theme);
+                console.log('System theme applied:', theme);
+            } else {
+                html.setAttribute('data-theme', appearance);
+                console.log('Theme applied:', appearance);
             }
 
-            // Single initialization point untuk menghindari duplikasi
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('Initializing SPA and Theme...');
+            window.currentAppearance = appearance;
+        }
 
-                // Initialize SPA navigation hanya sekali
-                if (window.initializeSPA && !window.spaNavigationReady) {
-                    initializeSPA();
-                    window.spaNavigationReady = true;
+        // Single initialization point untuk menghindari duplikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing SPA and Theme...');
+
+            // Initialize SPA navigation hanya sekali
+            if (window.initializeSPA && !window.spaNavigationReady) {
+                initializeSPA();
+                window.spaNavigationReady = true;
+            }
+
+            // Apply current theme on load
+            applyTheme(window.currentAppearance);
+
+            console.log('SPA and Theme initialized successfully');
+        });
+
+        // Enhanced Livewire initialization
+        document.addEventListener('livewire:init', () => {
+            console.log('Livewire initialized for SPA');
+
+            // Listen for appearance updates
+            Livewire.on('appearance-updated', (event) => {
+                console.log('Livewire appearance-updated event:', event);
+                if (event.appearance || event[0]?.appearance) {
+                    const newAppearance = event.appearance || event[0].appearance;
+                    applyTheme(newAppearance);
                 }
-
-                // Apply current theme on load
-                applyTheme(window.currentAppearance);
-
-                console.log('SPA and Theme initialized successfully');
             });
 
-            // Enhanced Livewire initialization
-            document.addEventListener('livewire:init', () => {
-                console.log('Livewire initialized for SPA');
-
-                // Listen for appearance updates
-                Livewire.on('appearance-updated', (event) => {
-                    console.log('Livewire appearance-updated event:', event);
-                    if (event.appearance || event[0]?.appearance) {
-                        const newAppearance = event.appearance || event[0].appearance;
-                        applyTheme(newAppearance);
-                    }
-                });
-
-                // Listen for system theme changes
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                    if (window.currentAppearance === 'system') {
-                        console.log('System theme changed, reapplying...');
-                        applyTheme('system');
-                    }
-                });
-            });
-
-            // Debug helper function
-            window.debugSPA = function() {
-                console.log('SPA Debug Info:', {
-                    currentTheme: document.documentElement.getAttribute('data-theme'),
-                    currentAppearance: window.currentAppearance,
-                    livewireVersion: window.Livewire?.version || 'Not loaded',
-                    currentURL: window.location.href,
-                    hasWireNavigate: !!window.Livewire?.navigate,
-                    wireNavigateLinks: document.querySelectorAll('[wire\\:navigate]').length,
-                    spaInitialized: window.spaInitialized,
-                    spaNavigationReady: window.spaNavigationReady
-                });
-            }
-
-            // Test SPA function
-            window.testSPA = function() {
-                console.log('Testing SPA navigation...');
-                const profileLink = document.querySelector('a[href*="settings/profile"]');
-                if (profileLink) {
-                    console.log('Found profile link, testing navigation');
-                    profileLink.click();
-                } else {
-                    console.log('No profile link found');
+            // Listen for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (window.currentAppearance === 'system') {
+                    console.log('System theme changed, reapplying...');
+                    applyTheme('system');
                 }
+            });
+        });
+
+        // Debug helper function
+        window.debugSPA = function() {
+            console.log('SPA Debug Info:', {
+                currentTheme: document.documentElement.getAttribute('data-theme'),
+                currentAppearance: window.currentAppearance,
+                livewireVersion: window.Livewire?.version || 'Not loaded',
+                currentURL: window.location.href,
+                hasWireNavigate: !!window.Livewire?.navigate,
+                wireNavigateLinks: document.querySelectorAll('[wire\\:navigate]').length,
+                spaInitialized: window.spaInitialized,
+                spaNavigationReady: window.spaNavigationReady
+            });
+        }
+
+        // Test SPA function
+        window.testSPA = function() {
+            console.log('Testing SPA navigation...');
+            const profileLink = document.querySelector('a[href*="settings/profile"]');
+            if (profileLink) {
+                console.log('Found profile link, testing navigation');
+                profileLink.click();
+            } else {
+                console.log('No profile link found');
             }
-        </script>
+        }
+    </script>
 </body>
 
 </html>

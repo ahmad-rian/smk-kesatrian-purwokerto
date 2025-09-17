@@ -36,7 +36,15 @@
 
                     <!-- Academic Section -->
                     <div class="mt-4">
-                        <x-mary-menu-title title="Akademik" />
+                        <x-mary-menu-title title="Konten Website" />
+
+                        <!-- Kategori Berita -->
+                        <x-mary-menu-item title="Kategori Berita" icon="o-tag" :link="route('admin.news-categories.index')" :active="request()->routeIs('admin.news-categories.*')"
+                            wire:navigate class="spa-nav-item" />
+
+                        <!-- Berita -->
+                        <x-mary-menu-item title="Berita" icon="o-newspaper" :link="route('admin.news.index')" :active="request()->routeIs('admin.news.*')"
+                            wire:navigate class="spa-nav-item" />
 
                         <!-- Study Programs -->
                         <x-mary-menu-item title="Program Studi" icon="o-academic-cap" :link="route('admin.study-programs.index')"
@@ -45,10 +53,6 @@
                         <!-- Kegiatan Sekolah -->
                         <x-mary-menu-item title="Kegiatan Sekolah" icon="o-calendar-days" :link="route('admin.school-activities.index')"
                             :active="request()->routeIs('admin.school-activities.*')" wire:navigate class="spa-nav-item" />
-
-                        <!-- Berita -->
-                        <x-mary-menu-item title="Berita" icon="o-newspaper" :link="route('admin.news.index')" :active="request()->routeIs('admin.news.*')"
-                            wire:navigate class="spa-nav-item" />
 
                         <!-- Fasilitas -->
                         <x-mary-menu-item title="Fasilitas" icon="o-building-office-2" :link="route('admin.facilities.index')"
@@ -61,11 +65,11 @@
                         <!-- Home Carousel -->
                         <x-mary-menu-item title="Carousel Beranda" icon="o-photo" :link="route('admin.home-carousels.index')" :active="request()->routeIs('admin.home-carousels.*')"
                             wire:navigate class="spa-nav-item" />
-
-                        <!-- Contact Messages -->
-                        <x-mary-menu-item title="Pesan Kontak" icon="o-envelope" :link="route('admin.contact-messages.index')" :active="request()->routeIs('admin.contact-messages.*')"
-                            wire:navigate class="spa-nav-item" />
                     </div>
+
+
+
+
 
                     <!-- System Management Section -->
                     <div class="mt-4">

@@ -34,11 +34,6 @@
                 <span class="sm:hidden">{{ __('Perbarui') }}</span>
             </x-mary-button>
 
-            <!-- Add Data Button -->
-            <x-mary-button icon="o-plus" class="btn-primary btn-sm sm:btn-md w-full sm:w-auto"
-                wire:click="goToAddStudent">
-                {{ __('Tambah Data') }}
-            </x-mary-button>
         </div>
     </div>
 
@@ -50,55 +45,33 @@
     @endif
 
     <!-- Stats Cards with Real Data -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-        <!-- Total Siswa -->
-        <x-mary-card class="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-2 lg:gap-2">
+
+
+
+        <!-- Pengunjung Hari Ini -->
+        <x-mary-card class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white">
             <div class="flex items-center justify-between p-4 sm:p-6">
                 <div class="flex-1 min-w-0">
-                    <p class="text-blue-100 text-xs sm:text-sm font-medium truncate">{{ __('Total Siswa') }}</p>
-                    <p class="text-xl sm:text-2xl font-bold">{{ number_format($totalSiswa) }}</p>
+                    <p class="text-cyan-100 text-xs sm:text-sm font-medium truncate">{{ __('Pengunjung Hari Ini') }}
+                    </p>
+                    <p class="text-xl sm:text-2xl font-bold">{{ number_format($todayVisitors) }}</p>
                 </div>
-                <div class="p-2 sm:p-3 bg-blue-400/30 rounded-full flex-shrink-0 ml-2">
-                    <x-mary-icon name="o-academic-cap" class="w-5 h-5 sm:w-6 sm:h-6" />
+                <div class="p-2 sm:p-3 bg-cyan-400/30 rounded-full flex-shrink-0 ml-2">
+                    <x-mary-icon name="o-eye" class="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
             </div>
         </x-mary-card>
 
-        <!-- Total Guru -->
-        <x-mary-card class="bg-gradient-to-r from-green-500 to-green-600 text-white">
+        <!-- Total Pengunjung -->
+        <x-mary-card class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white">
             <div class="flex items-center justify-between p-4 sm:p-6">
                 <div class="flex-1 min-w-0">
-                    <p class="text-green-100 text-xs sm:text-sm font-medium truncate">{{ __('Total Guru') }}</p>
-                    <p class="text-xl sm:text-2xl font-bold">{{ number_format($totalGuru) }}</p>
+                    <p class="text-indigo-100 text-xs sm:text-sm font-medium truncate">{{ __('Total Pengunjung') }}</p>
+                    <p class="text-xl sm:text-2xl font-bold">{{ number_format($totalVisitors) }}</p>
                 </div>
-                <div class="p-2 sm:p-3 bg-green-400/30 rounded-full flex-shrink-0 ml-2">
-                    <x-mary-icon name="o-user-group" class="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-            </div>
-        </x-mary-card>
-
-        <!-- Total Kelas -->
-        <x-mary-card class="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-            <div class="flex items-center justify-between p-4 sm:p-6">
-                <div class="flex-1 min-w-0">
-                    <p class="text-purple-100 text-xs sm:text-sm font-medium truncate">{{ __('Total Kelas') }}</p>
-                    <p class="text-xl sm:text-2xl font-bold">{{ number_format($totalKelas) }}</p>
-                </div>
-                <div class="p-2 sm:p-3 bg-purple-400/30 rounded-full flex-shrink-0 ml-2">
-                    <x-mary-icon name="o-building-office" class="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-            </div>
-        </x-mary-card>
-
-        <!-- Total Mata Pelajaran -->
-        <x-mary-card class="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-            <div class="flex items-center justify-between p-4 sm:p-6">
-                <div class="flex-1 min-w-0">
-                    <p class="text-orange-100 text-xs sm:text-sm font-medium truncate">{{ __('Mata Pelajaran') }}</p>
-                    <p class="text-xl sm:text-2xl font-bold">{{ number_format($totalMapel) }}</p>
-                </div>
-                <div class="p-2 sm:p-3 bg-orange-400/30 rounded-full flex-shrink-0 ml-2">
-                    <x-mary-icon name="o-book-open" class="w-5 h-5 sm:w-6 sm:h-6" />
+                <div class="p-2 sm:p-3 bg-indigo-400/30 rounded-full flex-shrink-0 ml-2">
+                    <x-mary-icon name="o-users" class="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
             </div>
         </x-mary-card>
@@ -154,7 +127,33 @@
     </div>
 
     <!-- Additional Charts Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
+        <!-- Website Visitor Trend Chart -->
+        <x-mary-card>
+            <x-slot:title class="text-lg sm:text-xl font-semibold">
+                <div class="flex items-center justify-between">
+                    <span>{{ __('Trend Pengunjung Website') }}</span>
+                    <div class="badge badge-info badge-outline">
+                        <x-mary-icon name="o-eye" class="w-4 h-4 mr-1" />
+                        7 Hari
+                    </div>
+                </div>
+            </x-slot:title>
+
+            <div class="h-64 sm:h-80 transition-all duration-500 hover:scale-[1.02]">
+                @if (!empty($visitorChart['data']['labels']))
+                    <x-mary-chart wire:model="visitorChart" />
+                @else
+                    <div class="flex items-center justify-center h-full text-gray-500">
+                        <div class="text-center">
+                            <x-mary-icon name="o-chart-bar" class="w-12 h-12 mx-auto mb-2 opacity-50" />
+                            <p class="text-sm">Belum ada data pengunjung</p>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </x-mary-card>
+
         <!-- Study Programs Chart -->
         <x-mary-card>
             <x-slot:title class="text-lg sm:text-xl font-semibold">

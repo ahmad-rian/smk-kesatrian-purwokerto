@@ -9,11 +9,20 @@
                     <div class="max-w-2xl">
                         <h1 class="text-4xl md:text-6xl font-bold mb-4"
                             style="font-family: 'Bricolage Grotesque', sans-serif;">
-                            Berita Terbaru
+                            @if ($selectedCategory && $selectedCategoryObject)
+                                Berita {{ $selectedCategoryObject->name }}
+                            @else
+                                Berita Terbaru
+                            @endif
                         </h1>
                         <p class="text-xl md:text-2xl opacity-90 mb-6 leading-relaxed"
                             style="font-family: 'Inter', sans-serif;">
-                            Ikuti perkembangan dan informasi terbaru dari SMK Kesatrian Purwokerto
+                            @if ($selectedCategory && $selectedCategoryObject)
+                                Informasi terbaru tentang {{ strtolower($selectedCategoryObject->name) }} dari SMK
+                                Kesatrian Purwokerto
+                            @else
+                                Ikuti perkembangan dan informasi terbaru dari SMK Kesatrian Purwokerto
+                            @endif
                         </p>
                         <div class="flex flex-wrap items-center gap-4 text-white/80">
                             <div class="flex items-center gap-2">
@@ -96,6 +105,76 @@
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-12">
+        <!-- Filter Status -->
+        @if ($selectedCategory || $search)
+            <div class="mb-8">
+                <div class="flex flex-wrap items-center gap-3 bg-base-200/50 rounded-xl p-4">
+                    <span class="text-sm font-medium text-base-content/70">Filter aktif:</span>
+
+                    @if ($selectedCategory && $selectedCategoryObject)
+                        <div class="flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                            @if ($selectedCategoryObject->icon)
+                                <x-mary-icon name="{{ $selectedCategoryObject->icon }}" class="w-4 h-4" />
+                            @endif
+                            <span>{{ $selectedCategoryObject->name }}</span>
+                            <button wire:click="filterByCategory(null)" class="ml-1 hover:text-primary-focus">
+                                <x-mary-icon name="o-x-mark" class="w-3 h-3" />
+                            </button>
+                        </div>
+                    @endif
+
+                    @if ($search)
+                        <div class="flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                            <x-mary-icon name="o-magnifying-glass" class="w-4 h-4" />
+                            <span>"{{ $search }}"</span>
+                            <button wire:click="$set('search', '')" class="ml-1 hover:text-primary-focus">
+                                <x-mary-icon name="o-x-mark" class="w-3 h-3" />
+                            </button>
+                        </div>
+                    @endif
+
+                    @if ($selectedCategory || $search)
+                        <button wire:click="clearFilters"
+                            class="text-xs text-base-content/60 hover:text-base-content underline">
+                            Hapus semua filter
+                        </button>
+                    @endif
+                </div>
+            </div>
+        @endif
+
+        <!-- Category Filter Buttons -->
+        @if ($categories && $categories->count() > 0)
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-base-content mb-4"
+                    style="font-family: 'Bricolage Grotesque', sans-serif;">
+                    Kategori Berita
+                </h3>
+                <div class="flex flex-wrap gap-3">
+                    <!-- All Categories Button -->
+                    <button wire:click="filterByCategory(null)"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 {{ !$selectedCategory ? 'bg-primary text-primary-content' : 'bg-base-200 text-base-content hover:bg-primary/10 hover:text-primary' }}">
+                        <x-mary-icon name="o-newspaper" class="w-4 h-4" />
+                        <span class="text-sm font-medium">Semua Berita</span>
+                        <span class="text-xs opacity-70">({{ $newsCount }})</span>
+                    </button>
+
+                    <!-- Category Buttons -->
+                    @foreach ($categories as $category)
+                        <button wire:click="filterByCategory('{{ $category->slug }}')"
+                            class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 {{ $selectedCategory === $category->slug ? 'text-primary-content' : 'bg-base-200 text-base-content hover:bg-primary/10 hover:text-primary' }}"
+                            style="{{ $selectedCategory === $category->slug ? 'background-color: ' . ($category->color ?? '#0ea5e9') : '' }}">
+                            @if ($category->icon)
+                                <x-mary-icon name="{{ $category->icon }}" class="w-4 h-4" />
+                            @endif
+                            <span class="text-sm font-medium">{{ $category->name }}</span>
+                            <span class="text-xs opacity-70">({{ $category->news_count }})</span>
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <!-- Search Section -->
         <div class="mb-8">
             <div class="max-w-md mx-auto">
@@ -114,15 +193,15 @@
         </div>
 
         <!-- News Grid -->
-        @if ($newsList->count() > 0)
+        @if ($news->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                @foreach ($newsList as $news)
+                @foreach ($news as $newsItem)
                     <article
                         class="bg-base-100 rounded-xl shadow-sm border border-base-300 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                         <!-- Image -->
                         <div class="relative h-48 bg-base-200 overflow-hidden">
-                            @if ($news->gambar)
-                                <img src="{{ Storage::url($news->gambar) }}" alt="{{ $news->judul }}"
+                            @if ($newsItem->gambar)
+                                <img src="{{ Storage::url($newsItem->gambar) }}" alt="{{ $newsItem->judul }}"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             @else
                                 <div
@@ -140,40 +219,55 @@
                             <div class="absolute top-4 right-4">
                                 <span class="badge bg-blue-600 text-white border-blue-600 badge-sm"
                                     style="font-family: 'Inter', sans-serif;">
-                                    {{ ucfirst($news->status) }}
+                                    {{ ucfirst($newsItem->status) }}
                                 </span>
                             </div>
                         </div>
 
                         <!-- Content -->
                         <div class="p-6">
-                            <!-- Date -->
-                            <div class="flex items-center gap-2 text-xs text-base-content/60 mb-3">
-                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                <span
-                                    style="font-family: 'Inter', sans-serif;">{{ $this->getFormattedDate($news->created_at) }}</span>
+                            <!-- Date and Views -->
+                            <div class="flex items-center justify-between text-xs text-base-content/60 mb-3">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    <span
+                                        style="font-family: 'Inter', sans-serif;">{{ $this->getFormattedDate($newsItem->created_at) }}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
+                                    </svg>
+                                    <span
+                                        style="font-family: 'Inter', sans-serif;">{{ number_format($newsItem->getVisitorCount()) }}
+                                        views</span>
+                                </div>
                             </div>
 
                             <!-- Title -->
                             <h3 class="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors line-clamp-2"
                                 style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                {{ $news->judul }}
+                                {{ $newsItem->judul }}
                             </h3>
 
                             <!-- Excerpt -->
                             <p class="text-base-content/70 text-sm mb-4 line-clamp-3 leading-relaxed"
                                 style="font-family: 'Inter', sans-serif;">
-                                {{ $this->getExcerpt($news->konten) }}
+                                {{ $this->getExcerpt($newsItem->konten) }}
                             </p>
 
                             <!-- Read More Button -->
                             <div class="flex justify-end">
-                                <a href="{{ route('berita.detail', $news->slug) }}" wire:navigate
+                                <a href="{{ route('berita.detail', $newsItem->slug) }}" wire:navigate
                                     class="btn btn-primary btn-sm hover:scale-105 transition-transform duration-200"
                                     style="font-family: 'Inter', sans-serif;">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
@@ -194,7 +288,7 @@
 
             <!-- Pagination -->
             <div class="flex justify-center">
-                {{ $newsList->links() }}
+                {{ $news->links() }}
             </div>
         @else
             <!-- Enhanced Empty State -->

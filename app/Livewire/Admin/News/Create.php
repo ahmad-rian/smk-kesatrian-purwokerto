@@ -3,11 +3,13 @@
 namespace App\Livewire\Admin\News;
 
 use App\Models\News;
+use App\Models\NewsCategory;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\File;
 use Livewire\Attributes\Layout;
 
@@ -31,7 +33,14 @@ class Create extends Component
     public string $judul = '';
     public string $slug = '';
     public string $konten = '';
+    public string $ringkasan = '';
     public string $status = 'aktif';
+    public ?int $news_category_id = null;
+    public string $penulis = '';
+    public array $tags = [];
+    public string $meta_title = '';
+    public string $meta_description = '';
+    public array $meta_keywords = [];
     public $gambar;
     public ?string $gambarPreview = null;
 
@@ -44,7 +53,14 @@ class Create extends Component
             'judul' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:news,slug',
             'konten' => 'required|string',
+            'ringkasan' => 'nullable|string|max:500',
             'status' => 'required|in:aktif,nonaktif',
+            'news_category_id' => 'nullable|exists:news_categories,id',
+            'penulis' => 'required|string|max:255',
+            'tags' => 'nullable|array',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|array',
             'gambar' => [
                 'nullable',
                 'image',
@@ -65,12 +81,34 @@ class Create extends Component
             'slug.required' => 'Slug wajib diisi.',
             'slug.unique' => 'Slug sudah digunakan, silakan gunakan yang lain.',
             'konten.required' => 'Konten berita wajib diisi.',
+            'ringkasan.max' => 'Ringkasan maksimal 500 karakter.',
             'status.required' => 'Status wajib dipilih.',
             'status.in' => 'Status harus aktif atau nonaktif.',
+            'news_category_id.exists' => 'Kategori yang dipilih tidak valid.',
+            'penulis.required' => 'Nama penulis wajib diisi.',
+            'penulis.max' => 'Nama penulis maksimal 255 karakter.',
+            'meta_title.max' => 'Meta title maksimal 255 karakter.',
+            'meta_description.max' => 'Meta description maksimal 500 karakter.',
             'gambar.image' => 'File harus berupa gambar.',
             'gambar.max' => 'Ukuran gambar maksimal 2MB.',
             'gambar.dimensions' => 'Dimensi gambar minimal 300x200 pixel.'
         ];
+    }
+
+    /**
+     * Mount component with default values
+     */
+    public function mount(): void
+    {
+        $this->penulis = Auth::user()->name ?? '';
+    }
+
+    /**
+     * Get available categories
+     */
+    public function getCategoriesProperty()
+    {
+        return NewsCategory::active()->ordered()->get();
     }
 
     /**
@@ -79,11 +117,11 @@ class Create extends Component
     public function updatedJudul(): void
     {
         $this->slug = Str::slug($this->judul);
-        
+
         // Pastikan slug unik
         $originalSlug = $this->slug;
         $counter = 1;
-        
+
         while (News::where('slug', $this->slug)->exists()) {
             $this->slug = $originalSlug . '-' . $counter;
             $counter++;
@@ -130,7 +168,15 @@ class Create extends Component
                 'judul' => $this->judul,
                 'slug' => $this->slug,
                 'konten' => $this->konten,
+                'ringkasan' => $this->ringkasan ?: null,
                 'status' => $this->status === 'aktif' ? 'published' : 'draft',
+                'news_category_id' => $this->news_category_id,
+                'penulis' => $this->penulis,
+                'tags' => $this->tags ?: null,
+                'meta_title' => $this->meta_title ?: null,
+                'meta_description' => $this->meta_description ?: null,
+                'meta_keywords' => $this->meta_keywords ?: null,
+                'tanggal_publikasi' => now(),
             ];
 
             // Upload gambar jika ada
@@ -143,9 +189,8 @@ class Create extends Component
             News::create($data);
 
             $this->success('Berita berhasil dibuat!');
-            
+
             $this->redirect(route('admin.news.index'), navigate: true);
-            
         } catch (\Exception $e) {
             $this->error('Gagal membuat berita: ' . $e->getMessage());
         }
