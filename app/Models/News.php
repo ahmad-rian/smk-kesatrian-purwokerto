@@ -185,13 +185,16 @@ class News extends Model
      */
     public function getVisitorCount(): int
     {
-        // Use both shetabit visitor and custom views field
+        // Get fresh count from database (force fresh query)
         $shetabitCount = \Shetabit\Visitor\Models\Visit::where('visitable_type', self::class)
             ->where('visitable_id', $this->id)
             ->count();
 
+        // Get fresh views count from database
+        $viewsCount = self::where('id', $this->id)->value('views') ?? 0;
+
         // Return max between shetabit count and views field
-        return max($shetabitCount, $this->views ?? 0);
+        return max($shetabitCount, $viewsCount);
     }
 
     /**
@@ -199,7 +202,11 @@ class News extends Model
      */
     public function incrementVisitorCount(): void
     {
-        $this->increment('views');
+        // Force immediate database update without touching updated_at
+        self::where('id', $this->id)->increment('views');
+
+        // Also update the current instance
+        $this->views = ($this->views ?? 0) + 1;
     }
 
     /**

@@ -59,6 +59,15 @@ class Index extends Component
     }
 
     /**
+     * Refresh news data to get latest view counts
+     */
+    public function refreshNews(): void
+    {
+        // Force re-render to get fresh data
+        $this->dispatch('$refresh');
+    }
+
+    /**
      * Get filtered news
      */
     public function getNewsProperty()
@@ -85,6 +94,7 @@ class Index extends Component
             });
         }
 
+        // Force fresh data from database to get latest view counts
         return $query->paginate($this->perPage);
     }
 
