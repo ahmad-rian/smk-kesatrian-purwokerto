@@ -47,6 +47,9 @@ class NewsDetail extends Component
         if (!$this->news) {
             abort(404, 'Berita tidak ditemukan');
         }
+
+        // Only increment views field once
+        $this->news->increment('views');
     }
 
     /**

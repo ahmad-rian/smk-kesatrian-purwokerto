@@ -158,15 +158,15 @@
                                     x-transition:leave="transition ease-in duration-150"
                                     x-transition:leave-start="opacity-100 transform scale-100"
                                     x-transition:leave-end="opacity-0 transform scale-95" @mouseenter="open = true"
-                                    class="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
+                                    class="absolute top-full left-0 mt-2 w-64 bg-base-100 rounded-xl shadow-lg border border-base-300 py-2 z-50"
                                     style="display: none;">
 
                                     {{-- All News --}}
                                     <a href="{{ route('berita') }}" wire:navigate
-                                        class="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                        class="flex items-center px-4 py-3 hover:bg-base-200 transition-colors duration-200">
                                         <div
-                                            class="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg mr-3">
-                                            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none"
+                                            class="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg mr-3">
+                                            <svg class="w-4 h-4 text-primary" fill="none"
                                                 stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
@@ -174,20 +174,20 @@
                                             </svg>
                                         </div>
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white">Semua Berita
+                                            <div class="text-sm font-medium text-base-content">Semua Berita
                                             </div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">Lihat semua artikel
+                                            <div class="text-xs text-base-content/60">Lihat semua artikel
                                             </div>
                                         </div>
                                     </a>
 
                                     {{-- Categories --}}
                                     @if ($newsCategories && $newsCategories->count() > 0)
-                                        <div class="border-t border-gray-100 dark:border-gray-700 my-2"></div>
+                                        <div class="border-t border-base-300 my-2"></div>
                                         @foreach ($newsCategories as $category)
                                             <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
                                                 wire:navigate
-                                                class="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                                class="flex items-center px-4 py-3 hover:bg-base-200 transition-colors duration-200">
                                                 <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3"
                                                     style="background-color: {{ $category->color }}20;">
                                                     @if ($category->icon)
@@ -199,9 +199,9 @@
                                                     @endif
                                                 </div>
                                                 <div class="flex-1">
-                                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                    <div class="text-sm font-medium text-base-content">
                                                         {{ $category->name }}</div>
-                                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                    <div class="text-xs text-base-content/60">
                                                         {{ $category->news_count }} artikel</div>
                                                 </div>
                                             </a>
@@ -374,11 +374,11 @@
                                 <div x-show="open" x-collapse class="ml-6 mt-2 space-y-1">
                                     {{-- All News --}}
                                     <a href="{{ route('berita') }}" @click="mobileMenuOpen = false"
-                                        class="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
+                                        class="block px-3 py-2 text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
                                         wire:navigate>
                                         <div class="flex items-center space-x-3">
                                             <div class="w-4 h-4 flex items-center justify-center">
-                                                <svg class="w-3 h-3 text-blue-500" fill="none"
+                                                <svg class="w-3 h-3 text-primary" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="2"
@@ -395,7 +395,7 @@
                                         @foreach ($newsCategories as $category)
                                             <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
                                                 @click="mobileMenuOpen = false"
-                                                class="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
+                                                class="block px-3 py-2 text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
                                                 wire:navigate>
                                                 <div class="flex items-center space-x-3">
                                                     <div class="w-4 h-4 flex items-center justify-center">
@@ -410,7 +410,7 @@
                                                     </div>
                                                     <span>{{ $category->name }}</span>
                                                     <span
-                                                        class="text-xs text-gray-400">({{ $category->news_count }})</span>
+                                                        class="text-xs text-base-content/40">({{ $category->news_count }})</span>
                                                 </div>
                                             </a>
                                         @endforeach

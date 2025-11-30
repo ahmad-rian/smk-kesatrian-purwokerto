@@ -42,9 +42,8 @@
                     <div class="text-center">
                         <!-- Lottie Animation -->
                         <div class="mb-4">
-                            <lottie-player src="/assets/animations/activity.json" background="transparent"
-                                speed="1" style="width: 300px; height: 300px;" loop autoplay renderer="svg"
-                                mode="normal">
+                            <lottie-player src="/assets/animations/activity.json" background="transparent" speed="1"
+                                style="width: 300px; height: 300px;" loop autoplay renderer="svg" mode="normal">
                             </lottie-player>
                             <!-- Fallback jika animasi gagal -->
                             <div class="hidden animate-pulse" id="animation-fallback">
@@ -99,8 +98,7 @@
                     <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari kegiatan..."
                         class="input input-bordered w-full pl-12 pr-4 focus:input-primary">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-base-content/40" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
@@ -133,14 +131,13 @@
                         class="bg-base-100 rounded-xl shadow-sm border border-base-300 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                         <!-- Image -->
                         <div class="relative h-48 bg-base-200 overflow-hidden">
-                            @if ($activity->gambar)
-                                <img src="{{ Storage::url($activity->gambar) }}" alt="{{ $activity->nama_kegiatan }}"
+                            @if ($activity->gambar_utama)
+                                <img src="{{ $activity->gambar_utama_url }}" alt="{{ $activity->nama_kegiatan }}"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             @else
                                 <div
                                     class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100/50 to-slate-100/50">
-                                    <svg class="w-16 h-16 text-slate-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-16 h-16 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
@@ -161,8 +158,7 @@
                             <!-- Unggulan Badge -->
                             @if ($activity->unggulan)
                                 <div class="absolute top-4 right-4">
-                                    <span class="badge badge-warning badge-sm"
-                                        style="font-family: 'Inter', sans-serif;">
+                                    <span class="badge badge-warning badge-sm" style="font-family: 'Inter', sans-serif;">
                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                             <path
                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
@@ -230,8 +226,7 @@
                                 <a href="{{ route('activity.detail', $activity->id) }}"
                                     class="btn btn-primary btn-sm hover:scale-105 transition-transform duration-200"
                                     style="font-family: 'Inter', sans-serif;" wire:navigate>
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -256,15 +251,14 @@
                 <div class="max-w-md mx-auto">
                     <div class="mb-6">
                         <div class="relative w-[200px] h-[200px] mx-auto">
-                            <lottie-player src="/assets/animations/activity.json" background="transparent"
-                                speed="1"
+                            <lottie-player src="/assets/animations/activity.json" background="transparent" speed="1"
                                 style="width: 100%; height: 100%; background: none !important; background-color: transparent !important;"
                                 loop autoplay renderer="svg" mode="normal">
                             </lottie-player>
                         </div>
                         <!-- Fallback untuk empty state -->
-                        <svg class="w-24 h-24 mx-auto text-base-content/20 mb-6 hidden" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-24 h-24 mx-auto text-base-content/20 mb-6 hidden" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                             </path>

@@ -51,8 +51,7 @@
                         <!-- Lottie Animation -->
                         <div class="mb-4">
                             <div class="relative w-[300px] h-[300px] mx-auto">
-                                <lottie-player src="/assets/animations/berita.json" background="transparent"
-                                    speed="1"
+                                <lottie-player src="/assets/animations/berita.json" background="transparent" speed="1"
                                     style="width: 100%; height: 100%; background: none !important; background-color: transparent !important;"
                                     loop autoplay renderer="svg" mode="normal">
                                 </lottie-player>
@@ -214,13 +213,12 @@
                         <!-- Image -->
                         <div class="relative h-48 bg-base-200 overflow-hidden">
                             @if ($newsItem->gambar)
-                                <img src="{{ Storage::url($newsItem->gambar) }}" alt="{{ $newsItem->judul }}"
+                                <img src="{{ $newsItem->gambar_url }}" alt="{{ $newsItem->judul }}"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             @else
                                 <div
                                     class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100/50 to-slate-100/50">
-                                    <svg class="w-16 h-16 text-slate-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-16 h-16 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
                                         </path>
@@ -242,8 +240,7 @@
                             <!-- Date and Views -->
                             <div class="flex items-center justify-between text-xs text-base-content/60 mb-3">
                                 <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                         </path>
@@ -252,16 +249,14 @@
                                         style="font-family: 'Inter', sans-serif;">{{ $this->getFormattedDate($newsItem->created_at) }}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
                                         </path>
                                     </svg>
-                                    <span
-                                        style="font-family: 'Inter', sans-serif;">{{ number_format($newsItem->getVisitorCount()) }}
+                                    <span style="font-family: 'Inter', sans-serif;">{{ number_format($newsItem->views) }}
                                         views</span>
                                 </div>
                             </div>
@@ -283,8 +278,7 @@
                                 <a href="{{ route('berita.detail', $newsItem->slug) }}" wire:navigate
                                     class="btn btn-primary btn-sm hover:scale-105 transition-transform duration-200"
                                     style="font-family: 'Inter', sans-serif;">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -309,15 +303,14 @@
                 <div class="max-w-md mx-auto">
                     <div class="mb-6">
                         <div class="relative w-[200px] h-[200px] mx-auto">
-                            <lottie-player src="/assets/animations/berita.json" background="transparent"
-                                speed="1"
+                            <lottie-player src="/assets/animations/berita.json" background="transparent" speed="1"
                                 style="width: 100%; height: 100%; background: none !important; background-color: transparent !important;"
                                 loop autoplay renderer="svg" mode="normal">
                             </lottie-player>
                         </div>
                         <!-- Fallback untuk empty state -->
-                        <svg class="w-24 h-24 mx-auto text-base-content/20 mb-6 hidden" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-24 h-24 mx-auto text-base-content/20 mb-6 hidden" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
                             </path>
@@ -329,8 +322,7 @@
                             style="font-family: 'Bricolage Grotesque', sans-serif;">
                             Tidak Ada Hasil Ditemukan
                         </h3>
-                        <p class="text-base-content/60 mb-6 leading-relaxed"
-                            style="font-family: 'Inter', sans-serif;">
+                        <p class="text-base-content/60 mb-6 leading-relaxed" style="font-family: 'Inter', sans-serif;">
                             Tidak ditemukan berita dengan kata kunci "{{ $search }}". Coba gunakan kata kunci
                             lain.
                         </p>
@@ -348,8 +340,7 @@
                             style="font-family: 'Bricolage Grotesque', sans-serif;">
                             Belum Ada Berita
                         </h3>
-                        <p class="text-base-content/60 mb-6 leading-relaxed"
-                            style="font-family: 'Inter', sans-serif;">
+                        <p class="text-base-content/60 mb-6 leading-relaxed" style="font-family: 'Inter', sans-serif;">
                             Saat ini belum ada berita yang dipublikasikan. Silakan kembali lagi nanti.
                         </p>
                         <a href="{{ route('home') }}" wire:navigate class="btn btn-primary"

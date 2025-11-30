@@ -90,22 +90,33 @@ class GalleryImage extends Model
     public function uploadGambar(UploadedFile $file): string
     {
         $imageService = app(ImageConversionService::class);
-        
+
         // Hapus gambar lama jika ada
         if ($this->gambar) {
             $imageService->deleteOldImage($this->gambar);
         }
-        
+
         // Konversi dan simpan gambar baru
         return $imageService->convertToWebP($file, 'galleries/images');
     }
 
     /**
      * Accessor untuk URL gambar
+     * Deteksi apakah URL external (http/https) atau local file
      */
     public function getGambarUrlAttribute(): ?string
     {
-        return $this->gambar ? Storage::url($this->gambar) : null;
+        if (!$this->gambar) {
+            return null;
+        }
+
+        // Jika URL sudah lengkap (external URL seperti Picsum, Unsplash, dll)
+        if (str_starts_with($this->gambar, 'http://') || str_starts_with($this->gambar, 'https://')) {
+            return $this->gambar;
+        }
+
+        // Jika local file, gunakan Storage::url()
+        return Storage::url($this->gambar);
     }
 
     /**

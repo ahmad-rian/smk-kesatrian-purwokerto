@@ -13,8 +13,8 @@
                 <!-- Breadcrumb -->
                 <nav class="flex items-center space-x-2 text-sm text-white/90 pt-6 pb-8"
                     style="font-family: 'Inter', sans-serif;">
-                    <a href="{{ route('home') }}"
-                        class="hover:text-white transition-colors duration-200 flex items-center" wire:navigate>
+                    <a href="{{ route('home') }}" class="hover:text-white transition-colors duration-200 flex items-center"
+                        wire:navigate>
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
@@ -26,8 +26,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
                         </path>
                     </svg>
-                    <a href="{{ route('kegiatan') }}" class="hover:text-white transition-colors duration-200"
-                        wire:navigate>
+                    <a href="{{ route('kegiatan') }}" class="hover:text-white transition-colors duration-200" wire:navigate>
                         Kegiatan
                     </a>
                     <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,8 +112,7 @@
                             <div class="relative group">
                                 <!-- Container with aspect ratio that adapts to image -->
                                 <div class="relative w-full">
-                                    <img src="{{ Storage::url($activity->gambar) }}"
-                                        alt="{{ $activity->nama_kegiatan }}"
+                                    <img src="{{ $activity->gambar_utama_url }}" alt="{{ $activity->nama_kegiatan }}"
                                         class="w-full h-auto max-h-[600px] object-contain bg-gradient-to-br from-base-200 to-primary/20"
                                         onload="this.parentElement.style.minHeight = 'auto'"
                                         onerror="this.parentElement.innerHTML='<div class=&quot;w-full h-96 bg-gradient-to-br from-base-200 via-base-300 to-primary/20 flex items-center justify-center&quot;><div class=&quot;text-center p-8&quot;><div class=&quot;p-6 bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-lg&quot;><svg class=&quot;w-16 h-16 text-primary mx-auto mb-4&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z&quot;></path></svg><h3 class=&quot;text-lg font-semibold text-base-content mb-2&quot;>Gambar Tidak Dapat Dimuat</h3><p class=&quot;text-sm text-base-content/70&quot;>Terjadi kesalahan saat memuat gambar</p></div></div></div>'"
@@ -126,10 +124,8 @@
                                         <div
                                             class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                             <div class="p-3 bg-black/50 backdrop-blur-sm rounded-full text-white">
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                                 </svg>
                                             </div>
@@ -143,8 +139,8 @@
                                 class="w-full h-96 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
                                 <div class="text-center p-8">
                                     <div class="p-6 bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-lg">
-                                        <svg class="w-16 h-16 text-primary mx-auto mb-4" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-16 h-16 text-primary mx-auto mb-4" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
                                             </path>
@@ -153,8 +149,7 @@
                                             style="font-family: 'Bricolage Grotesque', sans-serif;">
                                             Dokumentasi Kegiatan
                                         </h3>
-                                        <p class="text-sm text-base-content/70"
-                                            style="font-family: 'Inter', sans-serif;">
+                                        <p class="text-sm text-base-content/70" style="font-family: 'Inter', sans-serif;">
                                             Gambar kegiatan akan ditampilkan di sini
                                         </p>
                                     </div>
@@ -182,8 +177,7 @@
                         <div class="bg-base-100 rounded-2xl shadow-lg p-6 border border-base-300">
                             <h2 class="text-xl font-bold text-base-content mb-4 flex items-center"
                                 style="font-family: 'Bricolage Grotesque', sans-serif;">
-                                <svg class="w-5 h-5 mr-2 text-primary" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                     </path>
@@ -194,8 +188,7 @@
                                 @if ($activity->tanggal_kegiatan)
                                     <div class="flex items-center gap-3 text-base-content">
                                         <div class="p-2 bg-primary/20 rounded-lg">
-                                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
+                                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                                 </path>
@@ -203,8 +196,7 @@
                                         </div>
                                         <div>
                                             <span class="font-semibold text-base-content">Tanggal Kegiatan:</span>
-                                            <div class="text-sm text-base-content/80"
-                                                style="font-family: 'Inter', sans-serif;">
+                                            <div class="text-sm text-base-content/80" style="font-family: 'Inter', sans-serif;">
                                                 {{ \Carbon\Carbon::parse($activity->tanggal_kegiatan)->format('d F Y') }}
                                             </div>
                                         </div>
@@ -214,8 +206,7 @@
                                 @if ($activity->lokasi)
                                     <div class="flex items-center gap-3 text-base-content">
                                         <div class="p-2 bg-primary/20 rounded-lg">
-                                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
+                                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
                                                 </path>
@@ -225,9 +216,9 @@
                                         </div>
                                         <div>
                                             <span class="font-semibold text-base-content">Lokasi:</span>
-                                            <div class="text-sm text-base-content/80"
-                                                style="font-family: 'Inter', sans-serif;">
-                                                {{ $activity->lokasi }}</div>
+                                            <div class="text-sm text-base-content/80" style="font-family: 'Inter', sans-serif;">
+                                                {{ $activity->lokasi }}
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
@@ -242,8 +233,7 @@
                                 <h2 class="text-2xl font-bold text-base-content mb-6 flex items-center"
                                     style="font-family: 'Bricolage Grotesque', sans-serif;">
                                     <div class="p-2 bg-primary/20 rounded-xl mr-3">
-                                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                                             </path>
@@ -291,8 +281,7 @@
                             <h3 class="text-xl font-bold text-base-content mb-6 flex items-center"
                                 style="font-family: 'Bricolage Grotesque', sans-serif;">
                                 <div class="p-2 bg-primary/20 rounded-xl mr-3">
-                                    <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
@@ -373,8 +362,7 @@
                                 <h3 class="text-xl font-bold text-base-content mb-6 flex items-center"
                                     style="font-family: 'Bricolage Grotesque', sans-serif;">
                                     <div class="p-2 bg-accent/20 rounded-xl mr-3">
-                                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
                                             </path>
@@ -388,16 +376,14 @@
                                             onclick="window.location.href='{{ route('activity.detail', $related->id) }}'">
                                             <div class="flex gap-4">
                                                 @if ($related->gambar)
-                                                    <img src="{{ Storage::url($related->gambar) }}"
-                                                        alt="{{ $related->nama_kegiatan }}"
+                                                    <img src="{{ Storage::url($related->gambar) }}" alt="{{ $related->nama_kegiatan }}"
                                                         class="w-20 h-20 object-cover rounded-xl flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                                                 @else
                                                     <div
                                                         class="w-20 h-20 bg-base-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                        <svg class="w-8 h-8 text-base-content/40" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
+                                                        <svg class="w-8 h-8 text-base-content/40" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
                                                             </path>
                                                         </svg>
@@ -410,16 +396,15 @@
                                                     </h4>
                                                     <div class="flex items-center gap-2 text-sm text-base-content/70">
                                                         <div class="p-1 bg-primary/20 rounded-lg">
-                                                            <svg class="w-4 h-4 text-primary" fill="none"
-                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                                     stroke-width="2"
                                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                                                                 </path>
                                                             </svg>
                                                         </div>
-                                                        <span class="font-medium"
-                                                            style="font-family: 'Inter', sans-serif;">
+                                                        <span class="font-medium" style="font-family: 'Inter', sans-serif;">
                                                             {{ $related->created_at->format('d M Y') }}
                                                         </span>
                                                     </div>
@@ -453,8 +438,7 @@
                             <h3 class="text-xl font-bold text-base-content mb-6 flex items-center"
                                 style="font-family: 'Bricolage Grotesque', sans-serif;">
                                 <div class="p-2 bg-info/20 rounded-xl mr-3">
-                                    <svg class="w-6 h-6 text-info" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z">
                                         </path>
@@ -488,18 +472,16 @@
         </section>
 
         <!-- Image Modal -->
-        <div id="imageModal"
-            class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div id="imageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
             <div class="relative max-w-7xl max-h-full">
                 <button onclick="closeImageModal()"
                     class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
                     </svg>
                 </button>
-                <img id="modalImage" src="" alt=""
-                    class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+                <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
             </div>
         </div>
 
@@ -528,14 +510,14 @@
             }
 
             // Close modal when clicking outside the image
-            document.getElementById('imageModal')?.addEventListener('click', function(e) {
+            document.getElementById('imageModal')?.addEventListener('click', function (e) {
                 if (e.target === this) {
                     closeImageModal();
                 }
             });
 
             // Close modal with escape key
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') {
                     closeImageModal();
                 }
@@ -547,8 +529,7 @@
             <div class="text-center max-w-md mx-auto px-6">
                 <div class="mb-8">
                     <div class="w-32 h-32 mx-auto bg-base-200 rounded-3xl shadow-lg flex items-center justify-center">
-                        <svg class="w-16 h-16 text-base-content/40" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                        <svg class="w-16 h-16 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                             </path>
@@ -559,8 +540,7 @@
                     style="font-family: 'Bricolage Grotesque', sans-serif;">
                     Kegiatan Tidak Ditemukan
                 </h1>
-                <p class="text-lg text-base-content/70 mb-8 leading-relaxed"
-                    style="font-family: 'Inter', sans-serif;">
+                <p class="text-lg text-base-content/70 mb-8 leading-relaxed" style="font-family: 'Inter', sans-serif;">
                     Maaf, kegiatan yang Anda cari tidak dapat ditemukan atau mungkin telah dihapus.
                 </p>
                 <a href="{{ route('kegiatan') }}"

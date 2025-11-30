@@ -65,7 +65,7 @@ class SchoolActivity extends Model
     public function setNamaKegiatanAttribute($value): void
     {
         $this->attributes['nama_kegiatan'] = $value;
-        
+
         // Auto-generate slug jika belum ada atau nama berubah
         if (!$this->slug || $this->isDirty('nama_kegiatan')) {
             $this->attributes['slug'] = $this->generateUniqueSlug($value);
@@ -100,10 +100,21 @@ class SchoolActivity extends Model
 
     /**
      * Accessor untuk URL gambar utama
+     * Deteksi apakah URL external (http/https) atau local file
      */
     public function getGambarUtamaUrlAttribute(): ?string
     {
-        return $this->gambar_utama ? Storage::url($this->gambar_utama) : null;
+        if (!$this->gambar_utama) {
+            return null;
+        }
+
+        // Jika URL sudah lengkap (external URL seperti Picsum, Unsplash, dll)
+        if (str_starts_with($this->gambar_utama, 'http://') || str_starts_with($this->gambar_utama, 'https://')) {
+            return $this->gambar_utama;
+        }
+
+        // Jika local file, gunakan Storage::url()
+        return Storage::url($this->gambar_utama);
     }
 
     /**
@@ -112,7 +123,7 @@ class SchoolActivity extends Model
     public function getStatusKegiatanAttribute(): string
     {
         $today = now()->toDateString();
-        
+
         if ($this->tanggal_mulai && $this->tanggal_selesai) {
             if ($today < $this->tanggal_mulai->toDateString()) {
                 return 'akan_datang';
@@ -122,7 +133,7 @@ class SchoolActivity extends Model
                 return 'berlangsung';
             }
         }
-        
+
         return 'tidak_terjadwal';
     }
 
@@ -165,10 +176,10 @@ class SchoolActivity extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('nama_kegiatan', 'like', "%{$search}%")
-              ->orWhere('deskripsi', 'like', "%{$search}%")
-              ->orWhere('kategori', 'like', "%{$search}%")
-              ->orWhere('lokasi', 'like', "%{$search}%")
-              ->orWhere('penanggungjawab', 'like', "%{$search}%");
+                ->orWhere('deskripsi', 'like', "%{$search}%")
+                ->orWhere('kategori', 'like', "%{$search}%")
+                ->orWhere('lokasi', 'like', "%{$search}%")
+                ->orWhere('penanggungjawab', 'like', "%{$search}%");
         });
     }
 
@@ -178,7 +189,7 @@ class SchoolActivity extends Model
     public function scopeLatest($query)
     {
         return $query->orderBy('tanggal_mulai', 'desc')
-                    ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc');
     }
 
     /**

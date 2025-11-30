@@ -92,10 +92,21 @@ class SiteSetting extends Model
 
     /**
      * Accessor untuk URL logo
+     * Deteksi apakah URL external (http/https) atau local file
      */
     public function getLogoUrlAttribute()
     {
-        return $this->logo ? Storage::url($this->logo) : null;
+        if (!$this->logo) {
+            return null;
+        }
+
+        // Jika URL sudah lengkap (external URL)
+        if (str_starts_with($this->logo, 'http://') || str_starts_with($this->logo, 'https://')) {
+            return $this->logo;
+        }
+
+        // Jika local file, gunakan Storage::url()
+        return Storage::url($this->logo);
     }
 
     /**
@@ -161,14 +172,14 @@ class SiteSetting extends Model
     public static function getInstance()
     {
         $setting = static::first();
-        
+
         if (!$setting) {
             $setting = static::create([
                 'nama_sekolah' => 'SMK Kesatrian',
                 'alamat' => 'Alamat Sekolah',
             ]);
         }
-        
+
         return $setting;
     }
 
@@ -178,7 +189,7 @@ class SiteSetting extends Model
     public function cleanOldImages(array $newData)
     {
         $imageFields = ['logo', 'foto_kepala_sekolah'];
-        
+
         foreach ($imageFields as $field) {
             if (isset($newData[$field]) && $this->$field && $this->$field !== $newData[$field]) {
                 Storage::delete($this->$field);
@@ -195,11 +206,11 @@ class SiteSetting extends Model
         if ($this->logo) {
             Storage::delete($this->logo);
         }
-        
+
         if ($this->foto_kepala_sekolah) {
             Storage::delete($this->foto_kepala_sekolah);
         }
-        
+
         return parent::delete();
     }
 }

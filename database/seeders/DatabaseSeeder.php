@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             SchoolActivitySeeder::class,
             FacilitySeeder::class,
             GallerySeeder::class,
+            NewsCategorySeeder::class,  // Must run before NewsSeeder
             NewsSeeder::class,
         ]);
     }

@@ -27,14 +27,6 @@ class GallerySeeder extends Seeder
         // Hapus data lama terlebih dahulu
         GalleryImage::query()->delete();
         Gallery::query()->delete();
-        
-        // Bersihkan direktori storage
-        if (Storage::disk('public')->exists('galleries')) {
-            Storage::disk('public')->deleteDirectory('galleries');
-        }
-        
-        // Buat direktori storage baru
-        Storage::disk('public')->makeDirectory('galleries');
 
         // Data sample galleries
         $galleries = [
@@ -85,30 +77,77 @@ class GallerySeeder extends Seeder
             ],
         ];
 
-        foreach ($galleries as $galleryData) {
+        foreach ($galleries as $index => $galleryData) {
             // Generate slug dari judul
             $galleryData['slug'] = Str::slug($galleryData['judul']);
-            
-            // Create placeholder gambar sampul
-            $sampulFilename = 'galleries/sampul-' . $galleryData['slug'] . '.webp';
-            $this->createPlaceholderImage($sampulFilename, 800, 600, $galleryData['judul']);
-            $galleryData['gambar_sampul'] = $sampulFilename;
+
+            // Assign Picsum Photos images for cover
+            $coverImages = [
+                'https://picsum.photos/seed/gallery1/1200/800', // Kegiatan Pembelajaran
+                'https://picsum.photos/seed/gallery2/1200/800', // Fasilitas Sekolah
+                'https://picsum.photos/seed/gallery3/1200/800', // Ekstrakurikuler
+                'https://picsum.photos/seed/gallery4/1200/800', // Acara Sekolah
+                'https://picsum.photos/seed/gallery5/1200/800', // Prestasi Siswa
+            ];
+            $galleryData['gambar_sampul'] = $coverImages[$index];
 
             // Buat gallery
             $gallery = Gallery::create($galleryData);
 
-            // Buat sample images untuk setiap gallery
-            $imageCount = rand(3, 8); // Random 3-8 gambar per gallery
-            
-            for ($i = 1; $i <= $imageCount; $i++) {
-                $imageFilename = "galleries/{$gallery->slug}/image-{$i}.webp";
-                $this->createPlaceholderImage($imageFilename, 600, 400, "Gambar {$i}");
-                
+            // Define image sets for each gallery using Picsum Photos
+            $imageSets = [
+                // Kegiatan Pembelajaran
+                [
+                    'https://picsum.photos/seed/gallery1-img1/800/600',
+                    'https://picsum.photos/seed/gallery1-img2/800/600',
+                    'https://picsum.photos/seed/gallery1-img3/800/600',
+                    'https://picsum.photos/seed/gallery1-img4/800/600',
+                    'https://picsum.photos/seed/gallery1-img5/800/600',
+                ],
+                // Fasilitas Sekolah
+                [
+                    'https://picsum.photos/seed/gallery2-img1/800/600',
+                    'https://picsum.photos/seed/gallery2-img2/800/600',
+                    'https://picsum.photos/seed/gallery2-img3/800/600',
+                    'https://picsum.photos/seed/gallery2-img4/800/600',
+                    'https://picsum.photos/seed/gallery2-img5/800/600',
+                    'https://picsum.photos/seed/gallery2-img6/800/600',
+                ],
+                // Kegiatan Ekstrakurikuler
+                [
+                    'https://picsum.photos/seed/gallery3-img1/800/600',
+                    'https://picsum.photos/seed/gallery3-img2/800/600',
+                    'https://picsum.photos/seed/gallery3-img3/800/600',
+                    'https://picsum.photos/seed/gallery3-img4/800/600',
+                ],
+                // Acara Sekolah
+                [
+                    'https://picsum.photos/seed/gallery4-img1/800/600',
+                    'https://picsum.photos/seed/gallery4-img2/800/600',
+                    'https://picsum.photos/seed/gallery4-img3/800/600',
+                    'https://picsum.photos/seed/gallery4-img4/800/600',
+                    'https://picsum.photos/seed/gallery4-img5/800/600',
+                ],
+                // Prestasi Siswa
+                [
+                    'https://picsum.photos/seed/gallery5-img1/800/600',
+                    'https://picsum.photos/seed/gallery5-img2/800/600',
+                    'https://picsum.photos/seed/gallery5-img3/800/600',
+                    'https://picsum.photos/seed/gallery5-img4/800/600',
+                    'https://picsum.photos/seed/gallery5-img5/800/600',
+                    'https://picsum.photos/seed/gallery5-img6/800/600',
+                ],
+            ];
+
+            // Get images for this gallery
+            $galleryImages = $imageSets[$index];
+
+            foreach ($galleryImages as $i => $imageUrl) {
                 GalleryImage::create([
                     'id' => Str::ulid(),
                     'gallery_id' => $gallery->id,
-                    'gambar' => $imageFilename,
-                    'urutan' => $i,
+                    'gambar' => $imageUrl,
+                    'urutan' => $i + 1,
                 ]);
             }
         }
@@ -118,60 +157,7 @@ class GallerySeeder extends Seeder
     }
 
     /**
-     * Create placeholder image untuk testing
-     */
-    private function createPlaceholderImage(string $filename, int $width, int $height, string $text): void
-    {
-        // Pastikan direktori ada
-        $directory = dirname($filename);
-        if (!Storage::disk('public')->exists($directory)) {
-            Storage::disk('public')->makeDirectory($directory);
-        }
-
-        // Create simple SVG placeholder
-        $svg = $this->generatePlaceholderSVG($width, $height, $text);
-        
-        // Save as WebP-like file (actually SVG for simplicity)
-        Storage::disk('public')->put($filename, $svg);
-    }
-
-    /**
-     * Generate SVG placeholder image
-     */
-    private function generatePlaceholderSVG(int $width, int $height, string $text): string
-    {
-        $colors = [
-            '#3B82F6', // Blue
-            '#10B981', // Green
-            '#F59E0B', // Yellow
-            '#EF4444', // Red
-            '#8B5CF6', // Purple
-            '#06B6D4', // Cyan
-            '#F97316', // Orange
-            '#84CC16', // Lime
-        ];
-        
-        $bgColor = $colors[array_rand($colors)];
-        $textColor = '#FFFFFF';
-        
-        return <<<SVG
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="{$width}" height="{$height}" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100%" height="100%" fill="{$bgColor}"/>
-    <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="24" font-weight="bold" 
-          text-anchor="middle" dominant-baseline="middle" fill="{$textColor}">
-        {$text}
-    </text>
-    <text x="50%" y="70%" font-family="Arial, sans-serif" font-size="14" 
-          text-anchor="middle" dominant-baseline="middle" fill="{$textColor}" opacity="0.8">
-        {$width} × {$height}
-    </text>
-</svg>
-SVG;
-    }
-
-    /**
-     * Clean up method untuk menghapus file placeholder saat rollback
+     * Clean up method untuk menghapus data saat rollback
      */
     public function cleanup(): void
     {
@@ -179,11 +165,11 @@ SVG;
         if (Storage::disk('public')->exists('galleries')) {
             Storage::disk('public')->deleteDirectory('galleries');
         }
-        
+
         // Hapus data dari database
         GalleryImage::truncate();
         Gallery::truncate();
-        
+
         $this->command->info('Gallery seeder cleanup completed.');
     }
 }

@@ -31,6 +31,7 @@ class StudyProgramSeeder extends Seeder
                 'kode' => 'TKJ',
                 'nama' => 'Teknik Komputer dan Jaringan',
                 'deskripsi' => 'Program studi yang mempelajari tentang instalasi, konfigurasi, dan pemeliharaan komputer serta jaringan. Siswa akan dibekali kemampuan untuk merancang, membangun, dan mengelola infrastruktur IT yang handal dan aman.',
+                'gambar' => 'https://picsum.photos/seed/program1/1200/800',
                 'warna' => '#3B82F6', // Blue
                 'kompetensi' => [
                     'Instalasi dan konfigurasi sistem operasi',
@@ -56,6 +57,7 @@ class StudyProgramSeeder extends Seeder
                 'kode' => 'RPL',
                 'nama' => 'Rekayasa Perangkat Lunak',
                 'deskripsi' => 'Program studi yang fokus pada pengembangan aplikasi dan sistem perangkat lunak. Siswa akan mempelajari berbagai bahasa pemrograman, metodologi pengembangan software, dan teknologi terkini dalam dunia IT.',
+                'gambar' => 'https://picsum.photos/seed/program2/1200/800',
                 'warna' => '#10B981', // Green
                 'kompetensi' => [
                     'Pemrograman web dan mobile',
@@ -81,6 +83,7 @@ class StudyProgramSeeder extends Seeder
                 'kode' => 'MM',
                 'nama' => 'Multimedia',
                 'deskripsi' => 'Program studi yang menggabungkan seni dan teknologi untuk menciptakan konten digital yang menarik. Siswa akan belajar desain grafis, animasi, video editing, dan pengembangan konten multimedia interaktif.',
+                'gambar' => 'https://picsum.photos/seed/program3/1200/800',
                 'warna' => '#8B5CF6', // Purple
                 'kompetensi' => [
                     'Desain grafis dan ilustrasi digital',
@@ -106,6 +109,7 @@ class StudyProgramSeeder extends Seeder
                 'kode' => 'OTKP',
                 'nama' => 'Otomatisasi dan Tata Kelola Perkantoran',
                 'deskripsi' => 'Program studi yang mempersiapkan siswa untuk menjadi tenaga profesional di bidang administrasi perkantoran modern. Fokus pada penguasaan teknologi perkantoran, manajemen dokumen, dan komunikasi bisnis.',
+                'gambar' => 'https://picsum.photos/seed/program4/1200/800',
                 'warna' => '#F59E0B', // Orange
                 'kompetensi' => [
                     'Administrasi perkantoran modern',
@@ -131,6 +135,7 @@ class StudyProgramSeeder extends Seeder
                 'kode' => 'AKL',
                 'nama' => 'Akuntansi dan Keuangan Lembaga',
                 'deskripsi' => 'Program studi yang membekali siswa dengan pengetahuan dan keterampilan di bidang akuntansi, keuangan, dan perpajakan. Siswa akan mempelajari sistem informasi akuntansi dan aplikasi keuangan modern.',
+                'gambar' => 'https://picsum.photos/seed/program5/1200/800',
                 'warna' => '#EF4444', // Red
                 'kompetensi' => [
                     'Prinsip-prinsip akuntansi dan pembukuan',
@@ -156,6 +161,7 @@ class StudyProgramSeeder extends Seeder
                 'kode' => 'BDP',
                 'nama' => 'Bisnis Daring dan Pemasaran',
                 'deskripsi' => 'Program studi yang mempersiapkan siswa untuk terjun ke dunia bisnis digital dan e-commerce. Fokus pada strategi pemasaran online, manajemen toko online, dan pengembangan bisnis digital.',
+                'gambar' => 'https://picsum.photos/seed/program6/1200/800',
                 'warna' => '#06B6D4', // Cyan
                 'kompetensi' => [
                     'Digital marketing dan social media',

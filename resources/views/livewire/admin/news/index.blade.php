@@ -2,7 +2,8 @@
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-base-content mb-2" style="font-family: 'Bricolage Grotesque', sans-serif;">
+            <h1 class="text-3xl font-bold text-base-content mb-2"
+                style="font-family: 'Bricolage Grotesque', sans-serif;">
                 Manajemen Berita
             </h1>
             <p class="text-base-content/70" style="font-family: 'Inter', sans-serif;">
@@ -27,9 +28,8 @@
                 <label class="label">
                     <span class="label-text font-medium">Cari Berita</span>
                 </label>
-                <input type="text" wire:model.live.debounce.300ms="search" 
-                       placeholder="Cari berdasarkan judul atau konten..." 
-                       class="input input-bordered w-full">
+                <input type="text" wire:model.live.debounce.300ms="search"
+                    placeholder="Cari berdasarkan judul atau konten..." class="input input-bordered w-full">
             </div>
 
             <!-- Status Filter -->
@@ -80,15 +80,16 @@
                                     @if($news->gambar)
                                         <div class="avatar">
                                             <div class="w-16 h-12 rounded">
-                                                <img src="{{ Storage::url($news->gambar) }}" 
-                                                     alt="{{ $news->judul }}" 
-                                                     class="object-cover">
+                                                <img src="{{ $news->gambar_url }}" alt="{{ $news->judul }}" class="object-cover">
                                             </div>
                                         </div>
                                     @else
                                         <div class="w-16 h-12 bg-base-200 rounded flex items-center justify-center">
-                                            <svg class="w-6 h-6 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            <svg class="w-6 h-6 text-base-content/40" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                </path>
                                             </svg>
                                         </div>
                                     @endif
@@ -104,8 +105,8 @@
 
                                 <!-- Status -->
                                 <td>
-                                    <button wire:click="toggleStatus({{ $news->id }})" 
-                                            class="badge {{ $news->status === 'published' ? 'badge-success' : 'badge-error' }} cursor-pointer hover:opacity-80">
+                                    <button wire:click="toggleStatus({{ $news->id }})"
+                                        class="badge {{ $news->status === 'published' ? 'badge-success' : 'badge-error' }} cursor-pointer hover:opacity-80">
                                         {{ $news->status === 'published' ? 'Aktif' : 'Draft' }}
                                     </button>
                                 </td>
@@ -124,21 +125,22 @@
                                 <td>
                                     <div class="flex justify-center gap-2">
                                         <!-- Edit -->
-                                        <a href="{{ route('admin.news.edit', $news->id) }}" 
-                                           class="btn btn-sm btn-ghost btn-square" 
-                                           wire:navigate
-                                           title="Edit">
+                                        <a href="{{ route('admin.news.edit', $news->id) }}"
+                                            class="btn btn-sm btn-ghost btn-square" wire:navigate title="Edit">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
                                             </svg>
                                         </a>
 
                                         <!-- Delete -->
-                                        <button wire:click="confirmDelete({{ $news->id }})" 
-                                                class="btn btn-sm btn-ghost btn-square text-error hover:bg-error/10" 
-                                                title="Hapus">
+                                        <button wire:click="confirmDelete({{ $news->id }})"
+                                            class="btn btn-sm btn-ghost btn-square text-error hover:bg-error/10" title="Hapus">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
                                             </svg>
                                         </button>
                                     </div>
@@ -156,8 +158,11 @@
         @else
             <!-- Empty State -->
             <div class="text-center py-12">
-                <svg class="w-16 h-16 mx-auto text-base-content/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                <svg class="w-16 h-16 mx-auto text-base-content/40 mb-4" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
+                    </path>
                 </svg>
                 <h3 class="text-lg font-medium text-base-content mb-2">Belum Ada Berita</h3>
                 <p class="text-base-content/60 mb-4">Mulai tambahkan berita pertama untuk sekolah Anda.</p>
@@ -177,7 +182,7 @@
                 <h3 class="font-bold text-lg mb-4">Konfirmasi Hapus</h3>
                 <p class="mb-4">Apakah Anda yakin ingin menghapus berita "{{ $newsToDelete->judul }}"?</p>
                 <p class="text-warning text-sm mb-6">Tindakan ini tidak dapat dibatalkan.</p>
-                
+
                 <div class="modal-action">
                     <button wire:click="cancelDelete" class="btn btn-ghost">Batal</button>
                     <button wire:click="deleteNews" class="btn btn-error">Hapus</button>

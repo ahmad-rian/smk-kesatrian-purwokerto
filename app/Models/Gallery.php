@@ -134,22 +134,33 @@ class Gallery extends Model
     public function uploadGambarSampul(UploadedFile $file): string
     {
         $imageService = app(ImageConversionService::class);
-        
+
         // Hapus gambar lama jika ada
         if ($this->gambar_sampul) {
             $imageService->deleteOldImage($this->gambar_sampul);
         }
-        
+
         // Konversi dan simpan gambar baru
         return $imageService->convertToWebP($file, 'galleries/sampul');
     }
 
     /**
      * Accessor untuk URL gambar sampul
+     * Deteksi apakah URL external (http/https) atau local file
      */
     public function getGambarSampulUrlAttribute(): ?string
     {
-        return $this->gambar_sampul ? Storage::url($this->gambar_sampul) : null;
+        if (!$this->gambar_sampul) {
+            return null;
+        }
+
+        // Jika URL sudah lengkap (external URL seperti Picsum, Unsplash, dll)
+        if (str_starts_with($this->gambar_sampul, 'http://') || str_starts_with($this->gambar_sampul, 'https://')) {
+            return $this->gambar_sampul;
+        }
+
+        // Jika local file, gunakan Storage::url()
+        return Storage::url($this->gambar_sampul);
     }
 
     /**
@@ -184,8 +195,8 @@ class Gallery extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('judul', 'like', "%{$search}%")
-              ->orWhere('deskripsi', 'like', "%{$search}%")
-              ->orWhere('slug', 'like', "%{$search}%");
+                ->orWhere('deskripsi', 'like', "%{$search}%")
+                ->orWhere('slug', 'like', "%{$search}%");
         });
     }
 
