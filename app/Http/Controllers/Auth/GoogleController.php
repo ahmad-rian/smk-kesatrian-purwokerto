@@ -135,9 +135,16 @@ class GoogleController extends Controller
      */
     private function determineUserRole(string $email): string
     {
-        // Email admin yang sudah ditentukan
+        // 1. Cek apakah user sudah ada di database dan memiliki role admin
+        $user = \App\Models\User::where('email', $email)->first();
+        if ($user && $user->role === 'admin') {
+            return 'admin';
+        }
+
+        // 2. Fallback: Email admin yang sudah ditentukan (hardcoded)
         $adminEmails = [
             'ahmad.ritonga@mhs.unsoed.ac.id',
+            'alriansr@gmail.com',
         ];
 
         return in_array($email, $adminEmails) ? 'admin' : 'user';
