@@ -18,14 +18,9 @@ class Edit extends Component
     // Form Properties
     public string $nama = '';
     public string $email = '';
-    public string $password = '';
-    public string $password_confirmation = '';
     public string $role = 'user';
     public bool $aktif = true;
     public bool $diizinkan = false;
-
-    // Password Change State
-    public bool $changePassword = false;
 
     /**
      * Mount component with user data
@@ -66,17 +61,6 @@ class Edit extends Component
             'diizinkan' => 'boolean'
         ];
 
-        if ($this->changePassword) {
-            $rules['password'] = [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
-            ];
-            $rules['password_confirmation'] = 'required|same:password';
-        }
-
         return $rules;
     }
 
@@ -95,14 +79,6 @@ class Edit extends Component
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah terdaftar dalam sistem.',
 
-            'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            'password.regex' => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
-
-            'password_confirmation.required' => 'Konfirmasi password wajib diisi.',
-            'password_confirmation.same' => 'Konfirmasi password harus sama dengan password.',
-
             'role.required' => 'Role wajib dipilih.',
             'role.in' => 'Role yang dipilih tidak valid.'
         ];
@@ -114,20 +90,6 @@ class Edit extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
-    }
-
-    /**
-     * Toggle perubahan password
-     */
-    public function togglePasswordChange(): void
-    {
-        $this->changePassword = !$this->changePassword;
-
-        if (!$this->changePassword) {
-            $this->password = '';
-            $this->password_confirmation = '';
-            $this->resetValidation(['password', 'password_confirmation']);
-        }
     }
 
     /**
@@ -185,11 +147,6 @@ class Edit extends Component
                 'aktif' => $validated['aktif'],
                 'diizinkan' => $validated['diizinkan'],
             ];
-
-            // Password is auto-hashed by the User model's 'hashed' cast
-            if ($this->changePassword && !empty($validated['password'])) {
-                $updateData['password'] = $validated['password'];
-            }
 
             $this->user->update($updateData);
 

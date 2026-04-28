@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Users;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Mary\Traits\Toast;
@@ -15,8 +16,6 @@ class Create extends Component
     // Form Properties
     public string $nama = '';
     public string $email = '';
-    public string $password = '';
-    public string $password_confirmation = '';
     public string $role = 'user';
     public bool $aktif = true;
     public bool $diizinkan = false;
@@ -40,14 +39,6 @@ class Create extends Component
                 'max:255',
                 Rule::unique('users', 'email')
             ],
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
-            ],
-            'password_confirmation' => 'required|same:password',
             'role' => [
                 'required',
                 'string',
@@ -72,14 +63,6 @@ class Create extends Component
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah terdaftar dalam sistem.',
-
-            'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            'password.regex' => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
-
-            'password_confirmation.required' => 'Konfirmasi password wajib diisi.',
-            'password_confirmation.same' => 'Konfirmasi password harus sama dengan password.',
 
             'role.required' => 'Role wajib dipilih.',
             'role.in' => 'Role yang dipilih tidak valid.'
@@ -117,8 +100,6 @@ class Create extends Component
     {
         $this->nama = '';
         $this->email = '';
-        $this->password = '';
-        $this->password_confirmation = '';
         $this->role = 'user';
         $this->aktif = true;
         $this->diizinkan = false;
@@ -133,11 +114,13 @@ class Create extends Component
         $validated = $this->validate();
 
         try {
-            // Password is auto-hashed by the User model's 'hashed' cast
+            // Generate strong random password (login is via Google, password not needed)
+            $generatedPassword = Str::password(32);
+
             $user = User::create([
                 'nama' => $validated['nama'],
                 'email' => $validated['email'],
-                'password' => $validated['password'],
+                'password' => $generatedPassword,
                 'role' => $validated['role'],
                 'aktif' => $validated['aktif'],
                 'diizinkan' => $validated['diizinkan'],

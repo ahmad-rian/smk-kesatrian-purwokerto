@@ -57,122 +57,12 @@
                 </div>
             </div>
 
-            {{-- Keamanan --}}
-            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-slate-900 flex items-center"
-                        style="font-family: 'Bricolage Grotesque', sans-serif;">
-                        <x-mary-icon name="o-lock-closed" class="w-5 h-5 mr-2 text-green-600" />
-                        Keamanan
-                    </h3>
-
-                    {{-- Toggle Change Password --}}
-                    <div class="flex items-center gap-2">
-                        <x-mary-toggle wire:model.live="changePassword" wire:click="togglePasswordChange"
-                            class="toggle-sm toggle-primary" />
-                        <span class="text-sm font-medium text-slate-700">
-                            {{ $changePassword ? 'Ubah Password' : 'Pertahankan Password' }}
-                        </span>
-                    </div>
+            {{-- Info: Login via Google --}}
+            <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                <div class="flex items-center gap-3 text-blue-800">
+                    <x-mary-icon name="o-shield-check" class="w-5 h-5 text-blue-600" />
+                    <span class="text-sm font-medium">Login menggunakan Google. Password dikelola otomatis oleh sistem.</span>
                 </div>
-
-                @if ($changePassword)
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {{-- Password Baru --}}
-                        <div>
-                            <x-mary-input wire:model.live="password" label="Password Baru" type="password"
-                                placeholder="Masukkan password baru" icon="o-lock-closed" class="input-bordered"
-                                hint="Min 8 karakter, huruf besar, kecil, dan angka" />
-                        </div>
-
-                        {{-- Konfirmasi Password --}}
-                        <div>
-                            <x-mary-input wire:model.live="password_confirmation" label="Konfirmasi Password"
-                                type="password" placeholder="Ulangi password baru" icon="o-lock-closed"
-                                class="input-bordered" hint="Harus sama dengan password baru" />
-                        </div>
-                    </div>
-
-                    {{-- Password Strength Indicator --}}
-                    @if ($password)
-                        <div class="mt-4 p-3 bg-white rounded-lg border">
-                            <p class="text-sm font-medium text-slate-700 mb-2">Kekuatan Password:</p>
-                            <div class="flex items-center gap-2">
-                                @php
-                                    $hasLower = preg_match('/[a-z]/', $password);
-                                    $hasUpper = preg_match('/[A-Z]/', $password);
-                                    $hasNumber = preg_match('/\d/', $password);
-                                    $hasMinLength = strlen($password) >= 8;
-                                    $strength = $hasLower + $hasUpper + $hasNumber + $hasMinLength;
-                                @endphp
-
-                                <div class="flex-1 bg-slate-200 rounded-full h-2">
-                                    <div
-                                        class="h-2 rounded-full transition-all duration-300
-                                        @if ($strength <= 1) bg-red-500 w-1/4
-                                        @elseif($strength == 2) bg-yellow-500 w-2/4
-                                        @elseif($strength == 3) bg-blue-500 w-3/4
-                                        @else bg-green-500 w-full @endif
-                                    ">
-                                    </div>
-                                </div>
-
-                                <span
-                                    class="text-xs font-medium
-                                    @if ($strength <= 1) text-red-600
-                                    @elseif($strength == 2) text-yellow-600
-                                    @elseif($strength == 3) text-blue-600
-                                    @else text-green-600 @endif
-                                ">
-                                    @if ($strength <= 1)
-                                        Lemah
-                                    @elseif($strength == 2)
-                                        Sedang
-                                    @elseif($strength == 3)
-                                        Kuat
-                                    @else
-                                        Sangat Kuat
-                                    @endif
-                                </span>
-                            </div>
-
-                            {{-- Requirements Checklist --}}
-                            <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
-                                <div
-                                    class="flex items-center gap-1 {{ $hasMinLength ? 'text-green-600' : 'text-slate-500' }}">
-                                    <x-mary-icon name="{{ $hasMinLength ? 'o-check-circle' : 'o-x-circle' }}"
-                                        class="w-3 h-3" />
-                                    Min 8 karakter
-                                </div>
-                                <div
-                                    class="flex items-center gap-1 {{ $hasLower ? 'text-green-600' : 'text-slate-500' }}">
-                                    <x-mary-icon name="{{ $hasLower ? 'o-check-circle' : 'o-x-circle' }}"
-                                        class="w-3 h-3" />
-                                    Huruf kecil
-                                </div>
-                                <div
-                                    class="flex items-center gap-1 {{ $hasUpper ? 'text-green-600' : 'text-slate-500' }}">
-                                    <x-mary-icon name="{{ $hasUpper ? 'o-check-circle' : 'o-x-circle' }}"
-                                        class="w-3 h-3" />
-                                    Huruf besar
-                                </div>
-                                <div
-                                    class="flex items-center gap-1 {{ $hasNumber ? 'text-green-600' : 'text-slate-500' }}">
-                                    <x-mary-icon name="{{ $hasNumber ? 'o-check-circle' : 'o-x-circle' }}"
-                                        class="w-3 h-3" />
-                                    Angka
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                @else
-                    <div class="p-4 bg-white rounded-lg border border-slate-200">
-                        <div class="flex items-center gap-3 text-slate-600">
-                            <x-mary-icon name="o-shield-check" class="w-5 h-5 text-green-600" />
-                            <span class="text-sm">Password saat ini akan dipertahankan</span>
-                        </div>
-                    </div>
-                @endif
             </div>
 
             {{-- Pengaturan Akun --}}
