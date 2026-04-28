@@ -94,13 +94,13 @@
                                         <x-mary-badge :value="ucfirst($user->role)" :class="$user->role === 'admin' ? 'badge-error' : 'badge-info'" />
                                         <span class="text-xs text-base-content/50">(Anda)</span>
                                     @else
-                                        <x-mary-select :options="[
-                                            ['id' => 'admin', 'name' => 'Admin'],
-                                            ['id' => 'user', 'name' => 'User'],
-                                        ]" option-value="id" option-label="name"
-                                            :value="$user->role"
-                                            wire:change="confirmChangeRole('{{ $user->getKey() }}', $event.target.value)"
-                                            class="select-sm w-24" />
+                                        <select
+                                            class="select select-sm select-bordered w-24"
+                                            x-on:change="$wire.confirmChangeRole('{{ $user->getKey() }}', $event.target.value)"
+                                        >
+                                            <option value="admin" @selected($user->role === 'admin')>Admin</option>
+                                            <option value="user" @selected($user->role === 'user')>User</option>
+                                        </select>
                                     @endif
                                 </div>
                             </td>
