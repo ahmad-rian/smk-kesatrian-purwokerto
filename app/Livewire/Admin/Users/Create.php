@@ -3,28 +3,17 @@
 namespace App\Livewire\Admin\Users;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Mary\Traits\Toast;
 
-/**
- * Komponen Livewire untuk membuat user baru
- * 
- * Fitur:
- * - Form validation lengkap
- * - Password confirmation
- * - Role selection
- * - Status aktif dan diizinkan
- * - Toast notification
- */
 class Create extends Component
 {
     use Toast;
 
     // Form Properties
-    public string $name = '';
+    public string $nama = '';
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
@@ -32,16 +21,13 @@ class Create extends Component
     public bool $aktif = true;
     public bool $diizinkan = false;
 
-    // Modal State
-    public bool $showModal = false;
-
     /**
      * Validation rules untuk form create user
      */
     protected function rules(): array
     {
         return [
-            'name' => [
+            'nama' => [
                 'required',
                 'string',
                 'min:2',
@@ -78,10 +64,10 @@ class Create extends Component
     protected function messages(): array
     {
         return [
-            'name.required' => 'Nama lengkap wajib diisi.',
-            'name.min' => 'Nama lengkap minimal 2 karakter.',
-            'name.max' => 'Nama lengkap maksimal 255 karakter.',
-            'name.regex' => 'Nama lengkap hanya boleh berisi huruf dan spasi.',
+            'nama.required' => 'Nama lengkap wajib diisi.',
+            'nama.min' => 'Nama lengkap minimal 2 karakter.',
+            'nama.max' => 'Nama lengkap maksimal 255 karakter.',
+            'nama.regex' => 'Nama lengkap hanya boleh berisi huruf dan spasi.',
 
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
@@ -105,11 +91,10 @@ class Create extends Component
      */
     public function updated($propertyName)
     {
-        // Validasi real-time untuk field yang diubah
         $this->validateOnly($propertyName);
 
         // Auto-generate email dari nama jika email kosong
-        if ($propertyName === 'name' && empty($this->email)) {
+        if ($propertyName === 'nama' && empty($this->email)) {
             $this->generateEmailFromName();
         }
     }
@@ -119,29 +104,10 @@ class Create extends Component
      */
     private function generateEmailFromName(): void
     {
-        if (!empty($this->name)) {
-            $cleanName = strtolower(str_replace(' ', '.', trim($this->name)));
+        if (!empty($this->nama)) {
+            $cleanName = strtolower(str_replace(' ', '.', trim($this->nama)));
             $this->email = $cleanName . '@smkkesatrian.sch.id';
         }
-    }
-
-    /**
-     * Buka modal create user
-     */
-    public function openModal(): void
-    {
-        $this->resetForm();
-        $this->showModal = true;
-    }
-
-    /**
-     * Tutup modal create user
-     */
-    public function closeModal(): void
-    {
-        $this->showModal = false;
-        $this->resetForm();
-        $this->resetValidation();
     }
 
     /**
@@ -149,13 +115,14 @@ class Create extends Component
      */
     public function resetForm(): void
     {
-        $this->name = '';
+        $this->nama = '';
         $this->email = '';
         $this->password = '';
         $this->password_confirmation = '';
         $this->role = 'user';
         $this->aktif = true;
         $this->diizinkan = false;
+        $this->resetValidation();
     }
 
     /**
@@ -163,46 +130,34 @@ class Create extends Component
      */
     public function store(): void
     {
-        // Validasi semua input
         $validated = $this->validate();
 
         try {
-            // Buat user baru
+            // Password is auto-hashed by the User model's 'hashed' cast
             $user = User::create([
-                'name' => $validated['name'],
+                'nama' => $validated['nama'],
                 'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
+                'password' => $validated['password'],
                 'role' => $validated['role'],
                 'aktif' => $validated['aktif'],
                 'diizinkan' => $validated['diizinkan'],
-                'email_verified_at' => now(), // Auto verify untuk admin created users
+                'email_verified_at' => now(),
             ]);
 
-            // Tutup modal dan reset form
-            $this->closeModal();
+            $this->resetForm();
 
-            // Emit event untuk refresh parent component
-            $this->dispatch('user-created', [
-                'user' => $user->toArray()
-            ]);
+            $this->dispatch('user-created');
 
-            // Tampilkan toast success
             $this->success(
                 'User berhasil dibuat!',
-                'User ' . $user->name . ' telah ditambahkan ke sistem.',
+                'User ' . $user->nama . ' telah ditambahkan ke sistem.',
                 position: 'toast-top toast-end'
             );
-
-            // Dispatch event untuk refresh parent component
-            $this->dispatch('user-created');
         } catch (\Exception $e) {
-            // Log error untuk debugging
             Log::error('Error creating user: ' . $e->getMessage(), [
-                'user_data' => $validated,
                 'trace' => $e->getTraceAsString()
             ]);
 
-            // Tampilkan toast error
             $this->error(
                 'Gagal membuat user!',
                 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.',
@@ -211,9 +166,6 @@ class Create extends Component
         }
     }
 
-    /**
-     * Render komponen
-     */
     public function render()
     {
         return view('livewire.admin.users.create');

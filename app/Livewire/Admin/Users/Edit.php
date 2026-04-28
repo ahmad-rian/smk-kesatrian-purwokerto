@@ -3,23 +3,11 @@
 namespace App\Livewire\Admin\Users;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Mary\Traits\Toast;
 
-/**
- * Komponen Livewire untuk mengedit user yang sudah ada
- * 
- * Fitur:
- * - Pre-filled form dengan data user
- * - Form validation lengkap
- * - Optional password change
- * - Role selection dengan proteksi admin
- * - Status aktif dan diizinkan
- * - Toast notification
- */
 class Edit extends Component
 {
     use Toast;
@@ -28,7 +16,7 @@ class Edit extends Component
     public ?User $user = null;
 
     // Form Properties
-    public string $name = '';
+    public string $nama = '';
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
@@ -36,11 +24,19 @@ class Edit extends Component
     public bool $aktif = true;
     public bool $diizinkan = false;
 
-    // Modal State
-    public bool $showModal = false;
-
     // Password Change State
     public bool $changePassword = false;
+
+    /**
+     * Mount component with user data
+     */
+    public function mount(?User $user = null): void
+    {
+        if ($user) {
+            $this->user = $user;
+            $this->loadUserData();
+        }
+    }
 
     /**
      * Validation rules untuk form edit user
@@ -48,7 +44,7 @@ class Edit extends Component
     protected function rules(): array
     {
         $rules = [
-            'name' => [
+            'nama' => [
                 'required',
                 'string',
                 'min:2',
@@ -70,7 +66,6 @@ class Edit extends Component
             'diizinkan' => 'boolean'
         ];
 
-        // Tambahkan validasi password jika user ingin mengubah password
         if ($this->changePassword) {
             $rules['password'] = [
                 'required',
@@ -91,10 +86,10 @@ class Edit extends Component
     protected function messages(): array
     {
         return [
-            'name.required' => 'Nama lengkap wajib diisi.',
-            'name.min' => 'Nama lengkap minimal 2 karakter.',
-            'name.max' => 'Nama lengkap maksimal 255 karakter.',
-            'name.regex' => 'Nama lengkap hanya boleh berisi huruf dan spasi.',
+            'nama.required' => 'Nama lengkap wajib diisi.',
+            'nama.min' => 'Nama lengkap minimal 2 karakter.',
+            'nama.max' => 'Nama lengkap maksimal 255 karakter.',
+            'nama.regex' => 'Nama lengkap hanya boleh berisi huruf dan spasi.',
 
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
@@ -118,7 +113,6 @@ class Edit extends Component
      */
     public function updated($propertyName)
     {
-        // Validasi real-time untuk field yang diubah
         $this->validateOnly($propertyName);
     }
 
@@ -129,7 +123,6 @@ class Edit extends Component
     {
         $this->changePassword = !$this->changePassword;
 
-        // Reset password fields jika tidak ingin mengubah password
         if (!$this->changePassword) {
             $this->password = '';
             $this->password_confirmation = '';
@@ -138,53 +131,17 @@ class Edit extends Component
     }
 
     /**
-     * Buka modal edit user
-     */
-    public function openModal(User $user): void
-    {
-        $this->user = $user;
-        $this->loadUserData();
-        $this->showModal = true;
-    }
-
-    /**
      * Load data user ke form
      */
     private function loadUserData(): void
     {
         if ($this->user) {
-            $this->name = $this->user->name;
-            $this->email = $this->user->email;
-            $this->role = $this->user->role;
+            $this->nama = $this->user->nama ?? '';
+            $this->email = $this->user->email ?? '';
+            $this->role = $this->user->role ?? 'user';
             $this->aktif = $this->user->aktif;
             $this->diizinkan = $this->user->diizinkan;
         }
-    }
-
-    /**
-     * Tutup modal edit user
-     */
-    public function closeModal(): void
-    {
-        $this->showModal = false;
-        $this->resetForm();
-        $this->resetValidation();
-    }
-
-    /**
-     * Reset form ke nilai default
-     */
-    public function resetForm(): void
-    {
-        $this->user = null;
-        $this->name = '';
-        $this->email = '';
-        $this->password = '';
-        $this->password_confirmation = '';
-        $this->role = 'user';
-        $this->aktif = true;
-        $this->diizinkan = false;
-        $this->changePassword = false;
     }
 
     /**
@@ -208,7 +165,6 @@ class Edit extends Component
      */
     public function update(): void
     {
-        // Validasi semua input
         $validated = $this->validate();
 
         try {
@@ -222,40 +178,33 @@ class Edit extends Component
                 return;
             }
 
-            // Siapkan data untuk update
             $updateData = [
-                'name' => $validated['name'],
+                'nama' => $validated['nama'],
                 'email' => $validated['email'],
                 'role' => $validated['role'],
                 'aktif' => $validated['aktif'],
                 'diizinkan' => $validated['diizinkan'],
             ];
 
-            // Tambahkan password jika diubah
+            // Password is auto-hashed by the User model's 'hashed' cast
             if ($this->changePassword && !empty($validated['password'])) {
-                $updateData['password'] = Hash::make($validated['password']);
+                $updateData['password'] = $validated['password'];
             }
 
-            // Update user
             $this->user->update($updateData);
 
-            // Tampilkan toast success
-            $this->success('User berhasil diperbarui!');
-
-            // Dispatch event untuk refresh parent component
             $this->dispatch('user-updated');
 
-            // Reset form
-            $this->reset();
+            $this->success(
+                'User berhasil diperbarui!',
+                position: 'toast-top toast-end'
+            );
         } catch (\Exception $e) {
-            // Log error untuk debugging
             Log::error('Error updating user: ' . $e->getMessage(), [
                 'user_id' => $this->user?->id,
-                'user_data' => $validated,
                 'trace' => $e->getTraceAsString()
             ]);
 
-            // Tampilkan toast error
             $this->error(
                 'Gagal memperbarui user!',
                 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.',
@@ -264,9 +213,6 @@ class Edit extends Component
         }
     }
 
-    /**
-     * Render komponen
-     */
     public function render()
     {
         return view('livewire.admin.users.edit');

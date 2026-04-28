@@ -99,7 +99,7 @@
                                             ['id' => 'user', 'name' => 'User'],
                                         ]" option-value="id" option-label="name"
                                             :value="$user->role"
-                                            wire:change="confirmChangeRole({{ $user->getKey() }}, $event.target.value)"
+                                            wire:change="confirmChangeRole('{{ $user->getKey() }}', $event.target.value)"
                                             class="select-sm w-24" />
                                     @endif
                                 </div>
@@ -114,7 +114,7 @@
                                             <x-mary-badge :value="$user->aktif ? 'Aktif' : 'Tidak Aktif'" :class="$user->aktif ? 'badge-success' : 'badge-error'" />
                                         @else
                                             <x-mary-toggle :checked="$user->aktif"
-                                                wire:click="confirmToggleActive({{ $user->getKey() }})"
+                                                wire:click="confirmToggleActive('{{ $user->getKey() }}')"
                                                 class="toggle-sm {{ $user->aktif ? 'toggle-success' : 'toggle-error' }}" />
                                             <span
                                                 class="text-sm {{ $user->aktif ? 'text-success' : 'text-error' }}">{{ $user->aktif ? 'Aktif' : 'Tidak Aktif' }}</span>
@@ -124,7 +124,7 @@
                                     <!-- Status Diizinkan -->
                                     <div class="flex items-center gap-2">
                                         <x-mary-toggle :checked="$user->diizinkan"
-                                            wire:click="confirmToggleAllowed({{ $user->getKey() }})"
+                                            wire:click="confirmToggleAllowed('{{ $user->getKey() }}')"
                                             class="toggle-sm {{ $user->diizinkan ? 'toggle-warning' : 'toggle-error' }}" />
                                         <span
                                             class="text-xs {{ $user->diizinkan ? 'text-warning' : 'text-error' }}">{{ $user->diizinkan ? 'Diizinkan' : 'Menunggu' }}</span>
@@ -150,11 +150,11 @@
                             <td>
                                 <div class="flex justify-center gap-1">
                                     <x-mary-button icon="o-pencil" class="btn-ghost btn-sm text-info hover:bg-info/10"
-                                        wire:click="openEditModal({{ $user->getKey() }})" tooltip="Edit User" />
+                                        wire:click="openEditModal('{{ $user->getKey() }}')" tooltip="Edit User" />
                                     @if ($user->getKey() !== Auth::id())
                                         <x-mary-button icon="o-trash"
                                             class="btn-ghost btn-sm text-error hover:bg-error/10"
-                                            wire:click="confirmDelete({{ $user->getKey() }})" tooltip="Hapus User" />
+                                            wire:click="confirmDelete('{{ $user->getKey() }}')" tooltip="Hapus User" />
                                     @endif
                                 </div>
                             </td>
@@ -296,14 +296,14 @@
     </x-mary-modal>
 
     <!-- Create User Modal -->
-    <x-mary-modal wire:model="showCreateModal" title="Tambah User Baru" class="backdrop-blur">
+    <x-mary-modal wire:model="showCreateModal" title="Tambah User Baru" subtitle="Buat akun pengguna baru untuk sistem" class="backdrop-blur" box-class="max-w-3xl">
         @if ($showCreateModal)
             <livewire:admin.users.create wire:key="create-user-{{ now() }}" @user-created="userCreated" />
         @endif
     </x-mary-modal>
 
     <!-- Edit User Modal -->
-    <x-mary-modal wire:model="showEditModal" title="Edit User" class="backdrop-blur">
+    <x-mary-modal wire:model="showEditModal" title="Edit User" subtitle="Perbarui informasi pengguna" class="backdrop-blur" box-class="max-w-3xl">
         @if ($showEditModal && $userToEdit)
             <livewire:admin.users.edit :user="$userToEdit"
                 wire:key="edit-user-{{ $userToEdit->id }}-{{ now() }}" @user-updated="userUpdated" />
