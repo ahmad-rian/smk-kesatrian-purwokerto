@@ -32,6 +32,10 @@
                         <!-- Site Settings -->
                         <x-mary-menu-item title="Pengaturan Situs" icon="o-cog-6-tooth" :link="route('admin.site-settings')"
                             :active="request()->routeIs('admin.site-settings')" wire:navigate class="spa-nav-item" />
+
+                        <!-- Frontend Menu Management -->
+                        <x-mary-menu-item title="Menu Frontend" icon="o-bars-3" :link="route('admin.frontend-menus.index')"
+                            :active="request()->routeIs('admin.frontend-menus.*')" wire:navigate class="spa-nav-item" />
                     </div>
 
                     <!-- Academic Section -->

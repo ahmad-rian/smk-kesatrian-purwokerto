@@ -1,27 +1,41 @@
 <div x-data="{
     mobileMenuOpen: @entangle('mobileMenuOpen'),
     appearance: @entangle('appearance'),
+    navbarStyle: '{{ $navbarStyle }}',
     scrolled: false,
     isFloating: false
 }" @scroll.window="
     scrolled = window.scrollY > 10;
-    isFloating = window.scrollY > 100;
+    isFloating = navbarStyle === 'floating' ? window.scrollY > 100 : false;
 "
     x-init="scrolled = window.scrollY > 10;
-    isFloating = window.scrollY > 100;">
+    isFloating = navbarStyle === 'floating' ? window.scrollY > 100 : false;">
 
-    <!-- Navbar Container with simple top animation -->
-    <div class="z-50"
+    {{-- Spacer: saat navbar sticky/floating & scrolled, agar konten tidak loncat --}}
+    <div x-show="(navbarStyle === 'sticky' && scrolled) || (navbarStyle === 'floating' && isFloating)"
+        x-transition:enter="transition-all duration-300"
+        class="w-full"
         :class="{
-            'relative w-full': !isFloating,
-            'fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] lg:w-[85%] xl:w-[70%] max-w-6xl': isFloating
-        }">
+            'h-16 sm:h-20': navbarStyle === 'sticky',
+            'h-14 sm:h-16': navbarStyle === 'floating'
+        }"></div>
+
+    <!-- Navbar Container with dynamic style -->
+    <div class="z-50"
+        x-bind:class="
+            navbarStyle === 'floating' && isFloating
+                ? 'fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] lg:w-[85%] xl:w-[70%] max-w-6xl'
+                : navbarStyle === 'sticky'
+                    ? (scrolled ? 'fixed top-0 left-0 w-full' : 'relative w-full')
+                    : 'relative w-full'
+        ">
 
         <!-- Main Navbar -->
         <nav class="transition-all duration-500 ease-out"
             :class="{
-                'bg-base-100/95 backdrop-blur-sm border-b border-base-300/60 shadow-sm': !isFloating,
-                'bg-base-100/95 backdrop-blur-xl border border-base-300/60 rounded-2xl shadow-2xl': isFloating
+                'bg-base-100/95 backdrop-blur-sm border-b border-base-300/60 shadow-sm': !isFloating && !(navbarStyle === 'sticky' && scrolled),
+                'bg-base-100/95 backdrop-blur-xl border border-base-300/60 rounded-2xl shadow-2xl': isFloating && navbarStyle === 'floating',
+                'bg-base-100/95 backdrop-blur-xl border-b border-base-300/60 shadow-lg': navbarStyle === 'sticky' && scrolled
             }">
 
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 transition-all duration-500"
@@ -80,145 +94,130 @@
                         </a>
                     </div>
 
-                    <!-- Desktop Navigation -->
-                    <div class="hidden lg:flex items-center space-x-4 xl:space-x-6">
-                        <nav class="flex items-center space-x-1" style="font-family: 'Inter', sans-serif;">
-                            <a href="{{ route('home') }}"
-                                class="relative {{ $this->getActiveClass('home') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm"
-                                wire:navigate>
-                                Beranda
-                                @if ($this->isActiveRoute('home'))
-                                    <div
-                                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
-                                    </div>
-                                @endif
-                            </a>
-                            <a href="{{ route('profil') }}"
-                                class="relative {{ $this->getActiveClass('profil') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm"
-                                wire:navigate>
-                                Profil Sekolah
-                                @if ($this->isActiveRoute('profil'))
-                                    <div
-                                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
-                                    </div>
-                                @endif
-                            </a>
-                            <a href="{{ route('kegiatan') }}"
-                                class="relative {{ $this->getActiveClass('kegiatan') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm"
-                                wire:navigate>
-                                Kegiatan
-                                @if ($this->isActiveRoute('kegiatan'))
-                                    <div
-                                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
-                                    </div>
-                                @endif
-                            </a>
-                            <a href="{{ route('jurusan') }}"
-                                class="relative {{ $this->getActiveClass('jurusan') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm"
-                                wire:navigate>
-                                Jurusan
-                                @if ($this->isActiveRoute('jurusan'))
-                                    <div
-                                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
-                                    </div>
-                                @endif
-                            </a>
-                            <a href="{{ route('fasilitas.index') }}"
-                                class="relative {{ $this->getActiveClass('fasilitas') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm"
-                                wire:navigate>
-                                Fasilitas
-                                @if ($this->isActiveRoute('fasilitas'))
-                                    <div
-                                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
-                                    </div>
-                                @endif
-                            </a>
-                            {{-- Berita Dropdown --}}
-                            <div class="relative group" x-data="{ open: false }" @mouseleave="open = false">
-                                <button @mouseenter="open = true" @click="open = !open"
-                                    class="relative {{ $this->getActiveClass('berita') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm flex items-center">
-                                    Berita
-                                    <svg class="w-4 h-4 ml-1 transform transition-transform duration-200"
-                                        :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                    @if ($this->isActiveRoute('berita'))
-                                        <div
-                                            class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
-                                        </div>
-                                    @endif
-                                </button>
-
-                                {{-- Dropdown Menu --}}
-                                <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                                    x-transition:enter-start="opacity-0 transform scale-95"
-                                    x-transition:enter-end="opacity-100 transform scale-100"
-                                    x-transition:leave="transition ease-in duration-150"
-                                    x-transition:leave-start="opacity-100 transform scale-100"
-                                    x-transition:leave-end="opacity-0 transform scale-95" @mouseenter="open = true"
-                                    class="absolute top-full left-0 mt-2 w-64 bg-base-100 rounded-xl shadow-lg border border-base-300 py-2 z-50"
-                                    style="display: none;">
-
-                                    {{-- All News --}}
-                                    <a href="{{ route('berita') }}" wire:navigate
-                                        class="flex items-center px-4 py-3 hover:bg-base-200 transition-colors duration-200">
-                                        <div
-                                            class="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg mr-3">
-                                            <svg class="w-4 h-4 text-primary" fill="none"
-                                                stroke="currentColor" viewBox="0 0 24 24">
+                    <!-- Desktop Navigation (Dynamic from Database) -->
+                    <div class="hidden lg:flex items-center flex-1 justify-center min-w-0 mx-4">
+                        <nav class="flex items-center space-x-0.5 xl:space-x-1 flex-wrap justify-center" style="font-family: 'Inter', sans-serif;">
+                            @foreach($menus as $menu)
+                                @php $dropdownAlign = $loop->iteration > ($loop->count / 2) ? 'right-0' : 'left-0'; @endphp
+                                @if($menu->route_name === 'berita' && ($menu->activeChildren->isEmpty()))
+                                    {{-- Special: Berita menu with news categories dropdown --}}
+                                    <div class="relative group" x-data="{ open: false }" @mouseleave="open = false">
+                                        <button @mouseenter="open = true" @click="open = !open"
+                                            class="relative {{ $menu->isCurrentRoute() ? 'text-primary bg-primary/10 border-primary/20' : 'text-base-content hover:text-primary hover:bg-primary/5' }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm flex items-center {{ $menu->css_class }}">
+                                            {{ $menu->title }}
+                                            <svg class="w-4 h-4 ml-1 transform transition-transform duration-200"
+                                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
-                                                </path>
+                                                    d="M19 9l-7 7-7-7"></path>
                                             </svg>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-base-content">Semua Berita
-                                            </div>
-                                            <div class="text-xs text-base-content/60">Lihat semua artikel
-                                            </div>
-                                        </div>
-                                    </a>
+                                            @if ($menu->isCurrentRoute())
+                                                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></div>
+                                            @endif
+                                        </button>
 
-                                    {{-- Categories --}}
-                                    @if ($newsCategories && $newsCategories->count() > 0)
-                                        <div class="border-t border-base-300 my-2"></div>
-                                        @foreach ($newsCategories as $category)
-                                            <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
-                                                wire:navigate
+                                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 transform scale-95"
+                                            x-transition:enter-end="opacity-100 transform scale-100"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100 transform scale-100"
+                                            x-transition:leave-end="opacity-0 transform scale-95" @mouseenter="open = true"
+                                            class="absolute top-full {{ $dropdownAlign }} mt-2 w-64 bg-base-100 rounded-xl shadow-lg border border-base-300 py-2 z-50"
+                                            style="display: none;">
+
+                                            <a href="{{ $menu->resolved_url }}" wire:navigate
                                                 class="flex items-center px-4 py-3 hover:bg-base-200 transition-colors duration-200">
-                                                <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3"
-                                                    style="background-color: {{ $category->color }}20;">
-                                                    @if ($category->icon)
-                                                        <x-mary-icon name="{{ $category->icon }}" class="w-4 h-4"
-                                                            style="color: {{ $category->color }}" />
-                                                    @else
-                                                        <div class="w-4 h-4 rounded-full"
-                                                            style="background-color: {{ $category->color }}"></div>
-                                                    @endif
+                                                <div class="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg mr-3">
+                                                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                                                    </svg>
                                                 </div>
-                                                <div class="flex-1">
-                                                    <div class="text-sm font-medium text-base-content">
-                                                        {{ $category->name }}</div>
-                                                    <div class="text-xs text-base-content/60">
-                                                        {{ $category->news_count }} artikel</div>
+                                                <div>
+                                                    <div class="text-sm font-medium text-base-content">Semua Berita</div>
+                                                    <div class="text-xs text-base-content/60">Lihat semua artikel</div>
                                                 </div>
                                             </a>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                            <a href="{{ route('kontak') }}"
-                                class="relative {{ $this->getActiveClass('kontak') }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm"
-                                wire:navigate>
-                                Kontak
-                                @if ($this->isActiveRoute('kontak'))
-                                    <div
-                                        class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full">
+
+                                            @if ($newsCategories && $newsCategories->count() > 0)
+                                                <div class="border-t border-base-300 my-2"></div>
+                                                @foreach ($newsCategories as $category)
+                                                    <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
+                                                        wire:navigate
+                                                        class="flex items-center px-4 py-3 hover:bg-base-200 transition-colors duration-200">
+                                                        <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3"
+                                                            style="background-color: {{ $category->color }}20;">
+                                                            @if ($category->icon)
+                                                                <x-mary-icon name="{{ $category->icon }}" class="w-4 h-4"
+                                                                    style="color: {{ $category->color }}" />
+                                                            @else
+                                                                <div class="w-4 h-4 rounded-full"
+                                                                    style="background-color: {{ $category->color }}"></div>
+                                                            @endif
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <div class="text-sm font-medium text-base-content">{{ $category->name }}</div>
+                                                            <div class="text-xs text-base-content/60">{{ $category->news_count }} artikel</div>
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            @endif
+                                        </div>
                                     </div>
+                                @elseif($menu->activeChildren->isNotEmpty())
+                                    {{-- Menu with submenu/children --}}
+                                    <div class="relative group" x-data="{ open: false }" @mouseleave="open = false">
+                                        <button @mouseenter="open = true" @click="open = !open"
+                                            class="relative {{ $menu->isCurrentRoute() ? 'text-primary bg-primary/10 border-primary/20' : 'text-base-content hover:text-primary hover:bg-primary/5' }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm flex items-center {{ $menu->css_class }}">
+                                            {{ $menu->title }}
+                                            <svg class="w-4 h-4 ml-1 transform transition-transform duration-200"
+                                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                            @if ($menu->isCurrentRoute())
+                                                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></div>
+                                            @endif
+                                        </button>
+
+                                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 transform scale-95"
+                                            x-transition:enter-end="opacity-100 transform scale-100"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100 transform scale-100"
+                                            x-transition:leave-end="opacity-0 transform scale-95" @mouseenter="open = true"
+                                            class="absolute top-full {{ $dropdownAlign }} mt-2 w-56 bg-base-100 rounded-xl shadow-lg border border-base-300 py-2 z-50"
+                                            style="display: none;">
+
+                                            @foreach($menu->activeChildren as $child)
+                                                <a href="{{ $child->resolved_url }}"
+                                                    @if(!$child->open_in_new_tab) wire:navigate @endif
+                                                    @if($child->open_in_new_tab) target="_blank" rel="noopener" @endif
+                                                    class="flex items-center px-4 py-3 hover:bg-base-200 transition-colors duration-200 {{ $child->css_class }}">
+                                                    @if($child->icon)
+                                                        <div class="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg mr-3">
+                                                            <x-mary-icon name="{{ $child->icon }}" class="w-4 h-4 text-primary" />
+                                                        </div>
+                                                    @endif
+                                                    <div class="text-sm font-medium text-base-content">{{ $child->title }}</div>
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    {{-- Regular menu item (no children) --}}
+                                    <a href="{{ $menu->resolved_url }}"
+                                        class="relative {{ $menu->isCurrentRoute() ? 'text-primary bg-primary/10 border-primary/20' : 'text-base-content hover:text-primary hover:bg-primary/5' }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm {{ $menu->css_class }}"
+                                        @if(!$menu->open_in_new_tab) wire:navigate @endif
+                                        @if($menu->open_in_new_tab) target="_blank" rel="noopener" @endif>
+                                        {{ $menu->title }}
+                                        @if ($menu->isCurrentRoute())
+                                            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></div>
+                                        @endif
+                                    </a>
                                 @endif
-                            </a>
+                            @endforeach
                         </nav>
                     </div>
 
@@ -306,125 +305,124 @@
                     x-transition:leave="transition ease-in duration-200"
                     x-transition:leave-start="opacity-100 transform translate-y-0"
                     x-transition:leave-end="opacity-0 transform -translate-y-4"
-                    class="lg:hidden border-t border-base-300 bg-base-100"
+                    class="lg:hidden border-t border-base-300 bg-base-100 max-h-[70vh] overflow-y-auto"
                     :class="{
-                        'mt-2 rounded-b-2xl': isFloating,
-                        'mt-0': !isFloating
+                        'mt-2 rounded-b-2xl': isFloating && navbarStyle === 'floating',
+                        'mt-0': !isFloating || navbarStyle !== 'floating'
                     }">
 
                     <div class="px-4 py-4 space-y-2">
-                        <!-- Mobile Navigation Links -->
+                        <!-- Mobile Navigation Links (Dynamic from Database) -->
                         <nav class="space-y-1" style="font-family: 'Inter', sans-serif;">
-                            <a href="{{ route('home') }}" @click="mobileMenuOpen = false"
-                                class="block px-3 py-2 {{ $this->getActiveMobileClass('home') }} rounded-lg transition-all font-medium text-sm"
-                                wire:navigate>
-                                <div class="flex items-center space-x-3">
-                                    <x-mary-icon name="o-home" class="w-4 h-4" />
-                                    <span>Beranda</span>
-                                </div>
-                            </a>
-                            <a href="{{ route('profil') }}" @click="mobileMenuOpen = false"
-                                class="block px-3 py-2 {{ $this->getActiveMobileClass('profil') }} rounded-lg transition-all font-medium text-sm"
-                                wire:navigate>
-                                <div class="flex items-center space-x-3">
-                                    <x-mary-icon name="o-building-office-2" class="w-4 h-4" />
-                                    <span>Profil Sekolah</span>
-                                </div>
-                            </a>
-                            <a href="{{ route('jurusan') }}" @click="mobileMenuOpen = false"
-                                class="block px-3 py-2 {{ $this->getActiveMobileClass('jurusan') }} rounded-lg transition-all font-medium text-sm"
-                                wire:navigate>
-                                <div class="flex items-center space-x-3">
-                                    <x-mary-icon name="o-academic-cap" class="w-4 h-4" />
-                                    <span>Jurusan</span>
-                                </div>
-                            </a>
-                            <a href="{{ route('fasilitas.index') }}" @click="mobileMenuOpen = false"
-                                class="block px-3 py-2 {{ $this->getActiveMobileClass('fasilitas') }} rounded-lg transition-all font-medium text-sm"
-                                wire:navigate>
-                                <div class="flex items-center space-x-3">
-                                    <x-mary-icon name="o-building-library" class="w-4 h-4" />
-                                    <span>Fasilitas</span>
-                                </div>
-                            </a>
-                            <a href="{{ route('kegiatan') }}" @click="mobileMenuOpen = false"
-                                class="block px-3 py-2 {{ $this->getActiveMobileClass('kegiatan') }} rounded-lg transition-all font-medium text-sm"
-                                wire:navigate>
-                                <div class="flex items-center space-x-3">
-                                    <x-mary-icon name="o-calendar-days" class="w-4 h-4" />
-                                    <span>Kegiatan</span>
-                                </div>
-                            </a>
-                            {{-- Mobile Berita Accordion --}}
-                            <div x-data="{ open: false }">
-                                <button @click="open = !open"
-                                    class="w-full flex items-center justify-between px-3 py-2 {{ $this->getActiveMobileClass('berita') }} rounded-lg transition-all font-medium text-sm">
-                                    <div class="flex items-center space-x-3">
-                                        <x-mary-icon name="o-newspaper" class="w-4 h-4" />
-                                        <span>Berita</span>
-                                    </div>
-                                    <svg class="w-4 h-4 transform transition-transform duration-200"
-                                        :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </button>
-
-                                <div x-show="open" x-collapse class="ml-6 mt-2 space-y-1">
-                                    {{-- All News --}}
-                                    <a href="{{ route('berita') }}" @click="mobileMenuOpen = false"
-                                        class="block px-3 py-2 text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
-                                        wire:navigate>
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-4 h-4 flex items-center justify-center">
-                                                <svg class="w-3 h-3 text-primary" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
-                                                    </path>
-                                                </svg>
+                            @foreach($menus as $menu)
+                                @if($menu->route_name === 'berita' && ($menu->activeChildren->isEmpty()))
+                                    {{-- Special: Berita with news categories accordion --}}
+                                    <div x-data="{ open: false }">
+                                        <button @click="open = !open"
+                                            class="w-full flex items-center justify-between px-3 py-2 {{ $menu->isCurrentRoute() ? 'text-primary bg-primary/10 border-l-2 border-primary' : 'text-base-content hover:text-primary hover:bg-primary/5' }} rounded-lg transition-all font-medium text-sm">
+                                            <div class="flex items-center space-x-3">
+                                                @if($menu->icon)
+                                                    <x-mary-icon name="{{ $menu->icon }}" class="w-4 h-4" />
+                                                @endif
+                                                <span>{{ $menu->title }}</span>
                                             </div>
-                                            <span>Semua Berita</span>
-                                        </div>
-                                    </a>
+                                            <svg class="w-4 h-4 transform transition-transform duration-200"
+                                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </button>
 
-                                    {{-- Categories --}}
-                                    @if ($newsCategories && $newsCategories->count() > 0)
-                                        @foreach ($newsCategories as $category)
-                                            <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
-                                                @click="mobileMenuOpen = false"
+                                        <div x-show="open" x-collapse class="ml-6 mt-2 space-y-1">
+                                            <a href="{{ $menu->resolved_url }}" @click="mobileMenuOpen = false"
                                                 class="block px-3 py-2 text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
                                                 wire:navigate>
                                                 <div class="flex items-center space-x-3">
                                                     <div class="w-4 h-4 flex items-center justify-center">
-                                                        @if ($category->icon)
-                                                            <x-mary-icon name="{{ $category->icon }}" class="w-3 h-3"
-                                                                style="color: {{ $category->color }}" />
-                                                        @else
-                                                            <div class="w-3 h-3 rounded-full"
-                                                                style="background-color: {{ $category->color }}">
-                                                            </div>
-                                                        @endif
+                                                        <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                                                        </svg>
                                                     </div>
-                                                    <span>{{ $category->name }}</span>
-                                                    <span
-                                                        class="text-xs text-base-content/40">({{ $category->news_count }})</span>
+                                                    <span>Semua Berita</span>
                                                 </div>
                                             </a>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                            <a href="{{ route('kontak') }}" @click="mobileMenuOpen = false"
-                                class="block px-3 py-2 {{ $this->getActiveMobileClass('kontak') }} rounded-lg transition-all font-medium text-sm"
-                                wire:navigate>
-                                <div class="flex items-center space-x-3">
-                                    <x-mary-icon name="o-phone" class="w-4 h-4" />
-                                    <span>Kontak</span>
-                                </div>
-                            </a>
+
+                                            @if ($newsCategories && $newsCategories->count() > 0)
+                                                @foreach ($newsCategories as $category)
+                                                    <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
+                                                        @click="mobileMenuOpen = false"
+                                                        class="block px-3 py-2 text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
+                                                        wire:navigate>
+                                                        <div class="flex items-center space-x-3">
+                                                            <div class="w-4 h-4 flex items-center justify-center">
+                                                                @if ($category->icon)
+                                                                    <x-mary-icon name="{{ $category->icon }}" class="w-3 h-3"
+                                                                        style="color: {{ $category->color }}" />
+                                                                @else
+                                                                    <div class="w-3 h-3 rounded-full"
+                                                                        style="background-color: {{ $category->color }}"></div>
+                                                                @endif
+                                                            </div>
+                                                            <span>{{ $category->name }}</span>
+                                                            <span class="text-xs text-base-content/40">({{ $category->news_count }})</span>
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                @elseif($menu->activeChildren->isNotEmpty())
+                                    {{-- Menu with submenu accordion --}}
+                                    <div x-data="{ open: false }">
+                                        <button @click="open = !open"
+                                            class="w-full flex items-center justify-between px-3 py-2 {{ $menu->isCurrentRoute() ? 'text-primary bg-primary/10 border-l-2 border-primary' : 'text-base-content hover:text-primary hover:bg-primary/5' }} rounded-lg transition-all font-medium text-sm">
+                                            <div class="flex items-center space-x-3">
+                                                @if($menu->icon)
+                                                    <x-mary-icon name="{{ $menu->icon }}" class="w-4 h-4" />
+                                                @endif
+                                                <span>{{ $menu->title }}</span>
+                                            </div>
+                                            <svg class="w-4 h-4 transform transition-transform duration-200"
+                                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </button>
+
+                                        <div x-show="open" x-collapse class="ml-6 mt-2 space-y-1">
+                                            @foreach($menu->activeChildren as $child)
+                                                <a href="{{ $child->resolved_url }}" @click="mobileMenuOpen = false"
+                                                    class="block px-3 py-2 text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm {{ $child->css_class }}"
+                                                    @if(!$child->open_in_new_tab) wire:navigate @endif
+                                                    @if($child->open_in_new_tab) target="_blank" rel="noopener" @endif>
+                                                    <div class="flex items-center space-x-3">
+                                                        @if($child->icon)
+                                                            <x-mary-icon name="{{ $child->icon }}" class="w-3 h-3" />
+                                                        @endif
+                                                        <span>{{ $child->title }}</span>
+                                                    </div>
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    {{-- Regular mobile menu item --}}
+                                    <a href="{{ $menu->resolved_url }}" @click="mobileMenuOpen = false"
+                                        class="block px-3 py-2 {{ $menu->isCurrentRoute() ? 'text-primary bg-primary/10 border-l-2 border-primary' : 'text-base-content hover:text-primary hover:bg-primary/5' }} rounded-lg transition-all font-medium text-sm {{ $menu->css_class }}"
+                                        @if(!$menu->open_in_new_tab) wire:navigate @endif
+                                        @if($menu->open_in_new_tab) target="_blank" rel="noopener" @endif>
+                                        <div class="flex items-center space-x-3">
+                                            @if($menu->icon)
+                                                <x-mary-icon name="{{ $menu->icon }}" class="w-4 h-4" />
+                                            @endif
+                                            <span>{{ $menu->title }}</span>
+                                        </div>
+                                    </a>
+                                @endif
+                            @endforeach
                         </nav>
                     </div>
                 </div>

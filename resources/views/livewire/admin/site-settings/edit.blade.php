@@ -234,6 +234,33 @@
             </div>
         </x-mary-card>
 
+        <!-- Layout & Styling Section -->
+        <x-mary-card title="Layout & Styling" class="mt-6">
+            <p class="text-sm text-base-content/60 mb-4">Atur tampilan default halaman depan website</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{-- Navbar Style --}}
+                <div>
+                    <label class="block text-sm font-medium text-base-content mb-2">Gaya Navbar</label>
+                    <select wire:model="navbar_style" class="select select-bordered w-full">
+                        <option value="floating">Floating (Melayang saat scroll)</option>
+                        <option value="sticky">Sticky (Menempel di atas)</option>
+                        <option value="static">Static (Tidak bergerak)</option>
+                    </select>
+                    <p class="mt-1 text-xs text-base-content/50">Atur perilaku navbar saat halaman di-scroll</p>
+                </div>
+
+                {{-- Page Layout --}}
+                <div>
+                    <label class="block text-sm font-medium text-base-content mb-2">Layout Konten</label>
+                    <select wire:model="default_page_layout" class="select select-bordered w-full">
+                        <option value="contained">Contained (Konten terbatas di tengah)</option>
+                        <option value="full-width">Full Width (Konten lebar penuh)</option>
+                    </select>
+                    <p class="mt-1 text-xs text-base-content/50">Atur lebar default konten di setiap halaman. Hero section selalu full-width.</p>
+                </div>
+            </div>
+        </x-mary-card>
+
         <!-- Action Buttons -->
         <div class="flex items-center justify-end gap-3 mt-8">
             <x-mary-button 

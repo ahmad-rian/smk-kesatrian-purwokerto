@@ -52,6 +52,9 @@ class SiteSetting extends Model
         'misi',
         'nama_kepala_sekolah',
         'foto_kepala_sekolah',
+        'default_page_layout',
+        'navbar_style',
+        'footer_full_width',
     ];
 
     /**
@@ -62,6 +65,7 @@ class SiteSetting extends Model
     protected $casts = [
         'tahun_berdiri' => 'integer',
         'media_sosial' => 'array',
+        'footer_full_width' => 'boolean',
     ];
 
     /**

@@ -25,6 +25,9 @@ use App\Livewire\Admin\HomeCarousels\Index as HomeCarouselsIndex;
 use App\Livewire\Admin\HomeCarousels\Create as HomeCarouselsCreate;
 use App\Livewire\Admin\HomeCarousels\Edit as HomeCarouselsEdit;
 use App\Livewire\Admin\Users\Index as UsersIndex;
+use App\Livewire\Admin\FrontendMenus\Index as FrontendMenusIndex;
+use App\Livewire\Admin\FrontendMenus\Create as FrontendMenusCreate;
+use App\Livewire\Admin\FrontendMenus\Edit as FrontendMenusEdit;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\SeoController;
 use App\Livewire\Frontend\Jurusan\Index as JurusanIndex;
@@ -74,6 +77,10 @@ Route::get('/fasilitas', FasilitasIndex::class)
 // Detail fasilitas
 Route::get('/fasilitas/{slug}', FasilitasDetail::class)
     ->name('fasilitas.detail');
+
+// Custom Pages - dynamic pages from admin menu management
+Route::get('/page/{slug}', \App\Livewire\Frontend\CustomPage\Show::class)
+    ->name('custom-page.show');
 
 // Dashboard route alias untuk kompatibilitas tes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -177,6 +184,14 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(functio
 
     Route::get('/galleries/{gallery}/images', GalleryImagesIndex::class)
         ->name('admin.gallery-images.index');
+
+    // Frontend Menus Management
+    Route::get('/frontend-menus', FrontendMenusIndex::class)
+        ->name('admin.frontend-menus.index');
+    Route::get('/frontend-menus/create', FrontendMenusCreate::class)
+        ->name('admin.frontend-menus.create');
+    Route::get('/frontend-menus/{frontendMenu}/edit', FrontendMenusEdit::class)
+        ->name('admin.frontend-menus.edit');
 
     // Users Management
     Route::get('/users', UsersIndex::class)
