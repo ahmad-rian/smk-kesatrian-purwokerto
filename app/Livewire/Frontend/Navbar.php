@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\SiteSetting;
 use App\Models\NewsCategory;
+use App\Models\FrontendMenu;
 
 /**
  * Navbar Component untuk Frontend
@@ -41,6 +42,16 @@ class Navbar extends Component
     public $newsCategories;
 
     /**
+     * Dynamic menus from database
+     */
+    public $menus;
+
+    /**
+     * Navbar style from site settings
+     */
+    public string $navbarStyle = 'floating';
+
+    /**
      * Initialize component dengan theme dari session
      */
     public function mount(): void
@@ -48,6 +59,8 @@ class Navbar extends Component
         $this->appearance = session('appearance', 'light');
         $this->siteSettings = SiteSetting::first();
         $this->loadNewsCategories();
+        $this->loadMenus();
+        $this->navbarStyle = $this->siteSettings->navbar_style ?? 'floating';
     }
 
     /**
@@ -64,6 +77,18 @@ class Navbar extends Component
                 $category->news_count = $category->published_news_count;
                 return $category;
             });
+    }
+
+    /**
+     * Load dynamic menus from database
+     */
+    public function loadMenus(): void
+    {
+        $this->menus = FrontendMenu::active()
+            ->topLevel()
+            ->ordered()
+            ->with(['activeChildren'])
+            ->get();
     }
 
     /**

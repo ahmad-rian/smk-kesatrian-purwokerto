@@ -38,7 +38,7 @@
     <x-layouts.frontend.navbar />
 
     <!-- Main Content -->
-    <main class="min-h-screen pt-4">
+    <main class="min-h-screen">
         {{ $content ?? $slot }}
     </main>
 

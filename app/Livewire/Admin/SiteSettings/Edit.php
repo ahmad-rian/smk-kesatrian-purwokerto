@@ -64,6 +64,11 @@ class Edit extends Component
     public string $youtube = '';
     public string $tiktok = '';
 
+    // Form Properties - Layout & Styling
+    public string $default_page_layout = 'contained';
+    public string $navbar_style = 'floating';
+    public bool $footer_full_width = false;
+
     /**
      * Service untuk konversi gambar
      */
@@ -114,6 +119,11 @@ class Edit extends Component
         $this->facebook = $mediaSosial['facebook'] ?? '';
         $this->youtube = $mediaSosial['youtube'] ?? '';
         $this->tiktok = $mediaSosial['tiktok'] ?? '';
+
+        // Load layout settings
+        $this->default_page_layout = $this->siteSetting->default_page_layout ?? 'contained';
+        $this->navbar_style = $this->siteSetting->navbar_style ?? 'floating';
+        $this->footer_full_width = $this->siteSetting->footer_full_width ?? false;
     }
 
     /**
@@ -155,6 +165,9 @@ class Edit extends Component
                 'youtube' => $this->youtube ?: null,
                 'tiktok' => $this->tiktok ?: null,
             ],
+            'default_page_layout' => $this->default_page_layout,
+            'navbar_style' => $this->navbar_style,
+            'footer_full_width' => $this->footer_full_width,
         ];
 
         // Handle logo upload (hanya jika ada file baru)
