@@ -104,8 +104,8 @@ class Index extends Component
     public function getCategoriesProperty()
     {
         return NewsCategory::active()
+            ->has('publishedNews')
             ->withCount(['publishedNews'])
-            ->having('published_news_count', '>', 0)
             ->ordered()
             ->get();
     }

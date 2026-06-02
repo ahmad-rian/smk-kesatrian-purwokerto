@@ -69,8 +69,8 @@ class Navbar extends Component
     public function loadNewsCategories(): void
     {
         $this->newsCategories = NewsCategory::active()
+            ->has('publishedNews')
             ->withCount(['publishedNews'])
-            ->having('published_news_count', '>', 0)
             ->ordered()
             ->get()
             ->map(function ($category) {
