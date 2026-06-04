@@ -29,6 +29,20 @@ class UserSeeder extends Seeder
             ]);
         }
 
+        $admin = User::where('email', 'hyanangsimrs@gmail.com')->first();
+        if (!$admin) {
+            User::create([
+                'id' => Str::ulid(), // Generate ULID untuk primary key
+                'email' => 'hyanangsimrs@gmail.com',
+                'nama' => 'Hyanangsimrs',
+                'password' => Hash::make(Str::random(32)), // Password random untuk SSO
+                'role' => 'admin',
+                'aktif' => true,
+                'diizinkan' => true,
+                'email_verified_at' => now(),
+            ]);
+        }
+
         // Seeder untuk User
         $user = User::where('email', 'alriansr@gmail.com')->first();
         if (!$user) {
