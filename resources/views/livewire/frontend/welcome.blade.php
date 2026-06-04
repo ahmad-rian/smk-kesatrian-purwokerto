@@ -361,10 +361,10 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
             <div class="text-center mb-16">
                 <h2 class="text-4xl md:text-5xl font-bold mb-6" style="font-family: 'Bricolage Grotesque', sans-serif;">
-                    Konsentrasi
+                    Konsentrasi Keahlian
                 </h2>
                 <p class="text-xl text-base-content/70 max-w-3xl mx-auto" style="font-family: 'Inter', sans-serif;">
-                    Pilihan konsentrasi yang sesuai dengan minat dan bakat untuk masa depan yang cerah.
+                    Pilihan konsentrasi keahlian yang sesuai dengan minat dan bakat untuk masa depan yang cerah.
                 </p>
             </div>
 
