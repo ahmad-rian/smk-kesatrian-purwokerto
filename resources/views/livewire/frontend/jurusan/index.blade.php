@@ -159,15 +159,19 @@
                             {{-- Kompetensi Preview --}}
                             <div class="mb-4">
                                 <h4 class="text-sm font-semibold text-base-content mb-2"
-                                    style="font-family: 'Inter', sans-serif;">Kompetensi Utama:</h4>
-                                <div class="flex flex-wrap gap-1">
+                                    style="font-family: 'Inter', sans-serif;">
+                                    Kompetensi Utama:
+                                </h4>
+
+                                <div class="flex flex-col gap-2">
                                     @foreach (array_slice($program['kompetensi'], 0, 2) as $kompetensi)
-                                        <span class="badge badge-outline badge-sm">
+                                        <div class="border border-base-300 rounded-lg px-3 py-2 text-sm leading-relaxed bg-base-100">
                                             {{ $kompetensi }}
-                                        </span>
+                                        </div>
                                     @endforeach
+
                                     @if (count($program['kompetensi']) > 2)
-                                        <span class="badge badge-primary badge-sm">
+                                        <span class="badge badge-primary badge-sm w-fit">
                                             +{{ count($program['kompetensi']) - 2 }} lainnya
                                         </span>
                                     @endif
