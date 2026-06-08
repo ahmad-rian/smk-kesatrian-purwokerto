@@ -18,7 +18,7 @@
         "livewire/livewire": "^3.6",
         "livewire/volt": "^1.7",
         "mews/purifier": "^3.4",
-        "predis/predis": "^3.4",
+        "predis/predis": "^3.5",
         "robsontenorio/mary": "^2.4",
         "shetabit/visitor": "^4.4"
     },
