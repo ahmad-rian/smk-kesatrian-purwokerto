@@ -126,12 +126,11 @@
 
                 {{-- Konten Kegiatan --}}
                 <x-mary-card title="Konten Kegiatan" subtitle="Detail dan informasi lengkap kegiatan">
-                    <x-mary-textarea 
-                        wire:model.blur="konten"
+                    <x-quill-editor
+                        wire-model="konten"
                         label="Konten Lengkap"
                         placeholder="Tulis detail lengkap tentang kegiatan, tujuan, manfaat, dan informasi penting lainnya..."
-                        hint="Konten lengkap kegiatan yang akan ditampilkan di website (opsional)"
-                        rows="8" />
+                        hint="Konten lengkap kegiatan yang akan ditampilkan di website (opsional)" />
                 </x-mary-card>
             </div>
 

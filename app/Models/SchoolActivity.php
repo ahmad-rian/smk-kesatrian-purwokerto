@@ -37,10 +37,13 @@ class SchoolActivity extends Model
         'nama_kegiatan',
         'slug',
         'deskripsi',
+        'konten',
         'gambar_utama',
         'kategori',
         'tanggal_mulai',
         'tanggal_selesai',
+        'jam_mulai',
+        'jam_selesai',
         'lokasi',
         'penanggungjawab',
         'aktif',
@@ -246,6 +249,18 @@ class SchoolActivity extends Model
                 'nullable',
                 'string',
                 'max:5000',
+            ],
+            'konten' => [
+                'nullable',
+                'string',
+            ],
+            'jam_mulai' => [
+                'nullable',
+                'date_format:H:i',
+            ],
+            'jam_selesai' => [
+                'nullable',
+                'date_format:H:i',
             ],
             'gambar_utama' => [
                 'nullable',

@@ -32,10 +32,13 @@ class Create extends Component
     public string $nama_kegiatan = '';
     public string $slug = '';
     public string $deskripsi = '';
+    public string $konten = '';
     public $gambar_utama = null;
     public string $kategori = '';
     public string $tanggal_mulai = '';
     public string $tanggal_selesai = '';
+    public string $jam_mulai = '';
+    public string $jam_selesai = '';
     public string $lokasi = '';
     public string $penanggungjawab = '';
     public bool $aktif = true;
@@ -106,6 +109,13 @@ class Create extends Component
             if (!empty($this->tanggal_selesai)) {
                 $validatedData['tanggal_selesai'] = $this->tanggal_selesai;
             }
+
+            // Konversi jam jika ada
+            $validatedData['jam_mulai'] = !empty($this->jam_mulai) ? $this->jam_mulai : null;
+            $validatedData['jam_selesai'] = !empty($this->jam_selesai) ? $this->jam_selesai : null;
+
+            // Konten
+            $validatedData['konten'] = !empty($this->konten) ? $this->konten : null;
 
             // Buat kegiatan sekolah baru
             SchoolActivity::create($validatedData);

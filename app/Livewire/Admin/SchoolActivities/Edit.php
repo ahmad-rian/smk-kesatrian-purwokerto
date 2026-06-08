@@ -48,10 +48,13 @@ class Edit extends Component
     public string $nama_kegiatan = '';
     public string $slug = '';
     public string $deskripsi = '';
+    public string $konten = '';
     public $gambar_utama = null;
     public string $kategori = '';
     public string $tanggal_mulai = '';
     public string $tanggal_selesai = '';
+    public string $jam_mulai = '';
+    public string $jam_selesai = '';
     public string $lokasi = '';
     public string $penanggungjawab = '';
     public bool $aktif = true;
@@ -109,10 +112,13 @@ class Edit extends Component
         $this->nama_kegiatan = $schoolActivity->nama_kegiatan;
         $this->slug = $schoolActivity->slug ?? '';
         $this->deskripsi = $schoolActivity->deskripsi ?? '';
+        $this->konten = $schoolActivity->konten ?? '';
         $this->currentImage = $schoolActivity->gambar_utama;
         $this->kategori = $schoolActivity->kategori ?? '';
         $this->tanggal_mulai = $schoolActivity->tanggal_mulai ? $schoolActivity->tanggal_mulai->format('Y-m-d') : '';
         $this->tanggal_selesai = $schoolActivity->tanggal_selesai ? $schoolActivity->tanggal_selesai->format('Y-m-d') : '';
+        $this->jam_mulai = $schoolActivity->jam_mulai ?? '';
+        $this->jam_selesai = $schoolActivity->jam_selesai ?? '';
         $this->lokasi = $schoolActivity->lokasi ?? '';
         $this->penanggungjawab = $schoolActivity->penanggungjawab ?? '';
         $this->aktif = $schoolActivity->aktif;
@@ -140,6 +146,13 @@ class Edit extends Component
             } else {
                 $validatedData['tanggal_selesai'] = null;
             }
+
+            // Konversi jam jika ada
+            $validatedData['jam_mulai'] = !empty($this->jam_mulai) ? $this->jam_mulai : null;
+            $validatedData['jam_selesai'] = !empty($this->jam_selesai) ? $this->jam_selesai : null;
+
+            // Konten
+            $validatedData['konten'] = !empty($this->konten) ? $this->konten : null;
 
             // Jika tidak ada gambar baru, hapus dari validated data
             if (!$this->gambar_utama) {

@@ -68,8 +68,8 @@
                                         <div
                                             class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                                             @if ($user->avatar)
-                                                <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->nama }}"
-                                                    class="w-10 h-10 rounded-full object-cover">
+                                                <img src="{{ Str::startsWith($user->avatar, ['http://', 'https://']) ? $user->avatar : Storage::url($user->avatar) }}" alt="{{ $user->nama }}"
+                                                    class="w-10 h-10 rounded-full object-cover" referrerpolicy="no-referrer">
                                             @else
                                                 <span
                                                     class="text-primary font-medium text-sm">{{ $user->initials() }}</span>

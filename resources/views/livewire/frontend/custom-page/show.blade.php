@@ -106,7 +106,7 @@
                     prose-table:text-base-content prose-th:bg-base-200
                     prose-hr:border-base-300"
                     style="font-family: 'Inter', sans-serif;">
-                    {!! $page->content !!}
+                    {!! clean($page->content) !!}
                 </div>
             </div>
         </div>

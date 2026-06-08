@@ -43,7 +43,11 @@ class NewsController extends Controller
         $this->visitorService->trackVisitor($news);
 
         // Track juga dengan visitor package untuk backward compatibility
-        visitor($news)->visit();
+        try {
+            visitor($news)->visit();
+        } catch (\Exception $e) {
+            // Abaikan jika tabel visitors belum ada
+        }
 
         // Increment views count (simple counter)
         $news->incrementVisitorCount();

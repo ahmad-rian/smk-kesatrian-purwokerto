@@ -150,8 +150,8 @@ lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
                         <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                             <div class="w-10 rounded-full">
                                 @if (auth()->user()->avatar)
-                                    <img src="{{ Storage::url(auth()->user()->avatar) }}"
-                                        alt="{{ auth()->user()->name }}" />
+                                    <img src="{{ Str::startsWith(auth()->user()->avatar, ['http://', 'https://']) ? auth()->user()->avatar : Storage::url(auth()->user()->avatar) }}"
+                                        alt="{{ auth()->user()->name }}" referrerpolicy="no-referrer" />
                                 @else
                                     <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                                         <span

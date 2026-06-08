@@ -114,21 +114,16 @@
 
                     <!-- Konten -->
                     <div>
-                        <label class="label">
-                            <span class="label-text font-medium">Konten Berita <span class="text-error">*</span></span>
-                        </label>
-                        <textarea wire:model="konten" rows="12" placeholder="Tulis konten berita di sini..."
-                            class="textarea textarea-bordered w-full @error('konten') textarea-error @enderror"></textarea>
+                        <x-quill-editor
+                            wire-model="konten"
+                            label="Konten Berita *"
+                            placeholder="Tulis konten berita di sini..."
+                            hint="Gunakan toolbar di atas untuk memformat teks, menambahkan gambar, link, dan lainnya." />
                         @error('konten')
                             <div class="label">
                                 <span class="label-text-alt text-error">{{ $message }}</span>
                             </div>
                         @enderror
-                        <div class="label">
-                            <span class="label-text-alt text-base-content/60">
-                                Gunakan format teks biasa. HTML akan di-escape untuk keamanan.
-                            </span>
-                        </div>
                     </div>
                 </div>
 

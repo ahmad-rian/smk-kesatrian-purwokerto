@@ -118,18 +118,14 @@
 
                 {{-- Content --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Konten Halaman *
-                    </label>
-                    <textarea wire:model="page_content" rows="15"
-                        placeholder="Tulis konten halaman di sini... Mendukung HTML untuk formatting."
-                        class="textarea textarea-bordered w-full font-mono text-sm @error('page_content') textarea-error @enderror"></textarea>
+                    <x-quill-editor
+                        wire-model="page_content"
+                        label="Konten Halaman *"
+                        placeholder="Tulis konten halaman di sini..."
+                        hint="Gunakan toolbar di atas untuk memformat teks, menambahkan gambar, link, tabel, dan lainnya." />
                     @error('page_content')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <p class="mt-1 text-xs text-gray-500">
-                        Mendukung HTML. Gunakan tag seperti &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;img&gt;, &lt;table&gt; untuk formatting.
-                    </p>
                 </div>
 
                 {{-- Meta Description --}}

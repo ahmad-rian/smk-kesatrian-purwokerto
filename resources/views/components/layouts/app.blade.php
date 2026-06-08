@@ -16,10 +16,43 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 
+    <!-- Quill.js Rich Text Editor -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+
     <!-- Alpine.js CSS untuk x-cloak -->
     <style>
         [x-cloak] {
             display: none !important;
+        }
+
+        /* Quill Editor Styling */
+        .ql-toolbar.ql-snow {
+            border-color: oklch(var(--bc) / 0.2) !important;
+            border-radius: 0.5rem 0.5rem 0 0;
+            background: oklch(var(--b2));
+        }
+        .ql-container.ql-snow {
+            border-color: oklch(var(--bc) / 0.2) !important;
+            border-radius: 0 0 0.5rem 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        .ql-editor {
+            min-height: 250px;
+            color: oklch(var(--bc));
+        }
+        .ql-editor.ql-blank::before {
+            color: oklch(var(--bc) / 0.4);
+            font-style: normal;
+        }
+        .ql-snow .ql-stroke {
+            stroke: oklch(var(--bc) / 0.7);
+        }
+        .ql-snow .ql-fill {
+            fill: oklch(var(--bc) / 0.7);
+        }
+        .ql-snow .ql-picker {
+            color: oklch(var(--bc) / 0.7);
         }
 
         /* SPA Loading Animation */
@@ -241,6 +274,9 @@
             window.spaInitialized = true;
         }
     </script>
+
+    <!-- Quill.js Rich Text Editor -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
     <!-- Theme Management Script -->
     <script>

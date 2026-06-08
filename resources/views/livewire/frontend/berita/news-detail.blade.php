@@ -196,24 +196,7 @@
                         <!-- Content -->
                         <div class="prose prose-lg max-w-none text-base-content leading-relaxed"
                             style="font-family: 'Inter', sans-serif;">
-                            @php
-                                // Bersihkan konten dari tag P yang tidak diperlukan
-                                $cleanContent = $news->konten;
-                                // Hapus tag P pembuka dan penutup
-                                $cleanContent = preg_replace('/<\/?p[^>]*>/', '', $cleanContent);
-                                // Bersihkan whitespace berlebih
-                                $cleanContent = trim($cleanContent);
-                                // Split berdasarkan line breaks dan buat paragraf yang proper
-                                $paragraphs = array_filter(explode("\n", $cleanContent));
-                            @endphp
-
-                            @foreach ($paragraphs as $paragraph)
-                                @if (trim($paragraph))
-                                    <div class="mb-4 text-justify leading-7">
-                                        {{ trim($paragraph) }}
-                                    </div>
-                                @endif
-                            @endforeach
+                            {!! clean($news->konten) !!}
                         </div>
 
                         <!-- Share Section -->
