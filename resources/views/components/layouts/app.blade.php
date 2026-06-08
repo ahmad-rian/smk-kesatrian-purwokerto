@@ -16,84 +16,39 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 
-    <!-- Quill.js Rich Text Editor -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
-
     <!-- Alpine.js CSS untuk x-cloak -->
     <style>
         [x-cloak] {
             display: none !important;
         }
 
-        /* Quill Editor Wrapper */
-        .quill-wrapper {
-            border: 1px solid oklch(var(--bc) / 0.2);
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-        .quill-wrapper .ql-toolbar.ql-snow {
-            border: none !important;
-            border-bottom: 1px solid oklch(var(--bc) / 0.15) !important;
-            background: oklch(var(--b2));
-            padding: 8px !important;
-        }
-        .quill-wrapper .ql-toolbar.ql-snow .ql-formats {
-            margin-right: 8px;
-            padding-right: 8px;
-            border-right: 1px solid oklch(var(--bc) / 0.1);
-        }
-        .quill-wrapper .ql-toolbar.ql-snow .ql-formats:last-child {
-            margin-right: 0;
-            padding-right: 0;
-            border-right: none;
-        }
-        .quill-wrapper .ql-container.ql-snow {
-            border: none !important;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-        }
-        .quill-wrapper .ql-editor {
+        /* Rich Text Editor */
+        .rte-content {
             min-height: 250px;
-            color: oklch(var(--bc));
+            outline: none;
             line-height: 1.75;
-            padding: 16px 20px;
         }
-        .quill-wrapper .ql-editor.ql-blank::before {
+        .rte-content:empty::before {
+            content: attr(data-placeholder);
             color: oklch(var(--bc) / 0.35);
-            font-style: normal;
+            pointer-events: none;
         }
-        .quill-wrapper .ql-snow .ql-stroke {
-            stroke: oklch(var(--bc) / 0.55);
+        .rte-content h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .rte-content h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .rte-content h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .rte-content p { margin-bottom: 0.5rem; }
+        .rte-content ul, .rte-content ol { padding-left: 1.5rem; margin-bottom: 0.5rem; }
+        .rte-content ul { list-style-type: disc; }
+        .rte-content ol { list-style-type: decimal; }
+        .rte-content blockquote {
+            border-left: 3px solid oklch(var(--p));
+            padding-left: 1rem;
+            margin: 0.5rem 0;
+            color: oklch(var(--bc) / 0.7);
+            font-style: italic;
         }
-        .quill-wrapper .ql-snow .ql-fill {
-            fill: oklch(var(--bc) / 0.55);
-        }
-        .quill-wrapper .ql-snow .ql-picker {
-            color: oklch(var(--bc) / 0.65);
-        }
-        .quill-wrapper .ql-snow .ql-picker-options {
-            background: oklch(var(--b1));
-            border-color: oklch(var(--bc) / 0.15);
-            border-radius: 0.375rem;
-            box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
-        }
-        .quill-wrapper .ql-snow button:hover .ql-stroke,
-        .quill-wrapper .ql-snow .ql-picker-label:hover .ql-stroke {
-            stroke: oklch(var(--bc));
-        }
-        .quill-wrapper .ql-snow button:hover .ql-fill,
-        .quill-wrapper .ql-snow .ql-picker-label:hover .ql-fill {
-            fill: oklch(var(--bc));
-        }
-        .quill-wrapper .ql-snow button.ql-active .ql-stroke {
-            stroke: oklch(var(--p));
-        }
-        .quill-wrapper .ql-snow button.ql-active .ql-fill {
-            fill: oklch(var(--p));
-        }
-        .quill-wrapper .ql-snow .ql-picker-label.ql-active {
-            color: oklch(var(--p));
-        }
+        .rte-content a { color: oklch(var(--p)); text-decoration: underline; }
+        .rte-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 0.5rem 0; }
 
         /* SPA Loading Animation */
         .spa-loading {
@@ -314,9 +269,6 @@
             window.spaInitialized = true;
         }
     </script>
-
-    <!-- Quill.js Rich Text Editor -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 
     <!-- Theme Management Script -->
     <script>
