@@ -60,6 +60,7 @@ class UserSeeder extends Seeder
 
         $this->command->info('User seeder completed successfully!');
         $this->command->info('Admin: ahmad.ritonga@mhs.unsoed.ac.id');
+        $this->command->info('Admin: hyanangsimrs@gmail.com');
         $this->command->info('User: alriansr@gmail.com');
     }
 }
