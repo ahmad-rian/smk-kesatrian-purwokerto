@@ -17,7 +17,7 @@
     @livewireStyles
 
     <!-- Quill.js Rich Text Editor -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
 
     <!-- Alpine.js CSS untuk x-cloak -->
     <style>
@@ -25,80 +25,74 @@
             display: none !important;
         }
 
-        /* Quill Editor Styling */
-        .ql-toolbar.ql-snow {
-            border: 1px solid oklch(var(--bc) / 0.2) !important;
-            border-radius: 0.5rem 0.5rem 0 0;
-            background: oklch(var(--b2));
-            padding: 8px 12px !important;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2px;
+        /* Quill Editor Wrapper */
+        .quill-wrapper {
+            border: 1px solid oklch(var(--bc) / 0.2);
+            border-radius: 0.5rem;
+            overflow: hidden;
         }
-        .ql-toolbar.ql-snow .ql-formats {
-            margin-right: 12px !important;
-            padding-right: 12px;
+        .quill-wrapper .ql-toolbar.ql-snow {
+            border: none !important;
+            border-bottom: 1px solid oklch(var(--bc) / 0.15) !important;
+            background: oklch(var(--b2));
+            padding: 8px !important;
+        }
+        .quill-wrapper .ql-toolbar.ql-snow .ql-formats {
+            margin-right: 8px;
+            padding-right: 8px;
             border-right: 1px solid oklch(var(--bc) / 0.1);
         }
-        .ql-toolbar.ql-snow .ql-formats:last-child {
-            margin-right: 0 !important;
+        .quill-wrapper .ql-toolbar.ql-snow .ql-formats:last-child {
+            margin-right: 0;
             padding-right: 0;
             border-right: none;
         }
-        .ql-toolbar.ql-snow button {
-            width: 32px !important;
-            height: 32px !important;
-            padding: 4px !important;
-            border-radius: 0.25rem;
-        }
-        .ql-toolbar.ql-snow button:hover,
-        .ql-toolbar.ql-snow .ql-picker-label:hover {
-            background: oklch(var(--bc) / 0.08);
-            border-radius: 0.25rem;
-        }
-        .ql-toolbar.ql-snow button.ql-active,
-        .ql-toolbar.ql-snow .ql-picker-label.ql-active {
-            background: oklch(var(--p) / 0.15);
-            color: oklch(var(--p));
-            border-radius: 0.25rem;
-        }
-        .ql-toolbar.ql-snow button.ql-active .ql-stroke {
-            stroke: oklch(var(--p));
-        }
-        .ql-toolbar.ql-snow button.ql-active .ql-fill {
-            fill: oklch(var(--p));
-        }
-        .ql-container.ql-snow {
-            border: 1px solid oklch(var(--bc) / 0.2) !important;
-            border-top: none !important;
-            border-radius: 0 0 0.5rem 0.5rem;
+        .quill-wrapper .ql-container.ql-snow {
+            border: none !important;
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
         }
-        .ql-editor {
+        .quill-wrapper .ql-editor {
             min-height: 250px;
             color: oklch(var(--bc));
-            line-height: 1.7;
+            line-height: 1.75;
             padding: 16px 20px;
         }
-        .ql-editor.ql-blank::before {
-            color: oklch(var(--bc) / 0.4);
+        .quill-wrapper .ql-editor.ql-blank::before {
+            color: oklch(var(--bc) / 0.35);
             font-style: normal;
         }
-        .ql-snow .ql-stroke {
-            stroke: oklch(var(--bc) / 0.6);
+        .quill-wrapper .ql-snow .ql-stroke {
+            stroke: oklch(var(--bc) / 0.55);
         }
-        .ql-snow .ql-fill {
-            fill: oklch(var(--bc) / 0.6);
+        .quill-wrapper .ql-snow .ql-fill {
+            fill: oklch(var(--bc) / 0.55);
         }
-        .ql-snow .ql-picker {
-            color: oklch(var(--bc) / 0.7);
+        .quill-wrapper .ql-snow .ql-picker {
+            color: oklch(var(--bc) / 0.65);
         }
-        .ql-snow .ql-picker-options {
-            background: oklch(var(--b1)) !important;
-            border-color: oklch(var(--bc) / 0.2) !important;
+        .quill-wrapper .ql-snow .ql-picker-options {
+            background: oklch(var(--b1));
+            border-color: oklch(var(--bc) / 0.15);
             border-radius: 0.375rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+        }
+        .quill-wrapper .ql-snow button:hover .ql-stroke,
+        .quill-wrapper .ql-snow .ql-picker-label:hover .ql-stroke {
+            stroke: oklch(var(--bc));
+        }
+        .quill-wrapper .ql-snow button:hover .ql-fill,
+        .quill-wrapper .ql-snow .ql-picker-label:hover .ql-fill {
+            fill: oklch(var(--bc));
+        }
+        .quill-wrapper .ql-snow button.ql-active .ql-stroke {
+            stroke: oklch(var(--p));
+        }
+        .quill-wrapper .ql-snow button.ql-active .ql-fill {
+            fill: oklch(var(--p));
+        }
+        .quill-wrapper .ql-snow .ql-picker-label.ql-active {
+            color: oklch(var(--p));
         }
 
         /* SPA Loading Animation */
@@ -322,7 +316,7 @@
     </script>
 
     <!-- Quill.js Rich Text Editor -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 
     <!-- Theme Management Script -->
     <script>
