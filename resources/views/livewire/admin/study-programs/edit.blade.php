@@ -38,6 +38,18 @@
                         placeholder="Contoh: Teknik Komputer dan Jaringan" hint="Nama lengkap program studi"
                         maxlength="255" />
 
+                    {{-- Kategori Program Studi --}}
+                    <div>
+                        <label class="label"><span class="label-text font-medium">Kategori Program Studi</span></label>
+                        <select wire:model="study_program_category_id" class="select select-bordered w-full">
+                            <option value="">-- Pilih Kategori --</option>
+                            @foreach ($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                        <label class="label"><span class="label-text-alt text-base-content/60">Kategori untuk filter di halaman jurusan (opsional)</span></label>
+                    </div>
+
                     {{-- Deskripsi --}}
                     <x-mary-textarea wire:model.blur="deskripsi" label="Deskripsi"
                         placeholder="Deskripsi singkat tentang program studi..."

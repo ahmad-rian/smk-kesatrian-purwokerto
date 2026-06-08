@@ -28,6 +28,9 @@ use App\Livewire\Admin\Users\Index as UsersIndex;
 use App\Livewire\Admin\FrontendMenus\Index as FrontendMenusIndex;
 use App\Livewire\Admin\FrontendMenus\Create as FrontendMenusCreate;
 use App\Livewire\Admin\FrontendMenus\Edit as FrontendMenusEdit;
+use App\Livewire\Admin\StudyProgramCategories\Index as StudyProgramCategoriesIndex;
+use App\Livewire\Admin\StudyProgramCategories\Create as StudyProgramCategoriesCreate;
+use App\Livewire\Admin\StudyProgramCategories\Edit as StudyProgramCategoriesEdit;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\SeoController;
 use App\Livewire\Frontend\Jurusan\Index as JurusanIndex;
@@ -121,6 +124,14 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(functio
         ->name('admin.site-settings.create');
     Route::get('/site-settings/{siteSetting}/edit', SiteSettingsEdit::class)
         ->name('admin.site-settings.edit');
+
+    // Study Program Categories Management
+    Route::get('/study-program-categories', StudyProgramCategoriesIndex::class)
+        ->name('admin.study-program-categories.index');
+    Route::get('/study-program-categories/create', StudyProgramCategoriesCreate::class)
+        ->name('admin.study-program-categories.create');
+    Route::get('/study-program-categories/{studyProgramCategory}/edit', StudyProgramCategoriesEdit::class)
+        ->name('admin.study-program-categories.edit');
 
     // Study Programs Management
     Route::get('/study-programs', StudyProgramsIndex::class)

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\UploadedFile;
 use App\Services\ImageConversionService;
 use Illuminate\Support\Facades\Storage;
@@ -41,6 +42,7 @@ class StudyProgram extends Model
         'ketua_program',
         'aktif',
         'urutan',
+        'study_program_category_id',
     ];
 
     /**
@@ -124,6 +126,15 @@ class StudyProgram extends Model
                 ->orWhere('nama', 'like', "%{$search}%")
                 ->orWhere('ketua_program', 'like', "%{$search}%");
         });
+    }
+
+    /**
+     * Relasi dengan StudyProgramCategory
+     * Program studi memiliki satu kategori
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(StudyProgramCategory::class, 'study_program_category_id');
     }
 
     /**
@@ -212,6 +223,10 @@ class StudyProgram extends Model
             'urutan' => [
                 'integer',
                 'min:0',
+            ],
+            'study_program_category_id' => [
+                'nullable',
+                'exists:study_program_categories,id',
             ],
         ];
     }

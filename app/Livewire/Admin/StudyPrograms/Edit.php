@@ -43,6 +43,7 @@ class Edit extends Component
     public string $ketua_program = '';
     public bool $aktif = true;
     public int $urutan = 1;
+    public $study_program_category_id = null;
 
     /**
      * Property untuk menyimpan gambar lama
@@ -91,6 +92,7 @@ class Edit extends Component
         $this->ketua_program = $studyProgram->ketua_program ?? '';
         $this->aktif = $studyProgram->aktif;
         $this->urutan = $studyProgram->urutan;
+        $this->study_program_category_id = $studyProgram->study_program_category_id;
     }
 
     /**
@@ -263,6 +265,9 @@ class Edit extends Component
      */
     public function render()
     {
-        return view('livewire.admin.study-programs.edit');
+        return view('livewire.admin.study-programs.edit', [
+            'categories' => \App\Models\StudyProgramCategory::where('is_active', true)
+                ->orderBy('sort_order')->orderBy('name')->get(),
+        ]);
     }
 }

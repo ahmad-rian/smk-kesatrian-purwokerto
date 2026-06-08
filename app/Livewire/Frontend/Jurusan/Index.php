@@ -3,6 +3,7 @@
 namespace App\Livewire\Frontend\Jurusan;
 
 use App\Models\StudyProgram;
+use App\Models\StudyProgramCategory;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -24,32 +25,17 @@ use Livewire\Attributes\Title;
 #[Layout('components.layouts.frontend')]
 class Index extends Component
 {
-    /**
-     * Data program studi yang akan ditampilkan
-     */
     public $studyPrograms;
-
-    /**
-     * Program studi yang dipilih untuk detail
-     */
+    public $categories;
     public $selectedProgram = null;
-
-    /**
-     * Status modal detail
-     */
     public $showModal = false;
-
-    /**
-     * Filter kategori yang aktif
-     */
     public $activeFilter = 'all';
 
-    /**
-     * Mount komponen dan ambil data program studi
-     */
     public function mount()
     {
         $this->loadStudyPrograms();
+        $this->categories = StudyProgramCategory::where('is_active', true)
+            ->orderBy('sort_order')->orderBy('name')->get();
     }
 
     /**
@@ -71,7 +57,7 @@ class Index extends Component
                     'prospek_karir' => $program->prospek_karir ?? [],
                     'ketua_program' => $program->ketua_program,
                     'gambar' => $program->gambar_url,
-                    'kategori' => $this->getKategori($program->kode)
+                    'category_id' => $program->study_program_category_id,
                 ];
             });
     }
@@ -91,17 +77,6 @@ class Index extends Component
         ];
 
         return $colorMap[$kode] ?? '#6b7280'; // Gray 500 sebagai default
-    }
-
-    /**
-     * Mendapatkan kategori berdasarkan kode program studi
-     * Menggunakan nama program studi langsung sebagai kategori
-     */
-    private function getKategori($kode)
-    {
-        // Cari nama program studi berdasarkan kode dari data yang sudah di-load
-        $program = StudyProgram::where('kode', $kode)->where('aktif', true)->first();
-        return $program ? $program->nama : 'Lainnya';
     }
 
     /**
@@ -151,7 +126,7 @@ class Index extends Component
 
         return collect($this->studyPrograms)
             ->filter(function ($program) {
-                return $program['nama'] === $this->activeFilter;
+                return $program['category_id'] == $this->activeFilter;
             })
             ->values();
     }

@@ -50,6 +50,10 @@
                         <x-mary-menu-item title="Berita" icon="o-newspaper" :link="route('admin.news.index')" :active="request()->routeIs('admin.news.*')"
                             wire:navigate class="spa-nav-item" />
 
+                        <!-- Study Program Categories -->
+                        <x-mary-menu-item title="Kategori Program Studi" icon="o-folder-open" :link="route('admin.study-program-categories.index')"
+                            :active="request()->routeIs('admin.study-program-categories.*')" wire:navigate class="spa-nav-item" />
+
                         <!-- Study Programs -->
                         <x-mary-menu-item title="Program Studi" icon="o-academic-cap" :link="route('admin.study-programs.index')"
                             :active="request()->routeIs('admin.study-programs.*')" wire:navigate class="spa-nav-item" />

@@ -66,11 +66,11 @@
                     style="font-family: 'Inter', sans-serif;">
                     Semua Program
                 </button>
-                @foreach ($studyPrograms as $program)
-                    <button wire:click="setFilter('{{ $program['nama'] }}')"
-                        class="px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 {{ $activeFilter === $program['nama'] ? 'btn btn-primary' : 'btn btn-outline' }}"
+                @foreach ($categories as $category)
+                    <button wire:click="setFilter('{{ $category->id }}')"
+                        class="px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 {{ $activeFilter == $category->id ? 'btn btn-primary' : 'btn btn-outline' }}"
                         style="font-family: 'Inter', sans-serif;">
-                        {{ $program['nama'] }}
+                        {{ $category->name }}
                     </button>
                 @endforeach
             </div>

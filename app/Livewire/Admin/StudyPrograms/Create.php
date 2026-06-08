@@ -37,6 +37,7 @@ class Create extends Component
     public string $ketua_program = '';
     public bool $aktif = true;
     public int $urutan = 1;
+    public $study_program_category_id = null;
 
     /**
      * Validation rules
@@ -294,6 +295,9 @@ class Create extends Component
      */
     public function render()
     {
-        return view('livewire.admin.study-programs.create');
+        return view('livewire.admin.study-programs.create', [
+            'categories' => \App\Models\StudyProgramCategory::where('is_active', true)
+                ->orderBy('sort_order')->orderBy('name')->get(),
+        ]);
     }
 }
