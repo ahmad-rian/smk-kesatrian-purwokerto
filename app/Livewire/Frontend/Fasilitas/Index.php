@@ -113,6 +113,9 @@ class Index extends Component
     public function loadStudyPrograms(): void
     {
         $this->studyPrograms = StudyProgram::where('aktif', true)
+            ->whereHas('facilities', function ($query) {
+                $query->where('aktif', true);
+            })
             ->orderBy('nama')
             ->get();
     }
