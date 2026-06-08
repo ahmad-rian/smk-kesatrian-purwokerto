@@ -66,21 +66,13 @@
                     style="font-family: 'Inter', sans-serif;">
                     Semua Program
                 </button>
-                <button wire:click="setFilter('Teknologi')"
-                    class="px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 {{ $activeFilter === 'Teknologi' ? 'btn btn-primary' : 'btn btn-outline' }}"
-                    style="font-family: 'Inter', sans-serif;">
-                    Teknologi
-                </button>
-                <button wire:click="setFilter('Kreatif')"
-                    class="px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 {{ $activeFilter === 'Kreatif' ? 'btn btn-primary' : 'btn btn-outline' }}"
-                    style="font-family: 'Inter', sans-serif;">
-                    Kreatif
-                </button>
-                <button wire:click="setFilter('Bisnis')"
-                    class="px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 {{ $activeFilter === 'Bisnis' ? 'btn btn-primary' : 'btn btn-outline' }}"
-                    style="font-family: 'Inter', sans-serif;">
-                    Bisnis
-                </button>
+                @foreach ($studyPrograms as $program)
+                    <button wire:click="setFilter('{{ $program['nama'] }}')"
+                        class="px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 {{ $activeFilter === $program['nama'] ? 'btn btn-primary' : 'btn btn-outline' }}"
+                        style="font-family: 'Inter', sans-serif;">
+                        {{ $program['nama'] }}
+                    </button>
+                @endforeach
             </div>
         </div>
     </section>

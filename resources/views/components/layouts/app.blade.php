@@ -27,12 +27,50 @@
 
         /* Quill Editor Styling */
         .ql-toolbar.ql-snow {
-            border-color: oklch(var(--bc) / 0.2) !important;
+            border: 1px solid oklch(var(--bc) / 0.2) !important;
             border-radius: 0.5rem 0.5rem 0 0;
             background: oklch(var(--b2));
+            padding: 8px 12px !important;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+        .ql-toolbar.ql-snow .ql-formats {
+            margin-right: 12px !important;
+            padding-right: 12px;
+            border-right: 1px solid oklch(var(--bc) / 0.1);
+        }
+        .ql-toolbar.ql-snow .ql-formats:last-child {
+            margin-right: 0 !important;
+            padding-right: 0;
+            border-right: none;
+        }
+        .ql-toolbar.ql-snow button {
+            width: 32px !important;
+            height: 32px !important;
+            padding: 4px !important;
+            border-radius: 0.25rem;
+        }
+        .ql-toolbar.ql-snow button:hover,
+        .ql-toolbar.ql-snow .ql-picker-label:hover {
+            background: oklch(var(--bc) / 0.08);
+            border-radius: 0.25rem;
+        }
+        .ql-toolbar.ql-snow button.ql-active,
+        .ql-toolbar.ql-snow .ql-picker-label.ql-active {
+            background: oklch(var(--p) / 0.15);
+            color: oklch(var(--p));
+            border-radius: 0.25rem;
+        }
+        .ql-toolbar.ql-snow button.ql-active .ql-stroke {
+            stroke: oklch(var(--p));
+        }
+        .ql-toolbar.ql-snow button.ql-active .ql-fill {
+            fill: oklch(var(--p));
         }
         .ql-container.ql-snow {
-            border-color: oklch(var(--bc) / 0.2) !important;
+            border: 1px solid oklch(var(--bc) / 0.2) !important;
+            border-top: none !important;
             border-radius: 0 0 0.5rem 0.5rem;
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
@@ -40,19 +78,27 @@
         .ql-editor {
             min-height: 250px;
             color: oklch(var(--bc));
+            line-height: 1.7;
+            padding: 16px 20px;
         }
         .ql-editor.ql-blank::before {
             color: oklch(var(--bc) / 0.4);
             font-style: normal;
         }
         .ql-snow .ql-stroke {
-            stroke: oklch(var(--bc) / 0.7);
+            stroke: oklch(var(--bc) / 0.6);
         }
         .ql-snow .ql-fill {
-            fill: oklch(var(--bc) / 0.7);
+            fill: oklch(var(--bc) / 0.6);
         }
         .ql-snow .ql-picker {
             color: oklch(var(--bc) / 0.7);
+        }
+        .ql-snow .ql-picker-options {
+            background: oklch(var(--b1)) !important;
+            border-color: oklch(var(--bc) / 0.2) !important;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
         /* SPA Loading Animation */

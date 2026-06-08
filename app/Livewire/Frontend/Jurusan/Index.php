@@ -95,19 +95,13 @@ class Index extends Component
 
     /**
      * Mendapatkan kategori berdasarkan kode program studi
+     * Menggunakan nama program studi langsung sebagai kategori
      */
     private function getKategori($kode)
     {
-        $kategoriMap = [
-            'TKJ' => 'Teknologi',
-            'RPL' => 'Teknologi',
-            'MM' => 'Kreatif',
-            'OTKP' => 'Bisnis',
-            'AKL' => 'Bisnis',
-            'BDP' => 'Bisnis'
-        ];
-
-        return $kategoriMap[$kode] ?? 'Umum';
+        // Cari nama program studi berdasarkan kode dari data yang sudah di-load
+        $program = StudyProgram::where('kode', $kode)->where('aktif', true)->first();
+        return $program ? $program->nama : 'Lainnya';
     }
 
     /**
@@ -157,7 +151,7 @@ class Index extends Component
 
         return collect($this->studyPrograms)
             ->filter(function ($program) {
-                return $program['kategori'] === $this->activeFilter;
+                return $program['nama'] === $this->activeFilter;
             })
             ->values();
     }
