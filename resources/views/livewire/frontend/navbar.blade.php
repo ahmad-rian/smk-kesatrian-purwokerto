@@ -99,72 +99,7 @@
                         <nav class="flex items-center space-x-0.5 xl:space-x-1 flex-wrap justify-center" style="font-family: 'Inter', sans-serif;">
                             @foreach($menus as $menu)
                                 @php $dropdownAlign = $loop->iteration > ($loop->count / 2) ? 'right-0' : 'left-0'; @endphp
-                                @if($menu->route_name === 'berita' && ($menu->activeChildren->isEmpty()))
-                                    {{-- Special: Berita menu with news categories dropdown --}}
-                                    <div class="relative group" x-data="{ open: false }" @mouseleave="open = false">
-                                        <button @mouseenter="open = true" @click="open = !open"
-                                            class="relative {{ $menu->isCurrentRoute() ? 'text-primary bg-primary/10 border-primary/20' : 'text-base-content hover:text-primary hover:bg-primary/5' }} transition-all duration-300 font-medium py-2 px-3 rounded-lg text-sm flex items-center {{ $menu->css_class }}">
-                                            {{ $menu->title }}
-                                            <svg class="w-4 h-4 ml-1 transform transition-transform duration-200"
-                                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                            @if ($menu->isCurrentRoute())
-                                                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></div>
-                                            @endif
-                                        </button>
-
-                                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                                            x-transition:enter-start="opacity-0 transform scale-95"
-                                            x-transition:enter-end="opacity-100 transform scale-100"
-                                            x-transition:leave="transition ease-in duration-150"
-                                            x-transition:leave-start="opacity-100 transform scale-100"
-                                            x-transition:leave-end="opacity-0 transform scale-95" @mouseenter="open = true"
-                                            class="absolute top-full {{ $dropdownAlign }} mt-2 w-64 bg-base-100 rounded-xl shadow-lg border border-base-300 py-2 z-50"
-                                            style="display: none;">
-
-                                            <a href="{{ $menu->resolved_url }}" wire:navigate
-                                                class="flex items-center px-4 py-3 hover:bg-base-200 transition-colors duration-200">
-                                                <div class="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg mr-3">
-                                                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <div class="text-sm font-medium text-base-content">Semua Berita</div>
-                                                    <div class="text-xs text-base-content/60">Lihat semua artikel</div>
-                                                </div>
-                                            </a>
-
-                                            @if ($newsCategories && $newsCategories->count() > 0)
-                                                <div class="border-t border-base-300 my-2"></div>
-                                                @foreach ($newsCategories as $category)
-                                                    <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
-                                                        wire:navigate
-                                                        class="flex items-center px-4 py-3 hover:bg-base-200 transition-colors duration-200">
-                                                        <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3"
-                                                            style="background-color: {{ $category->color }}20;">
-                                                            @if ($category->icon)
-                                                                <x-mary-icon name="{{ $category->icon }}" class="w-4 h-4"
-                                                                    style="color: {{ $category->color }}" />
-                                                            @else
-                                                                <div class="w-4 h-4 rounded-full"
-                                                                    style="background-color: {{ $category->color }}"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="flex-1">
-                                                            <div class="text-sm font-medium text-base-content">{{ $category->name }}</div>
-                                                            <div class="text-xs text-base-content/60">{{ $category->news_count }} artikel</div>
-                                                        </div>
-                                                    </a>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </div>
-                                @elseif($menu->activeChildren->isNotEmpty())
+                                @if($menu->activeChildren->isNotEmpty())
                                     {{-- Menu with submenu/children --}}
                                     <div class="relative group" x-data="{ open: false }" @mouseleave="open = false">
                                         <button @mouseenter="open = true" @click="open = !open"
@@ -315,65 +250,7 @@
                         <!-- Mobile Navigation Links (Dynamic from Database) -->
                         <nav class="space-y-1" style="font-family: 'Inter', sans-serif;">
                             @foreach($menus as $menu)
-                                @if($menu->route_name === 'berita' && ($menu->activeChildren->isEmpty()))
-                                    {{-- Special: Berita with news categories accordion --}}
-                                    <div x-data="{ open: false }">
-                                        <button @click="open = !open"
-                                            class="w-full flex items-center justify-between px-3 py-2 {{ $menu->isCurrentRoute() ? 'text-primary bg-primary/10 border-l-2 border-primary' : 'text-base-content hover:text-primary hover:bg-primary/5' }} rounded-lg transition-all font-medium text-sm">
-                                            <div class="flex items-center space-x-3">
-                                                @if($menu->icon)
-                                                    <x-mary-icon name="{{ $menu->icon }}" class="w-4 h-4" />
-                                                @endif
-                                                <span>{{ $menu->title }}</span>
-                                            </div>
-                                            <svg class="w-4 h-4 transform transition-transform duration-200"
-                                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </button>
-
-                                        <div x-show="open" x-collapse class="ml-6 mt-2 space-y-1">
-                                            <a href="{{ $menu->resolved_url }}" @click="mobileMenuOpen = false"
-                                                class="block px-3 py-2 text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
-                                                wire:navigate>
-                                                <div class="flex items-center space-x-3">
-                                                    <div class="w-4 h-4 flex items-center justify-center">
-                                                        <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-                                                        </svg>
-                                                    </div>
-                                                    <span>Semua Berita</span>
-                                                </div>
-                                            </a>
-
-                                            @if ($newsCategories && $newsCategories->count() > 0)
-                                                @foreach ($newsCategories as $category)
-                                                    <a href="{{ route('berita') }}?kategori={{ $category->slug }}"
-                                                        @click="mobileMenuOpen = false"
-                                                        class="block px-3 py-2 text-base-content/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-all text-sm"
-                                                        wire:navigate>
-                                                        <div class="flex items-center space-x-3">
-                                                            <div class="w-4 h-4 flex items-center justify-center">
-                                                                @if ($category->icon)
-                                                                    <x-mary-icon name="{{ $category->icon }}" class="w-3 h-3"
-                                                                        style="color: {{ $category->color }}" />
-                                                                @else
-                                                                    <div class="w-3 h-3 rounded-full"
-                                                                        style="background-color: {{ $category->color }}"></div>
-                                                                @endif
-                                                            </div>
-                                                            <span>{{ $category->name }}</span>
-                                                            <span class="text-xs text-base-content/40">({{ $category->news_count }})</span>
-                                                        </div>
-                                                    </a>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </div>
-                                @elseif($menu->activeChildren->isNotEmpty())
+                                @if($menu->activeChildren->isNotEmpty())
                                     {{-- Menu with submenu accordion --}}
                                     <div x-data="{ open: false }">
                                         <button @click="open = !open"
