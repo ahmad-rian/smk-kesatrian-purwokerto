@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Shetabit\Visitor\Traits\Visitable;
@@ -21,6 +22,12 @@ use Shetabit\Visitor\Traits\Visitable;
 class News extends Model
 {
     use HasFactory, Visitable;
+
+    protected static function booted(): void
+    {
+        static::saved(fn () => Cache::forget('latest_news'));
+        static::deleted(fn () => Cache::forget('latest_news'));
+    }
 
     /**
      * Nama tabel di database
