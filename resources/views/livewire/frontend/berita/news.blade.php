@@ -209,7 +209,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                 @foreach ($news as $newsItem)
                     <article
-                        class="bg-base-100 rounded-xl shadow-sm border border-base-300 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                        class="bg-base-100 rounded-xl shadow-sm border border-base-300 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full">
                         <!-- Image -->
                         <div class="relative h-48 bg-base-200 overflow-hidden">
                             @if ($newsItem->gambar)
@@ -236,7 +236,7 @@
                         </div>
 
                         <!-- Content -->
-                        <div class="p-6">
+                        <div class="p-6 flex-1 flex flex-col">
                             <!-- Date and Views -->
                             <div class="flex items-center justify-between text-xs text-base-content/60 mb-3">
                                 <div class="flex items-center gap-2">
@@ -274,7 +274,7 @@
                             </p>
 
                             <!-- Read More Button -->
-                            <div class="flex justify-end">
+                            <div class="flex justify-end mt-auto">
                                 <a href="{{ route('berita.detail', $newsItem->slug) }}" wire:navigate
                                     class="btn btn-primary btn-sm hover:scale-105 transition-transform duration-200"
                                     style="font-family: 'Inter', sans-serif;">
